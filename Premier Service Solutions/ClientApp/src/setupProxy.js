@@ -2,8 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const { env } = require('process');
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:7270 ';
-  ////https://localhost:19049
+  env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:19049';
 
 const context = [
   "/api",
@@ -20,7 +19,7 @@ module.exports = function (app) {
     // Handle errors to prevent the proxy middleware from crashing when
     // the ASP NET Core webserver is unavailable
     onError: onError,
-    secure: true,
+    secure: false,
     // Uncomment this line to add support for proxying websockets
     //ws: true, 
     headers: {
