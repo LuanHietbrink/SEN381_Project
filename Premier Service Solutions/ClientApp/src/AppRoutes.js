@@ -1,6 +1,7 @@
 import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
+import Messaging from './components/Messaging';
 
 const AppRoutes = [
   {
@@ -14,7 +15,12 @@ const AppRoutes = [
   {
     path: '/fetch-data',
     element: <FetchData />
+  },
+  {
+      path: '/message',
+      element: <Messaging />
   }
+
 ];
 
 export default AppRoutes;

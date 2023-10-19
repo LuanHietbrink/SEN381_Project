@@ -33,6 +33,10 @@ code {
   padding: 10px;
 }
 
+.MessageApp {
+    height: 100vh;
+    width: 100vw;
+}
 /* 
 .table-scroll thead {
   background-color: #f8f9fa;
