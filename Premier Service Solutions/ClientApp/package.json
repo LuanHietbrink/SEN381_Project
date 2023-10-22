@@ -5,7 +5,9 @@
   "dependencies": {
     "@react-native-firebase/app": "^18.5.0",
     "@react-native-firebase/messaging": "^18.5.0",
+    "@sendbird/chat": "^4.10.0",
     "@sendbird/uikit-react": "^3.6.10",
+    "axios": "^1.5.1",
     "bootstrap": "^5.2.3",
     "http-proxy-middleware": "^2.0.6",
     "jquery": "^3.6.4",

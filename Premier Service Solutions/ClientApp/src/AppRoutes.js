@@ -2,7 +2,9 @@ import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import Messaging from './components/Messaging';
-import JobAssignmentForm from './components/JobForm'
+
+import JobAssignmentForm from './components/JobForm';
+import ChannelForm from "./components/ChannelForm";
 
 const AppRoutes = [
   {
@@ -24,7 +26,11 @@ const AppRoutes = [
   {
       path: '/job',
       element: <JobAssignmentForm />
-  }
+   },
+   {
+      path: '/channel',
+       element: <ChannelForm />
+   }
 
 ];
 
