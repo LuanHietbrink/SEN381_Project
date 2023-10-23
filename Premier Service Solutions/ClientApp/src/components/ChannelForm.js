@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { createChannel, getChannels, userJoinChannel } from './SendBird'; // Import your createChannel function
+import { createChannel, getChannels, userJoinChannel, deleteChannel, sendMessageToTechnician, sendNotification } from './SendBird'
 
 const ChannelForm = () => {
     const [channelName, setChannelName] = useState('');
     const [channelUrl, setChannelUrl] = useState('');
-    const [distinct, setDistinct] = useState(true);
-    const [userIds, setUserIds] = useState([]);
-    const [operatorIds, setOperatorIds] = useState([]);
+    //const [distinct, setDistinct] = useState(true);
+    //const [userIds, setUserIds] = useState([]);
+    //const [operatorIds, setOperatorIds] = useState([]);
 
     useEffect(() => {
         // Function to be executed when the component loads
         getChannels();
-        userJoinChannel("Tech-notif","1")
+        //userJoinChannel("Tech-notif", "1")
+        //deleteChannel("Job-Notifications")
+        sendMessageToTechnician();
+        //sendNotification();
+
     }, []);
     const handleCreateChannel = async () => {
         // Call the createChannel function with the provided parameters
