@@ -1,0 +1,265 @@
+import React, { useState } from 'react';
+import { useData } from './DataContext';
+import { useNavigate } from 'react-router-dom';
+import './Login-Signup.css'
+
+export function LoginSignup() {
+    const navigate = useNavigate();
+
+    const [state, setState] = useState({
+        email: '',
+        password: '',
+        clientName: '',
+        address: '',
+        contactNumber: '',
+        userType: 'login',
+        error: null,
+        clientData: null,
+        employeeData: null,
+    });
+
+    const handleInputChange = (e) => {
+        setState({ ...state, [e.target.name]: e.target.value });
+    }
+
+    const handleModeChange = () => {
+        setState({
+            userType: state.userType === 'login' ? 'signup' : 'login',
+            email: '',
+            password: '',
+            clientName: '',
+            address: '',
+            contactNumber: '',
+            error: null,
+        });
+    }
+
+    const handleLogin = async () => {
+        try {
+            if (state.userType === 'login') {
+                const { email, password } = state;
+
+                const employeeResponse = await fetch(`api/employees/employee-info/${email}`);
+                const employeeData = await employeeResponse.json();
+
+                const clientResponse = await fetch(`api/clients/client-info/${email}`);
+                const clientData = await clientResponse.json();
+
+                if (employeeData.length === 1) {
+                    if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (!password))) {
+                        setState({ ...state, error: 'Password is required.' });
+                        return;
+                    } else if (((employeeData[0].email !== null) && (employeeData[0].password == null)) && ((email !== null) && (!password))) {
+                        const response = await fetch(`api/employees/new-employee-login/${email}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            setState({ userType: 'employee', employeeData: employeeData[0], error: null });
+                        }
+                    } else if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (password !== ""))) {
+                        const response = await fetch(`api/employees/employee-login/${email}/${password}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            setState({ userType: 'employee', employeeData: employeeData[0], error: null });
+                        }
+                    }
+
+                } else if (!email || !password) {
+                    setState({ ...state, error: 'Email and password are required.' });
+                    return;
+                } else if (clientData.length === 1) {
+                    const response = await fetch(`api/clients/client-login/${email}/${password}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    if (response.status === 200) {
+                        setState({ userType: 'client', clientData: clientData[0], error: null });
+                    }
+                } else {
+                    setState({ ...state, error: 'No matching user found.' });
+                }
+            }
+            else if (state.userType === 'signup') {
+                const { email, password, clientName, address, contactNumber } = state;
+
+                if (!email || !password || !clientName || !address || !contactNumber) {
+                    setState({ ...state, error: 'All information is required.' });
+                    return;
+                }
+
+                const signUpData = {
+                    clientName,
+                    email,
+                    password,
+                    address,
+                    contactNumber,
+                };
+
+                const response = await fetch(`api/clients/client-signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(signUpData),
+                });
+
+                if (response.status === 201) {
+                    setState({ userType: 'login', error: null });
+                    window.alert('You have successfully signed up!');
+                } else {
+                    setState({ ...state, error: 'Error signing up.' });
+                }
+            }
+        } catch (error) {
+            setState({ ...state, error: 'Error fetching user data.' });
+        }
+    }
+
+    const { userType, error, clientData, employeeData } = state;
+    const { setPrivateData } = useData();
+
+    if (userType === 'client' && clientData) {
+        setPrivateData({ type: 'client', data: clientData });
+        navigate("/client-dashboard", { replace: true });
+        window.location.reload();
+    } else if (userType === 'employee' && employeeData) {
+        if (((employeeData.email !== null) || (employeeData.email !== "")) && (employeeData.password !== null)) {
+            const { firstName, lastName } = employeeData;
+            const employeePrivateData = { firstName, lastName };
+
+            setPrivateData({ type: 'employee', data: employeePrivateData });
+            navigate("/employee-dashboard", { replace: true });
+            window.location.reload();
+        } else {
+            const { email } = employeeData;
+            const employeePrivateData = { email };
+
+            setPrivateData({ type: 'employee', data: employeePrivateData });
+            navigate("/account-setup", { replace: true });
+        }
+    }
+
+    return (
+        <div className="d-flex justify-content-center align-items-center return-body" style={{ height: '100vh' }}>
+            <div className="text-center wrapper">
+                <h1>Premier Service Solutions</h1>
+                <h5><em>One call away from making your day</em></h5>
+
+                {state.userType === 'login' && (
+                    <div className='input-group'>
+                        <div className='form-group, email-input'>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={state.email}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <small id="emailHelp" class="form-text text-muted"><em>We'll never share your email with anyone else.</em></small>
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={state.password}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                )}
+                {state.userType === 'signup' && (
+                    <div className='input-group'>
+                        <div className='form-group'>
+                            <input
+                                type="text"
+                                name="clientName"
+                                placeholder="Full Name"
+                                value={state.clientName}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={state.email}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                value={state.password}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="text"
+                                name="address"
+                                placeholder="Address"
+                                value={state.address}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+                        <div className='form-group'>
+                            <input
+                                type="text"
+                                name="contactNumber"
+                                placeholder="Contact Number"
+                                value={state.contactNumber}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>                     
+                    </div>
+                )}
+
+                <button onClick={handleLogin} className='btn-login-signup'>
+                    {state.userType === 'login' ? 'Login' : 'Sign Up'}
+                </button>
+                <p>
+                    {state.userType === 'login' ? "Don't have an account? " : "Already have an account? "}
+                    <span style={{ color: 'blue', cursor: 'pointer' }} onClick={handleModeChange}>
+                        {state.userType === 'login' ? 'Sign up here' : 'Login here'}
+                    </span>
+                </p>
+                {error && <p style={{color: "red"}}>{error}</p>}
+            </div>
+                <div
+                    style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        width: '65%',
+                        height: '100%',
+                        backgroundColor: '#2d2c54',
+                        clipPath: 'circle(50% at 120% 50%)',
+                    }}
+                ></div>
+        </div>
+    );
+}

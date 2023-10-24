@@ -1,37 +1,51 @@
-import { Counter } from "./components/Counter";
+import { ClientDashboard } from "./components/Client/ClientDashboard";
+import { EmployeeDashboard } from "./components/Employee/EmployeeDashboard";
+import { CallCenterDept } from "./components/Departments/CallCenterDept";
+import { ClientMaintenanceDept } from "./components/Departments/ClientMaintenanceDept";
+import { ContractMaintenanceDept } from "./components/Departments/ContractMaintenanceDept";
+import { ServiceDept } from "./components/Departments/ServiceDept";
+import { LoginSignup } from "./components/Login-Signup";
+import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
 import { FetchData } from "./components/FetchData";
-import { Home } from "./components/Home";
-import Messaging from './components/Messaging';
 
-import JobAssignmentForm from './components/JobForm';
-import ChannelForm from "./components/ChannelForm";
 
 const AppRoutes = [
   {
     index: true,
-    element: <Home />
-  },
-  {
-    path: '/counter',
-    element: <Counter />
+    element: <LoginSignup />
   },
   {
     path: '/fetch-data',
     element: <FetchData />
   },
   {
-      path: '/message',
-      element: <Messaging />
+    path: '/employee-dashboard',
+    element: <EmployeeDashboard />
   },
   {
-      path: '/job',
-      element: <JobAssignmentForm />
-   },
-   {
-      path: '/channel',
-       element: <ChannelForm />
-   }
-
+    path: '/client-dashboard',
+    element: <ClientDashboard />
+  },
+  {
+    path: '/service-department',
+    element: <ServiceDept />
+  },
+  {
+    path: '/call-center',
+    element: <CallCenterDept />
+  },
+  {
+    path: '/contract-maintenance',
+    element: <ContractMaintenanceDept />
+  },
+  {
+    path: '/client-maintenance',
+    element: <ClientMaintenanceDept />
+  },
+  {
+    path: '/account-setup',
+    element: <EmployeeAccSetup />
+  }
 ];
 
 export default AppRoutes;

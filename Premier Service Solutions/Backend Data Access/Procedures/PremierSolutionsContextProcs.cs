@@ -17,9 +17,13 @@ public partial class PremierSolutionsContextProcs : DbContext
 
     public virtual DbSet<GetClientDetails> SpGetClientDetails { get; set; } = null!;
 
+    public virtual DbSet<GetAllClientDetails> SpGetAllClientDetails { get; set; } = null!;
+
     public virtual DbSet<GetClientServiceReq> SpGetClientServiceReqs { get; set; } = null!;
 
     public virtual DbSet<GetMaintenanceJobs> SpGetMaintenanceJobs { get; set; } = null!;
+
+    public virtual DbSet<GetEmployeeDetails> SpGetEmployeeDetails { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +60,17 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.EndDate);
         });        
         
+        modelBuilder.Entity<GetAllClientDetails>(entity =>
+        {
+            entity.HasNoKey();
+            entity.Property(e => e.ClientId);
+            entity.Property(e => e.ClientName);
+            entity.Property(e => e.Email);
+            entity.Property(e => e.Password);
+            entity.Property(e => e.Address);
+            entity.Property(e => e.ContactNumber);
+        });    
+
         modelBuilder.Entity<GetClientServiceReq>(entity =>
         {
             entity.HasNoKey();
@@ -76,6 +91,18 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.RequestDate);
             entity.Property(e => e.RequestDetails);
             entity.Property(e => e.Status);
+        });
+
+        modelBuilder.Entity<GetEmployeeDetails>(entity =>
+        {
+            entity.HasNoKey(); 
+            entity.Property(e => e.FirstName);
+            entity.Property(e => e.LastName);
+            entity.Property(e => e.Email);
+            entity.Property(e => e.Password);
+            entity.Property(e => e.ContactNumber);
+            entity.Property(e => e.EmgContact);
+            entity.Property(e => e.Skills);
         });
     }
 }
