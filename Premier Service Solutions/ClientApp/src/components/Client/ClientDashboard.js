@@ -9,7 +9,6 @@ export class ClientDashboard extends Component {
       <div>
         <ClientDashboardNav />
         <h1>Client Dashboard</h1>
-        <h2>Welcome, {clientName}!</h2>
       </div>
     );
   }

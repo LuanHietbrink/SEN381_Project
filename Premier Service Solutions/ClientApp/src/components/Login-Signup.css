@@ -1,0 +1,60 @@
+.return-body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.wrapper h1 {
+    font-weight: bolder;
+    font-size: 45px;
+    color: #2d2c54;
+}
+
+.wrapper h5 {
+    margin-bottom: 3em;
+    color: #2d2c54;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group div input {
+    width: 370px;
+}
+
+.input-group div {
+    margin-bottom: 2.5em;
+}
+
+.input-group div input {
+    border: none;
+    border-bottom: 2px solid #2d2c54;
+    border-radius: 4px;
+}
+
+.email-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.email-input small {
+    margin-top: 0.5em;
+}
+
+.btn-login-signup {
+    background-color: #2d2c54;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 15px 7px 15px;
+    margin: 0 0 1.5em 0;
+    font-size: large;
+}
