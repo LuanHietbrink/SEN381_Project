@@ -150,4 +150,58 @@ export async function sendMessageToTechnician() {
 }
 
 
+export async function botJoinChannel() {
+
+    const botUserId = 'Notification-Bot'
+    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/channels`
+
+
+
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+    };
+    const params = {
+
+        channel_urls: ["Job-Notifications"]
+    };
+
+    try {
+        const response = await axios.post(url, params, { headers });
+        console.log(`${botUserId} joined channel successfully`);
+    } catch (err) {
+        console.error(`${botUserId} failed to join channel`, err);
+        console.error('Error Response:', err.response.data);
+    }
+}
+
+export async function botMessage() {
+
+    const botUserId = 'Notification-Bot'
+    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`
+
+
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+    };
+    const params = {
+
+        message: "You have been assigned a job",
+        channel_url: "Job-Notifications"
+
+    };
+
+    try {
+        const response = await axios.post(url, params, { headers });
+        console.log('Bot message sent successfully');
+    } catch (err) {
+        console.error('Failed to send Bot message', err);
+        console.error('Error Response:', err.response.data);
+    }
+}
+
+
 //ADD ONE ON ONE CHANNEL CREATION WITH TECHNICIANS AND NOTIFICATIONSENDER FOR EACH.

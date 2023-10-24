@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createChannel, getChannels, userJoinChannel, deleteChannel, sendMessageToTechnician, sendNotification } from './SendBird'
+import { createChannel, getChannels, userJoinChannel, deleteChannel, sendMessageToTechnician, sendNotification, botJoinChannel, botMessage } from './SendBird'
 
 const ChannelForm = () => {
     const [channelName, setChannelName] = useState('');
@@ -13,8 +13,12 @@ const ChannelForm = () => {
         getChannels();
         //userJoinChannel("Tech-notif", "1")
         //deleteChannel("Job-Notifications")
-        sendMessageToTechnician();
+        //sendMessageToTechnician();
         //sendNotification();
+        //botJoinChannel()
+        botMessage()
+
+
 
     }, []);
     const handleCreateChannel = async () => {
