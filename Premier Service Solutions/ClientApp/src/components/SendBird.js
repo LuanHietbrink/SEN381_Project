@@ -150,7 +150,7 @@ export async function sendMessageToTechnician() {
 }
 
 
-export async function botJoinChannel() {
+export async function botJoinChannel(channelUrls) {
 
     const botUserId = 'Notification-Bot'
     const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/channels`
@@ -164,7 +164,7 @@ export async function botJoinChannel() {
     };
     const params = {
 
-        channel_urls: ["Job-Notifications"]
+        channel_urls: [channelUrls]
     };
 
     try {
@@ -176,7 +176,7 @@ export async function botJoinChannel() {
     }
 }
 
-export async function botMessage() {
+export async function botMessage(channelUrl, message) {
 
     const botUserId = 'Notification-Bot'
     const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`
@@ -189,8 +189,8 @@ export async function botMessage() {
     };
     const params = {
 
-        message: "You have been assigned a job",
-        channel_url: "Job-Notifications"
+        message: message,
+        channel_url: channelUrl
 
     };
 
