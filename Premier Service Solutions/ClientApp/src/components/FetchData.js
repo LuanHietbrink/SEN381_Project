@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../custom.css'
 
 export class FetchData extends Component {
   static displayName = FetchData.name;

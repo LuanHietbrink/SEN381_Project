@@ -4,27 +4,27 @@ USE `Premier_Service_Solutions`;
 -- Create tables
 CREATE TABLE Client (
     ClientID INT AUTO_INCREMENT PRIMARY KEY,
-    ClientName NVARCHAR(100),
-    Email NVARCHAR(50),
-    Password NVARCHAR(50),
-    Address NVARCHAR(50),
-    ContactNumber NVARCHAR(15)
+    ClientName VARCHAR(100),
+    Email VARCHAR(50),
+    Password VARCHAR(50),
+    Address VARCHAR(50),
+    ContactNumber VARCHAR(15)
 );
 
 CREATE TABLE Employee (
     EmpID INT AUTO_INCREMENT PRIMARY KEY,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    Email NVARCHAR(50),
-    Password NVARCHAR(50),
-    ContactNumber NVARCHAR(15),
-    EmgContact NVARCHAR(15),
-    Skills NVARCHAR(100)
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(50),
+    Password VARCHAR(50),
+    ContactNumber VARCHAR(15),
+    EmgContact VARCHAR(15),
+    Skills VARCHAR(100)
 );
 
 CREATE TABLE PackageTracking (
     PackageID INT AUTO_INCREMENT PRIMARY KEY,
-    PackageName NVARCHAR(50),
+    PackageName VARCHAR(50),
     Price INT,
     ServiceContractCount INT DEFAULT 0
 );
@@ -35,8 +35,8 @@ CREATE TABLE ServiceContract (
     PackageID INT,
     StartDate DATETIME NOT NULL,
     EndDate DATETIME NOT NULL,
-    ContractType NVARCHAR(30) NOT NULL,
-    ServiceLevel NVARCHAR(30),
+    ContractType VARCHAR(30) NOT NULL,
+    ServiceLevel VARCHAR(30),
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID),
     FOREIGN KEY (PackageID) REFERENCES PackageTracking(PackageID)    
 );
@@ -46,8 +46,8 @@ CREATE TABLE ServiceRequest (
     ClientID INT,
     EmpID INT,
     RequestDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    RequestDetails NVARCHAR(100) NOT NULL,
-    Status NVARCHAR(50) NOT NULL DEFAULT 'In Progress',
+    RequestDetails VARCHAR(100) NOT NULL,
+    Status VARCHAR(50) NOT NULL DEFAULT 'In Progress',
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID),
     FOREIGN KEY (EmpID) REFERENCES Employee(empID)    
 );
@@ -61,7 +61,7 @@ BEGIN
     SELECT * FROM ServiceRequest WHERE ClientID = Client_ID;
 END//
 
-CREATE PROCEDURE spGetClientDetails (IN Client_Email NVARCHAR(50))
+CREATE PROCEDURE spGetClientDetails (IN Client_Email VARCHAR(50))
 BEGIN
     SELECT
         C.ClientID,
@@ -93,6 +93,15 @@ BEGIN
     SELECT * FROM ServiceRequest WHERE Status = "In Progress";
 END//
 
+CREATE PROCEDURE spGetEmployeeDetails (IN Emp_Email VARCHAR(50))
+BEGIN
+    SELECT * FROM Employee WHERE Email = Emp_Email;
+END//
+
+CREATE PROCEDURE spGetAllClientDetails (IN Client_Email VARCHAR(50))
+BEGIN
+    SELECT * FROM Client WHERE Email = Client_Email;
+END//
 DELIMITER ;
 
 
