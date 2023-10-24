@@ -28,7 +28,7 @@ export async function createTechnicianUser(technicianId, technicianName) {
 
 }
 
-export async function createChannel(channelName, channelUrl, disctinct, userIds, operatorIds) {
+export async function createChannel(channelName, channelUrl, userIds, operatorIds) {
 
     const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels'
 
@@ -45,7 +45,7 @@ export async function createChannel(channelName, channelUrl, disctinct, userIds,
         cover_url: "",
         custom_type: "Technician-Jobs",
         is_distinct: true,
-        user_ids: ["1","2", "Test", "NotificationSender", "Test2"],
+        user_ids: [userIds],
         is_public: false,
         operator_ids:["NotificationSender"]
     };
@@ -176,7 +176,7 @@ export async function botJoinChannel(channelUrls) {
     }
 }
 
-export async function botMessage(channelUrl, message) {
+export async function botMessage(channelUrl, message, technicianId,technicianName) {
 
     const botUserId = 'Notification-Bot'
     const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`
