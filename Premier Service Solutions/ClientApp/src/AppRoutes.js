@@ -12,6 +12,7 @@ import { FetchData } from "./components/FetchData";
 import Messaging from "./components/Messaging";
 import JobForm from "./components/JobForm";
 import ChannelForm from "./components/ChannelForm";
+import { SendEmail } from "./components/SendEmail";
 
 const AppRoutes = [
   {
@@ -61,6 +62,10 @@ const AppRoutes = [
   {
     path: '/channel',
     element: <ChannelForm />
+  },
+  {
+    path: '/send-email',
+    element: <SendEmail />
   }
 ];
 

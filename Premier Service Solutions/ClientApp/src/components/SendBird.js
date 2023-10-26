@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 export async function createTechnicianUser(technicianId, technicianName) {
-
-    const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/users'
-
+    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/users`;
     const headers = {
         'Content-Type': 'application/json',
         'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
@@ -16,16 +14,44 @@ export async function createTechnicianUser(technicianId, technicianName) {
     };
 
     try {
-        const response = await axios.post(url, params, { headers });
+        await axios.post(url, params, { headers });
         console.log('Technician user created on sendbird successfully');
+        return true;
     } catch (err) {
-        console.error('Failed to create technician user on sendbird', err);
-        console.error('Error Response:', err.response.data);
+        console.error('Failed to create technician user on Sendbird', err);
+        if (err.response) {
+            console.error('Error Response:', err.response.data);
+        } else {
+            console.error('No response received from Sendbird.');
+        }
+        return false;
     }
-
 }
 
-export async function createChannel(channelName, channelUrl, userIds, operatorIds) {
+export async function checkUserExists(userId) {
+    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/users`;
+    const headers = {
+        'Content-Type': 'application/json',
+        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+    };
+
+    try {
+        const response = await axios.get(url, { headers });
+        const users = response.data.users;
+        const userExists = users.some(user => user.user_id === userId);
+        return userExists;
+    } catch (err) {
+        console.error('Failed to check if user exists on Sendbird', err);
+        if (err.response) {
+            console.error('Error Response:', err.response.data);
+        } else {
+            console.error('No response received from Sendbird.');
+        }
+        return false;
+    }
+}
+
+export async function createChannel(userIds) {
 
     const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels'
 
@@ -37,29 +63,30 @@ export async function createChannel(channelName, channelUrl, userIds, operatorId
 
     const params = {
 
-        name: channelName,
-        channel_url: channelUrl,
+        name: "Notification Channel",
         cover_url: "",
         custom_type: "Technician-Jobs",
         is_distinct: true,
-        user_ids: [userIds],
+        user_ids: userIds,
         is_public: false,
-        operator_ids: ["NotificationSender"]
+        operator_ids: ["Admin"]
     };
 
-
-
     try {
+        
         const response = await axios.post(url, params, { headers });
         console.log('Channel created on sendbird successfully');
+        const channelUrl = response.data.channel.channel_url;
+        return channelUrl;
     } catch (err) {
         console.error('Failed to create channel on sendbird', err);
         console.error('Error Response:', err.response.data);
     }
 }
 
-export async function getChannels() {
+export async function getChannels(technicianId) {
     const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels'
+
 
 
     const headers = {
@@ -70,33 +97,11 @@ export async function getChannels() {
     try {
         const response = await axios.get(url, { headers });
         console.log("Success", response);
+        
     } catch (err) {
         console.error('Failed to load channels', err);
         console.error('Error Response:', err.response.data);
     }
-}
-export async function userJoinChannel(channelUrl, userIds) {
-
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels/${channelUrl}/join`
-
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
-    };
-    const params = {
-        channel_url: channelUrl,
-        user_id: userIds,
-
-    };
-    try {
-        const response = await axios.put(url, params, { headers });
-        console.log("Successfully added user to channel", response);
-    } catch (err) {
-        console.error('Failed to join channel');
-        console.error('Error Response:', err.response.data);
-    }
-
 }
 
 export async function deleteChannel(channelUrl) {
@@ -113,35 +118,6 @@ export async function deleteChannel(channelUrl) {
         console.log('Channel Deleted Successfuly');
     } catch (err) {
         console.error('Failed to delete channel on sendbird', err);
-        console.error('Error Response:', err.response.data);
-    }
-}
-
-export async function sendMessageToTechnician() {
-
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels/Job-Notifications/messages`
-
-
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
-    };
-    const params = {
-
-        message_type: "MESG",
-        user_id: "NotificationSender",
-        message: "You have been assigned a job",
-        mentioned_user_ids: ["Test"],
-        mention_type: "users"
-
-    };
-
-    try {
-        const response = await axios.post(url, params, { headers });
-        console.log('Message sent successfully');
-    } catch (err) {
-        console.error('Failed to send message', err);
         console.error('Error Response:', err.response.data);
     }
 }
@@ -173,12 +149,10 @@ export async function botJoinChannel(channelUrls) {
     }
 }
 
-export async function botMessage(channelUrl, message, technicianId, technicianName) {
+export async function botMessage(channelUrl, technicianId, technicianName, message) {
 
     const botUserId = 'Notification-Bot'
     const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`
-
-
 
     const headers = {
         'Content-Type': 'application/json',
@@ -201,4 +175,3 @@ export async function botMessage(channelUrl, message, technicianId, technicianNa
 }
 
 
-//ADD ONE ON ONE CHANNEL CREATION WITH TECHNICIANS AND NOTIFICATIONSENDER FOR EACH.

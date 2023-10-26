@@ -16,7 +16,7 @@ const ChannelForm = () => {
         //sendMessageToTechnician();
         //sendNotification();
         //botJoinChannel()
-        botMessage()
+        //botMessage()
 
 
 
