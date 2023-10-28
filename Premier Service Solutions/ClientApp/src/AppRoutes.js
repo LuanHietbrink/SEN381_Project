@@ -1,6 +1,6 @@
 import { ClientDashboard } from "./components/Client/ClientDashboard";
 import { EmployeeDashboard } from "./components/Employee/EmployeeDashboard";
-import { CallCenterDept } from "./components/Departments/CallCenterDept";
+import { CallCenterDept } from "./components/CallCenter/CallCenterDept";
 import { ClientMaintenanceDept } from "./components/Departments/ClientMaintenanceDept";
 import { ContractMaintenanceDept } from "./components/Departments/ContractMaintenanceDept";
 import { ServiceDept } from "./components/Departments/ServiceDept";
@@ -36,8 +36,8 @@ const AppRoutes = [
     element: <ServiceDept />
   },
   {
-    path: '/call-center',
-    element: <CallCenterDept />
+      path: '/call-center',
+      element: <CallCenterDept />
   },
   {
     path: '/contract-maintenance',
