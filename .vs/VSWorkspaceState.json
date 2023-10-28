@@ -1,7 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Premier Service Solutions",
+    "\\Premier Service Solutions\\ClientApp",
+    "\\Premier Service Solutions\\ClientApp\\src",
+    "\\Premier Service Solutions\\ClientApp\\src\\components",
+    "\\Premier Service Solutions\\ClientApp\\src\\components\\Client",
+    "\\Premier Service Solutions\\ClientApp\\src\\components\\Departments",
+    "\\Premier Service Solutions\\ClientApp\\src\\components\\Departments\\Dept Navs"
   ],
-  "SelectedNode": "\\Premier Service Solutions.sln",
   "PreviewInSolutionExplorer": false
 }
