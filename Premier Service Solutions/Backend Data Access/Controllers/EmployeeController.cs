@@ -56,11 +56,10 @@ namespace PremierSolutions.Controllers
             return employee;
         }
 
-        // PUT: api/employees/5
+        // PUT: api/employees/email
         [HttpPut("edit-employee/{email}")]
         public async Task<IActionResult> PutEmployee(string email, [FromBody] Employee employee)
         {
-            // var existingEmployee = await _context.Employees.FindAsync(email);
             var existingEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
 
             if (existingEmployee == null)

@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from '../DataContext';
 
 export function EmployeeAccSetup() {
+    // Use the useNavigate hook to handle navigation
     const navigate = useNavigate();
     const { privateData, setPrivateData } = useData();
     const empData = privateData.data;
 
+    // State variables to manage employee information
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -18,6 +20,7 @@ export function EmployeeAccSetup() {
         isDashboardVisible: false,
     });
 
+    // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
         try {
             if (empData) {
@@ -28,8 +31,10 @@ export function EmployeeAccSetup() {
         }
     }, [empData]);
 
+    // Initialize an object to store employee data retrieved from local storage
     let storedEmployeeData = {};
 
+    // Try to retrieve employee data from local storage
     try {
         const storedData = localStorage.getItem('empData');
         if (storedData) {
@@ -39,26 +44,27 @@ export function EmployeeAccSetup() {
         console.error('Error retrieving employeeData from local storage:', error);
     }
 
-    console.log(storedEmployeeData.email);
-
-    useEffect(() => {
-        checkInfoCompleteness();
-    }, [state.firstName, state.lastName, state.password, state.contactNumber, state.emgContact, state.skills]);
-
+    // Function to handle input changes
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     };
 
+    // Function to check if employee information is complete
     const checkInfoCompleteness = () => {
         const { firstName, lastName, password, contactNumber, emgContact, skills } = state;
         const isInfoComplete = firstName && lastName && password && contactNumber && emgContact && skills;
         setState({ ...state, isInfoComplete });
     };
 
+    // Use useEffect to check if employee information is complete
+    useEffect(() => {
+        checkInfoCompleteness();
+    }, [state.firstName, state.lastName, state.password, state.contactNumber, state.emgContact, state.skills]);
+
+    // Function to show the employee dashboard
     const handleShowEmployeeDashboard = () => {
         const { firstName, lastName, password, contactNumber, emgContact, skills } = state;
 
-        // Update privateData with the new information
         setPrivateData({
             ...privateData,
             newEmployeeData: {
@@ -99,7 +105,8 @@ export function EmployeeAccSetup() {
                 console.error('Network error:', error);
             });
     };
-
+    
+    // Destructure state variables
     const { isInfoComplete, isDashboardVisible } = state;
 
     return (

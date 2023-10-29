@@ -57,24 +57,56 @@ namespace PremierSolutions.Controllers
             return client;
         }
 
-        // PUT: api/clients/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(int id, Client client)
+        // PUT: api/clients/edit-client/{email}
+        [HttpPut("edit-client/{email}")]
+        public async Task<IActionResult> PutClient(string email, Client client)
         {
-            if (id != client.ClientId)
+            var existingClient = await _context.Clients.FirstOrDefaultAsync(e => e.Email == email);
+
+            if (existingClient == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+            if (!string.IsNullOrEmpty(client.ClientName))
+            { existingClient.ClientName = client.ClientName; }
+
+            if (!string.IsNullOrEmpty(client.Email))
+            { existingClient.Email = client.Email; }
+
+            if (!string.IsNullOrEmpty(client.Password))
+            {
+                int iterations = 4;
+                int memorySize = 65536;
+                int parallelism = 4;
+
+                using var hasher = new Argon2id(Encoding.UTF8.GetBytes(client.Password));
+                hasher.Salt = Encoding.UTF8.GetBytes("YourSaltHere");
+                hasher.DegreeOfParallelism = parallelism;
+                hasher.MemorySize = memorySize;
+                hasher.Iterations = iterations;
+
+                byte[] hash = hasher.GetBytes(32);
+                existingClient.Password = Convert.ToBase64String(hash);
+            }
+
+            if (!string.IsNullOrEmpty(client.ContactNumber))
+            { existingClient.ContactNumber = client.ContactNumber; }
+
+            if (!string.IsNullOrEmpty(client.Address))
+            { existingClient.Address = client.Address; }
+
+            if (!string.IsNullOrEmpty(client.ContactNumber))
+            { existingClient.ContactNumber = client.ContactNumber; }
 
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok("Changes has been saved.");
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClientExists(id))
+                if (!ClientExists(email))
                 {
                     return NotFound();
                 }
@@ -83,8 +115,6 @@ namespace PremierSolutions.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/clients
@@ -148,9 +178,29 @@ namespace PremierSolutions.Controllers
         [HttpGet("client-details/{clientEmail}")]
         public async Task<IEnumerable<GetClientDetails>> GetClientDetails(string clientEmail)
         {
-            return await _contextProcedures.SpGetClientDetails
-                .FromSqlRaw("call spGetClientDetails({0})", clientEmail)
-                .ToListAsync();
+            var clientDetails = await _contextProcedures.SpGetClientDetails
+                                .FromSqlRaw("call spGetClientDetails({0})", clientEmail)
+                                .ToListAsync();
+
+            var result = clientDetails.Select(details => new GetClientDetails
+            {
+                ClientId = details.ClientId,
+                ClientName = details.ClientName,
+                Email = details.Email,
+                ContactNumber = details.ContactNumber,
+
+                StartDate = details.StartDate,
+                EndDate = details.EndDate,
+                ContractType = details.ContractType,
+                ServiceLevel = details.ServiceLevel,
+
+                RequestId = details.RequestId ,
+                RequestDate = details.RequestDate,
+                RequestDetails = details.RequestDetails,
+                Status = details.Status
+            }).ToList();
+
+            return result;
         }
 
         [HttpGet("client-info/{clientEmail}")]
@@ -221,9 +271,9 @@ namespace PremierSolutions.Controllers
             return diff == 0;
         }
 
-        private bool ClientExists(int id)
+        private bool ClientExists(string email)
         {
-            return (_context.Clients?.Any(e => e.ClientId == id)).GetValueOrDefault();
+            return (_context.Clients?.Any(e => e.Email == email)).GetValueOrDefault();
         }
     }
 }

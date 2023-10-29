@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useData } from './DataContext';
 import { useNavigate } from 'react-router-dom';
 import './Login-Signup.css'
 
-//Sendbird related:
-import { createTechnicianUser } from './SendBird';
-
-
-
 export function LoginSignup() {
     const navigate = useNavigate();
+
+    // Initialize the component's state using the useState hook
     const [state, setState] = useState({
         email: '',
         password: '',
         clientName: '',
         address: '',
         contactNumber: '',
-        userType: 'login',
+        userType: 'login', // User type (login or signup)
         error: null,
         clientData: null,
         employeeData: null,
     });
 
+    // Event handler for input changes
     const handleInputChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     }
 
+    // Event handler for switching between login and signup modes
     const handleModeChange = () => {
         setState({
             userType: state.userType === 'login' ? 'signup' : 'login',
@@ -38,19 +37,22 @@ export function LoginSignup() {
         });
     }
 
+    // Event handler for user login or signup
     const handleLogin = async () => {
         try {
             if (state.userType === 'login') {
                 const { email, password } = state;
 
+                // Attempt to fetch employee data by email
                 const employeeResponse = await fetch(`api/employees/employee-info/${email}`);
                 const employeeData = await employeeResponse.json();
 
+                // Attempt to fetch client data by email
                 const clientResponse = await fetch(`api/clients/client-info/${email}`);
                 const clientData = await clientResponse.json();
 
                 if (employeeData.length === 1) {
-
+                    // Handle employee login
                     if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (!password))) {
                         setState({ ...state, error: 'Password is required.' });
                         return;
@@ -75,14 +77,13 @@ export function LoginSignup() {
 
                         if (response.status === 200) {
                             setState({ userType: 'employee', employeeData: employeeData[0], error: null });
-                            
                         }
                     }
-
                 } else if (!email || !password) {
                     setState({ ...state, error: 'Email and password are required.' });
                     return;
                 } else if (clientData.length === 1) {
+                    // Handle client login
                     const response = await fetch(`api/clients/client-login/${email}/${password}`, {
                         method: 'POST',
                         headers: {
@@ -92,13 +93,11 @@ export function LoginSignup() {
 
                     if (response.status === 200) {
                         setState({ userType: 'client', clientData: clientData[0], error: null });
-                        await createTechnicianUser(clientData[0].email, clientData[0].name)
                     }
                 } else {
                     setState({ ...state, error: 'No matching user found.' });
                 }
-            }
-            else if (state.userType === 'signup') {
+            } else if (state.userType === 'signup') {
                 const { email, password, clientName, address, contactNumber } = state;
 
                 if (!email || !password || !clientName || !address || !contactNumber) {
@@ -134,15 +133,17 @@ export function LoginSignup() {
         }
     }
 
+    // Destructure the state variables and data management functions
     const { userType, error, clientData, employeeData } = state;
     const { setPrivateData } = useData();
 
     if (userType === 'client' && clientData) {
-
-        setPrivateData({ type: 'client', data: clientData })
+        // Handle client login success
+        setPrivateData({ type: 'client', data: clientData });
         navigate("/client-dashboard", { replace: true });
         window.location.reload();
     } else if (userType === 'employee' && employeeData) {
+        // Handle employee login success
         if (((employeeData.email !== null) || (employeeData.email !== "")) && (employeeData.password !== null)) {
             const { firstName, lastName } = employeeData;
             const employeePrivateData = { firstName, lastName };

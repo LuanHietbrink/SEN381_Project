@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "./Service.css";
+import "./Dept Styles/Service.css";
 
 export class ServiceDept extends Component {
     static displayName = ServiceDept.name;

@@ -1,0 +1,53 @@
+.settings-wrapper {
+    font-family: 'Montserrat', 'Sans Serif';
+    padding: 1.5em;
+    margin-top: 70px;
+}
+
+.main-heading {
+    text-align: center;
+    margin-bottom: 2.5em;
+}
+
+.main-heading h2 {
+    font-weight: bold;
+}
+
+.section-div {
+    padding-left: 6em;
+    margin-bottom: 1.6em;
+}
+
+.btn-save {
+    background-color: #2d2c54;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #39359d;
+    color: white;
+}
+
+.service-div {
+    margin-top: 3em;
+}
+
+.service-details {
+    display: flex;
+    flex-direction: column;
+    padding: 1em 2em 2em 2em;
+}
+
+.service-info {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.no-service-details {
+    text-align: center;
+    margin-top: 2em;
+}
+
+.account-renewal {
+    margin-top: 2em;
+}

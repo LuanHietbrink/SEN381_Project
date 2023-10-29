@@ -1,4 +1,3 @@
--- Active: 1696838194376@@127.0.0.1@3306@premier_service_solutions
 USE `Premier_Service_Solutions`;
 
 -- Create tables
@@ -45,9 +44,9 @@ CREATE TABLE ServiceRequest (
     RequestID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT,
     EmpID INT,
-    RequestDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    RequestDate DATETIME DEFAULT CURRENT_TIMESTAMP(),
     RequestDetails VARCHAR(100) NOT NULL,
-    Status VARCHAR(50) NOT NULL DEFAULT 'In Progress',
+    Status VARCHAR(50) DEFAULT 'In Progress',
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID),
     FOREIGN KEY (EmpID) REFERENCES Employee(empID)    
 );
@@ -68,8 +67,10 @@ BEGIN
         C.ClientName,
         C.Email,
         C.ContactNumber,
+        SC.StartDate,
+        SC.EndDate,
         SC.ContractType,
-        SC.EndDate
+        SC.ServiceLevel
     FROM
         Client C
     INNER JOIN

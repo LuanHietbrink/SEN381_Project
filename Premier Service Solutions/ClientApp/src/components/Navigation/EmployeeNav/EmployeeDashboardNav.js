@@ -10,6 +10,7 @@ export default function EmployeeDashboardNav() {
     const menuRef = useRef(null);
     const navigate = useNavigate();
 
+    // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
         try {
             if (employeeData) {
@@ -20,8 +21,10 @@ export default function EmployeeDashboardNav() {
         }
     }, [employeeData]);
 
+    // Initialize an object to store employee data retrieved from local storage
     let storedEmployeeData = {};
 
+    // Try to retrieve employee data from local storage
     try {
         const storedData = localStorage.getItem('employeeData');
         if (storedData) {
@@ -31,16 +34,19 @@ export default function EmployeeDashboardNav() {
         console.error('Error retrieving employeeData from local storage:', error);
     }
 
+    // Function to toggle the menu visibility
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
+    // Function to handle clicks outside the menu to close it
     const handleDocumentClick = (e) => {
         if (menuRef.current && !menuRef.current.contains(e.target)) {
             setIsOpen(false);
         }
     };
 
+    // Use useEffect to add and remove event listeners for handling document clicks
     useEffect(() => {
         document.addEventListener('click', handleDocumentClick);
 
@@ -49,6 +55,7 @@ export default function EmployeeDashboardNav() {
         };
     }, []);
 
+    // Function to handle user logout
     const handleLogout = () => {
         navigate('/', { replace: true });
         window.location.reload();
@@ -82,7 +89,8 @@ export default function EmployeeDashboardNav() {
                             <li><a href="/call-center">Call Center Dept.</a></li>
                             <li><a href="/contract-maintenance">Contract Maintenance Dept.</a></li>
                             <li><a href="/client-maintenance">Client Maintenance Dept.</a></li>
-                            <li><a href="/" onClick={handleLogout}>Logout</a></li>
+                            <li className='emp-account-settings'><a href="/emp-account-settings"><i class="fa fa-gears"></i>  Account Settings</a></li>
+                            <li className='emp-logout-link'><a href="/" onClick={handleLogout}><i class="fa fa-sign-out"></i>  Logout</a></li>
                         </ul>
                     </div>
                 </div>

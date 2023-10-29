@@ -83,8 +83,8 @@ namespace PremierSolutions.Controllers
             return NoContent();
         }
 
-        // POST: api/service-contracts
-        [HttpPost]
+        // POST: api/service-contracts/contract-application
+        [HttpPost("contract-application")]
         public async Task<ActionResult<Servicecontract>> PostServicecontract(Servicecontract servicecontract)
         {
           if (_context.Servicecontracts == null)

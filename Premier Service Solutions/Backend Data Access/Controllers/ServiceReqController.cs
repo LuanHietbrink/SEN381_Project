@@ -83,8 +83,8 @@ namespace PremierSolutions.Controllers
             return NoContent();
         }
 
-        // POST: api/service-requests
-        [HttpPost]
+        // POST: api/service-requests/log-request
+        [HttpPost("log-request")]
         public async Task<ActionResult<Servicerequest>> PostServicerequest(Servicerequest servicerequest)
         {
           if (_context.Servicerequests == null)

@@ -4,13 +4,16 @@ import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav
 import { useData } from '../DataContext';
 
 export function EmployeeDashboard() {
+    // Access privateData and navigate functions from the DataContext
     const { privateData } = useData();
     const employeeData = privateData.data;
     const navigate = useNavigate();
 
+    // State variables for email and modal visibility
     const [email, setEmail] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
         try {
             if (employeeData) {
@@ -21,8 +24,10 @@ export function EmployeeDashboard() {
         }
     }, [employeeData]);
 
+    // Initialize an object to store employee data retrieved from local storage
     let storedEmployeeData = {};
 
+    // Try to retrieve employee data from local storage
     try {
         const storedData = localStorage.getItem('employeeData');
         if (storedData) {
@@ -32,10 +37,12 @@ export function EmployeeDashboard() {
         console.error('Error retrieving employeeData from local storage:', error);
     }
 
+    // Function to handle email input changes
     const handleInputChange = (e) => {
         setEmail(e.target.value);
     };
 
+    // Function to add an employee
     const addEmployee = async () => {
         try {
             const response = await fetch('/api/employees/employee-signup', {
