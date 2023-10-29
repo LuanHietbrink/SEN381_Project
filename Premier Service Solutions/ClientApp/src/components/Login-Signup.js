@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useData } from './DataContext';
 import { useNavigate } from 'react-router-dom';
 import './Login-Signup.css'
 
+//Sendbird related:
+import { createTechnicianUser } from './SendBird';
+
+
+
 export function LoginSignup() {
     const navigate = useNavigate();
-
     const [state, setState] = useState({
         email: '',
         password: '',
@@ -46,6 +50,7 @@ export function LoginSignup() {
                 const clientData = await clientResponse.json();
 
                 if (employeeData.length === 1) {
+
                     if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (!password))) {
                         setState({ ...state, error: 'Password is required.' });
                         return;
@@ -70,6 +75,7 @@ export function LoginSignup() {
 
                         if (response.status === 200) {
                             setState({ userType: 'employee', employeeData: employeeData[0], error: null });
+                            
                         }
                     }
 
@@ -86,6 +92,7 @@ export function LoginSignup() {
 
                     if (response.status === 200) {
                         setState({ userType: 'client', clientData: clientData[0], error: null });
+                        await createTechnicianUser(clientData[0].email, clientData[0].name)
                     }
                 } else {
                     setState({ ...state, error: 'No matching user found.' });
@@ -131,7 +138,8 @@ export function LoginSignup() {
     const { setPrivateData } = useData();
 
     if (userType === 'client' && clientData) {
-        setPrivateData({ type: 'client', data: clientData });
+
+        setPrivateData({ type: 'client', data: clientData })
         navigate("/client-dashboard", { replace: true });
         window.location.reload();
     } else if (userType === 'employee' && employeeData) {

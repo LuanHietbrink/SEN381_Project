@@ -10,6 +10,11 @@ import { LoginSignup } from "./components/Login-Signup";
 import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
 import { FetchData } from "./components/FetchData";
 
+//Messaging
+import Messaging from "./components/Messaging";
+import JobForm from "./components/JobForm";
+import ChannelForm from "./components/ChannelForm";
+import { SendEmail } from "./components/SendEmail";
 
 const AppRoutes = [
   {
@@ -55,6 +60,22 @@ const AppRoutes = [
   {
     path: '/account-setup',
     element: <EmployeeAccSetup />
+  },
+  {
+    path: '/message',
+    element: <Messaging />
+  },
+  {
+    path: '/job',
+    element: <JobForm />
+  },
+  {
+    path: '/channel',
+    element: <ChannelForm />
+  },
+  {
+    path: '/send-email',
+    element: <SendEmail />
   }
 ];
 
