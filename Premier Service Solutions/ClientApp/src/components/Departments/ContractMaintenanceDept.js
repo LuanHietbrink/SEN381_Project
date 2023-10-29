@@ -108,9 +108,11 @@ export function ContractMaintenanceDept() {
                 }
             } else {
                 console.error('Failed to fetch client details:', clientResponse.status);
+                window.alert('Failed to fetch client details');
             }
         } catch (error) {
             console.error('An error occurred while fetching client details:', error);
+            window.alert('An error occurred while fetching client details');
         }
     };
 
