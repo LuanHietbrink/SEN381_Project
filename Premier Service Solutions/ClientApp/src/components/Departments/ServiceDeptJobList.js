@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./Service.css";
+import "./Dept Styles/Service.css";
 
 export class ServiceDeptJobList extends Component {
     static displayName = ServiceDeptJobList.name;
