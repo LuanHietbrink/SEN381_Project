@@ -201,3 +201,7 @@ select {
     background-color: #2D2C54;
     color: white;
 }
+
+.filter-container{
+    text-align: center;
+}
