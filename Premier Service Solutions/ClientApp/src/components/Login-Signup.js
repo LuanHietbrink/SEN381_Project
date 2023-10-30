@@ -145,10 +145,7 @@ export function LoginSignup() {
     } else if (userType === 'employee' && employeeData) {
         // Handle employee login success
         if (((employeeData.email !== null) || (employeeData.email !== "")) && (employeeData.password !== null)) {
-            const { firstName, lastName } = employeeData;
-            const employeePrivateData = { firstName, lastName };
-
-            setPrivateData({ type: 'employee', data: employeePrivateData });
+            setPrivateData({ type: 'employee', data: employeeData });
             navigate("/employee-dashboard", { replace: true });
             window.location.reload();
         } else {

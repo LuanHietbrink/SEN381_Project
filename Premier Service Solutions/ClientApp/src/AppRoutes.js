@@ -9,12 +9,15 @@ import { ServiceDeptJobList } from "./components/Departments/ServiceDeptJobList"
 import { LoginSignup } from "./components/Login-Signup";
 import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
 import { FetchData } from "./components/FetchData";
+import { ServicesOffered } from "./components/Client/ServicesOffered"
 
 //Messaging
 import Messaging from "./components/Messaging";
 import JobForm from "./components/JobForm";
 import ChannelForm from "./components/ChannelForm";
 import { SendEmail } from "./components/SendEmail";
+import { MaintenanceTab } from "./components/Client/MaintenanceTab";
+import { ClientSettings } from "./components/Client/ClientSettings";
 
 const AppRoutes = [
   {
@@ -36,26 +39,38 @@ const AppRoutes = [
   {
     path: '/service-department',
     element: <ServiceDept />
-    },
-    {
-        path: '/jobs-list',
-        element: <ServiceDeptJobList />
-    },
-    {
-        path: '/technician-dashboard',
-        element: <TechDashboard />
-    },
+  },
+  {
+    path: '/jobs-list',
+    element: <ServiceDeptJobList />
+  },
+  {
+    path: '/technician-dashboard',
+    element: <TechDashboard />
+  },
   {
     path: '/call-center',
     element: <CallCenterDept />
+  },
+  {
+    path: '/services-offered',
+    element: <ServicesOffered />
+  },
+  {
+    path: '/client-maintenance',
+    element: <ClientMaintenanceDept />
   },
   {
     path: '/contract-maintenance',
     element: <ContractMaintenanceDept />
   },
   {
-    path: '/client-maintenance',
-    element: <ClientMaintenanceDept />
+    path: '/maintenance-tab',
+    element: <MaintenanceTab />
+  },
+  {
+    path: '/client-account-settings',
+    element: <ClientSettings />
   },
   {
     path: '/account-setup',

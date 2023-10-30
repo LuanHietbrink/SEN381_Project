@@ -134,3 +134,8 @@ position: absolute;
 bottom: 0;
 padding-bottom: 4.8em;
 }
+
+.heading a, .header-right p a {
+text-decoration: none;
+color: white;
+}

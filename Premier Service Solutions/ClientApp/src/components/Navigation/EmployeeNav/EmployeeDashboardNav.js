@@ -3,9 +3,11 @@ import './EmployeeDashboardNav.css';
 import { useData } from '../../DataContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function EmployeeDashboardNav() {
+export default function EmployeeDashboardNav(props) {
     const { privateData } = useData();
     const employeeData = privateData.data;
+    const theFirstName = props.theFirstName;
+    const theLastName = props.theLastName;
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
@@ -96,10 +98,10 @@ export default function EmployeeDashboardNav() {
                 </div>
             </div>
             <div className="header-center">
-                <h1>Premier Service Solutions</h1>
+                <h1 className="heading"><a href="/employee-dashboard">Premier Service Solutions</a></h1>
             </div>
             <div className="header-right">
-                <p>{storedEmployeeData.firstName} {storedEmployeeData.lastName}</p>
+                <p><a href="/emp-account-settings">{theFirstName || storedEmployeeData.firstName} {theLastName || storedEmployeeData.lastName}</a></p>
             </div>
         </header>
     );
