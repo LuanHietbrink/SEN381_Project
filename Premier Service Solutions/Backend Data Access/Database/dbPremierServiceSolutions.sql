@@ -1,8 +1,10 @@
+-- Active: 1696838194376@@127.0.0.1@3306@premier_service_solutions
 USE `Premier_Service_Solutions`;
 
 -- Create tables
 CREATE TABLE Client (
     ClientID INT AUTO_INCREMENT PRIMARY KEY,
+    ClientType VARCHAR(10),
     ClientName VARCHAR(100),
     Email VARCHAR(50),
     Password VARCHAR(50),
