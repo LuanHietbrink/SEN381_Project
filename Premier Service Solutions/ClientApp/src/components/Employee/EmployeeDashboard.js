@@ -50,10 +50,8 @@ export function EmployeeDashboard() {
             if (empInfoResponse.ok) {
                 const empInfoData = await empInfoResponse.json();
                 const empId = empInfoData[0].empId;
-                console.log(empId);
 
                 const serviceRequestsResponse = await fetch('/api/service-requests');
-                console.log(serviceRequestsResponse);
 
                 if (serviceRequestsResponse.ok) {
                     const serviceRequestsData = await serviceRequestsResponse.json();
@@ -136,7 +134,8 @@ export function EmployeeDashboard() {
                                 </h2>
                             </div>
                             <div className="assigned-job-list">
-                                {filteredServiceRequests.map((request) => (
+                            {filteredServiceRequests.length > 0 ? (
+                                filteredServiceRequests.map((request) => (
                                     <div key={request.requestId} className="assigned-job" onClick={() => setIsIssueModalOpen(true)}>
                                         <h5>
                                             #{request.requestId} | {request.requestDetails}
@@ -147,7 +146,11 @@ export function EmployeeDashboard() {
                                             </p>
                                         </div>
                                     </div>
-                                ))}
+                                ))
+                            ) : (
+                                    <p><em>You have no assigned jobs.</em></p>
+                                )
+                            }
                             </div>   
                         </div>   
 

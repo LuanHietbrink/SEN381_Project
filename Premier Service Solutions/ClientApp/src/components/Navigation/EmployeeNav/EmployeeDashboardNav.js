@@ -70,8 +70,8 @@ export default function EmployeeDashboardNav(props) {
             const employeeResponse = await fetch(`api/employees/employee-info/${storedEmployeeData.email}`);
             if (employeeResponse.ok) {
                 const fetchedData = await employeeResponse.json();
-                if (Array.isArray(fetchedData) && fetchedData.length === 0) {
-                    setEmployeeType(fetchedData[0].employeeType)
+                if (Array.isArray(fetchedData) && fetchedData.length !== 0) {
+                    setEmployeeType(fetchedData[0].employeeType);
                 }
             } else {
                 console.error('Failed to fetch employee details:', employeeResponse.status);

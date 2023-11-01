@@ -47,7 +47,7 @@
     align-items: center;
     padding: 10px;
     max-height: 480px;
-    overflow-y: scroll;
+    overflow-y: auto;
     width: 897px;
 }
 

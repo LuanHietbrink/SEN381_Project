@@ -72,6 +72,10 @@ public partial class PremierSolutionsContext : DbContext
             entity.HasIndex(e => e.EmpId, "idxTechnician_EmpID");
 
             entity.Property(e => e.EmpId).HasColumnName("EmpID");
+            entity.Property(e => e.EmployeeType)
+                .HasMaxLength(10)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
             entity.Property(e => e.ContactNumber)
                 .HasMaxLength(15)
                 .UseCollation("utf8mb3_general_ci")
