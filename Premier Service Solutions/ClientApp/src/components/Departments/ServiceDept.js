@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import "./Dept Styles/Service.css";
+import ServiceDeptNav from './Dept Navs/ServiceDeptNav';
 
 export class ServiceDept extends Component {
     static displayName = ServiceDept.name;
@@ -39,18 +40,11 @@ export class ServiceDept extends Component {
     render() {
         return (
             <div>
-                <h1 className="center">Premier Service Solutions</h1>
-                <div className="user-info">
-                    <span>Hello, {this.state.user.username}</span>
-                    <img
-                        src={this.state.user.profilePicture}
-                        alt="Profile"
-                        className="profile-picture"
-                    />
-                </div>
-                <div className="left-align">
-                    <h2>Service Dashboard</h2>
+                <ServiceDeptNav></ServiceDeptNav>
+                <div className="center-head">
+                    
                     <div className="line"></div>
+                    <h2>Service Dashboard</h2>
                 </div>
                 <div className="button-container">
                     <Link to="/jobs-list">
