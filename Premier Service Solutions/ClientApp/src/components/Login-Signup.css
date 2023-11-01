@@ -77,6 +77,12 @@
     font-size: large;
 }
 
+.login-error-div {
+    height: 10px;
+    position: relative;
+    bottom: 1.7em;
+}
+
 .error-div {
     height: 10px;
     position: relative;

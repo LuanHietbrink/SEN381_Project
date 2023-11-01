@@ -11,8 +11,8 @@ export function EmployeeDashboard() {
     const navigate = useNavigate();
 
     // State variables for email and modal visibility
-    const [email, setEmail] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
+    const [filteredServiceRequests, setFilteredServiceRequests] = useState([]);
 
     // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
@@ -38,62 +38,79 @@ export function EmployeeDashboard() {
         console.error('Error retrieving employeeData from local storage:', error);
     }
 
-    // Function to handle email input changes
-    const handleInputChange = (e) => {
-        setEmail(e.target.value);
+    // Function to report an issue
+    const reportIssue = async () => {
+        setIsIssueModalOpen(true);
     };
 
-    // Function to add an employee
-    const addEmployee = async () => {
+    // Function to fetch employee details and filter service requests
+    const fetchEmployeeDetails = async (email) => {
         try {
-            const response = await fetch('/api/employees/employee-signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
+            const empInfoResponse = await fetch(`/api/employees/employee-info/${email}`);
+            if (empInfoResponse.ok) {
+                const empInfoData = await empInfoResponse.json();
+                const empId = empInfoData[0].empId;
+                console.log(empId);
 
-            if (response.ok) {
-                setIsModalOpen(false);
-                window.alert('Employee added successfully');
-                setEmail('');
-            } else {
-                window.alert('Failed to add employee');
+                const serviceRequestsResponse = await fetch('/api/service-requests');
+                console.log(serviceRequestsResponse);
+
+                if (serviceRequestsResponse.ok) {
+                    const serviceRequestsData = await serviceRequestsResponse.json();
+                    const filteredRequests = serviceRequestsData.filter(
+                        (request) => request.empId === empId
+                    );
+
+                    setFilteredServiceRequests(filteredRequests);
+                }
             }
         } catch (error) {
-            console.error('Error adding employee:', error);
+            console.error('Error fetching employee details:', error);
         }
     };
 
-    const modalComponent = (
-        <div className={`modal ${isModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isModalOpen ? 'block' : 'none' }}>
+    useEffect(() => {
+        if (storedEmployeeData.email) {
+            fetchEmployeeDetails(storedEmployeeData.email);
+        }
+    }, [storedEmployeeData.email]);
+
+    const formatDate = (date) => {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = new Date(date).toLocaleDateString(undefined, options);
+        return formattedDate;
+    };
+
+    const reportIssueModal = (
+        <div className={`modal ${isIssueModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isIssueModalOpen ? 'block' : 'none' }}>
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
                         <div className='modal-heading'>
-                            <h5 className="modal-title">Add Employee</h5>
+                            <h5 className="modal-title">Report Issue</h5>
                         </div>
                         <div>
-                            <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsModalOpen(false)}></button>
+                            <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsIssueModalOpen(false)}></button>
                         </div>
                     </div>
-                    <div className="modal-body">
-                        <div className='input-group'>
-                            <div className='form-group'>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
+                        <div className="modal-form">                    
+                            <input
+                                type="text"
+                                name="issueTitle"
+                                // value={formData.name}
+                                readOnly
+                                placeholder="Issue Title"
+                            />
+
+                            <textarea
+                                name="issueDescription"
+                                // value={formData.description}
+                                readOnly
+                                placeholder="Issue Description"
+                            />
                         </div>
-                    </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-add" onClick={addEmployee}>Add Employee</button>
+                        <button type="button" className="btn btn-add" onClick={reportIssue}>Report</button>
                     </div>
                 </div>
             </div>
@@ -101,17 +118,45 @@ export function EmployeeDashboard() {
     );
 
     return (
-        <div>
+        <>
             <EmployeeDashboardNav />
-            {storedEmployeeData.firstName !== null ? (
-                <>
-                    <h2>Employee Dashboard</h2>
-                    <button onClick={() => setIsModalOpen(true)}>Add Employee</button>
-                    {modalComponent}
-                </>
-            ) : (
-                navigate('/account-setup', { replace: true })
-            )}
-        </div>
+            <div className='emp-dash-wrapper'>
+                {storedEmployeeData.firstName !== null ? (
+                    <>
+                        <div className='emp-dash-heading'>
+                            <h1>Employee Dashboard</h1>
+                        </div>
+
+                        <div style={{display: "flex", justifyContent: "center"}}><hr style={{width: "50%"}}></hr></div>
+
+                        <div className='assigned-job-wrapper'>
+                            <div>
+                                <h2>
+                                    Assigned Jobs
+                                </h2>
+                            </div>
+                            <div className="assigned-job-list">
+                                {filteredServiceRequests.map((request) => (
+                                    <div key={request.requestId} className="assigned-job" onClick={() => setIsIssueModalOpen(true)}>
+                                        <h5>
+                                            #{request.requestId} | {request.requestDetails}
+                                        </h5>
+                                        <div className="assigned-job-content" title='View Details'>
+                                            <p>
+                                                Request for client <b>#{request.clientId}</b> requested on <b>{formatDate(request.requestDate)}</b> is <b>{request.status}.</b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>   
+                        </div>   
+
+                        {reportIssueModal}
+                    </>
+                ) : (
+                    navigate('/account-setup', { replace: true })
+                )}
+            </div>
+        </>
     );
 }

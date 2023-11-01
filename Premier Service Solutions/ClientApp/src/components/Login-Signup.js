@@ -216,7 +216,7 @@ export function LoginSignup() {
                                 />
                             </div>
                         </div>
-                        <div className='error-div'>
+                        <div className='login-error-div'>
                             {error && <p style={{color: "red"}}>{error}</p>}
                         </div>
                     </>

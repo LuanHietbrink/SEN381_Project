@@ -8,25 +8,23 @@ import { ServiceDept } from "./components/Departments/ServiceDept";
 import { ServiceDeptJobList } from "./components/Departments/ServiceDeptJobList";
 import { LoginSignup } from "./components/Login-Signup";
 import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
-import { FetchData } from "./components/FetchData";
 import { ServicesOffered } from "./components/Client/ServicesOffered"
+import { EmployeeSettings } from "./components/Employee/EmployeeSettings"
+import { MaintenanceTab } from "./components/Client/MaintenanceTab";
+import { ClientSettings } from "./components/Client/ClientSettings";
+import { EmployeeManagement } from "./components/Employee/EmployeeManagement";
 
 //Messaging
 import Messaging from "./components/Messaging";
 import JobForm from "./components/JobForm";
 import ChannelForm from "./components/ChannelForm";
 import { SendEmail } from "./components/SendEmail";
-import { MaintenanceTab } from "./components/Client/MaintenanceTab";
-import { ClientSettings } from "./components/Client/ClientSettings";
+
 
 const AppRoutes = [
   {
     index: true,
     element: <LoginSignup />
-  },
-  {
-    path: '/fetch-data',
-    element: <FetchData />
   },
   {
     path: '/employee-dashboard',
@@ -73,8 +71,16 @@ const AppRoutes = [
     element: <ClientSettings />
   },
   {
+    path: '/employee-account-settings',
+    element: <EmployeeSettings />
+  },
+  {
     path: '/account-setup',
     element: <EmployeeAccSetup />
+  },
+  {
+    path: '/employee-management',
+    element: <EmployeeManagement />
   },
   {
     path: '/message',

@@ -10,7 +10,7 @@
 
 .contracts-table-wrapper {
     overflow: auto;
-    height: 400px;
+    height: 500px;
     width: 1000px;
 }
   
@@ -40,6 +40,7 @@
     margin-bottom: 2em;
     border-radius: 10px;
     height: 30px;
+    padding: 0 0.5em;
 }
 
 .contract-heading {

@@ -14,6 +14,7 @@ CREATE TABLE Client (
 
 CREATE TABLE Employee (
     EmpID INT AUTO_INCREMENT PRIMARY KEY,
+    EmployeeType VARCHAR(10),
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
     Email VARCHAR(50),
