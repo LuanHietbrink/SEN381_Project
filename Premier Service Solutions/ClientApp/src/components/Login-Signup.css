@@ -38,6 +38,24 @@
     border-radius: 4px;
 }
 
+.acc-type-select {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.acc-type-select select {
+    width: 370px;
+    border: none;
+    border-bottom: 2px solid #2d2c54;
+    border-radius: 4px;
+    color: black;
+}
+
+.acc-type-select select option[disabled]:first-child {
+    color: gray;
+}
+
 .email-input {
     display: flex;
     flex-direction: column;
@@ -57,4 +75,16 @@
     padding: 5px 15px 7px 15px;
     margin: 0 0 1.5em 0;
     font-size: large;
+}
+
+.error-div {
+    height: 10px;
+    position: relative;
+    bottom: 2.9em;
+}
+
+.signup-div {
+    position: relative;
+    bottom: 1.5em;
+    margin-top: 1em;
 }

@@ -69,7 +69,6 @@ export function EmployeeSettings() {
             const employeeResponse = await fetch(`api/employees/employee-info/${storedEmployeeData.email}`);
             if (employeeResponse.ok) {
                 const fetchedData = await employeeResponse.json();
-                console.log(storedEmployeeData.email);
                 setFetchedFirstName(fetchedData[0].firstName);
                 setFetchedLastName(fetchedData[0].lastName);
                 setFetchedEmail(fetchedData[0].email);

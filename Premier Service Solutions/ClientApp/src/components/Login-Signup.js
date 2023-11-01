@@ -5,12 +5,14 @@ import './Login-Signup.css'
 
 export function LoginSignup() {
     const navigate = useNavigate();
+    const [validPassword, setValidPassword] = useState(true);
 
     // Initialize the component's state using the useState hook
     const [state, setState] = useState({
         email: '',
         password: '',
         clientName: '',
+        clientType: '',
         address: '',
         contactNumber: '',
         userType: 'login', // User type (login or signup)
@@ -22,6 +24,11 @@ export function LoginSignup() {
     // Event handler for input changes
     const handleInputChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
+    }
+
+    // Event handler for selecting client type
+    const handleClientTypeChange = (e) => {
+        setState({ ...state, clientType: e.target.value });
     }
 
     // Event handler for switching between login and signup modes
@@ -77,6 +84,8 @@ export function LoginSignup() {
 
                         if (response.status === 200) {
                             setState({ userType: 'employee', employeeData: employeeData[0], error: null });
+                        } else if (response.status === 400) {
+                            setState({ ...state, error: 'Invalid details.' });
                         }
                     }
                 } else if (!email || !password) {
@@ -93,20 +102,39 @@ export function LoginSignup() {
 
                     if (response.status === 200) {
                         setState({ userType: 'client', clientData: clientData[0], error: null });
+                    } else if (response.status === 400) {
+                        setState({ ...state, error: 'Invalid details.' });
                     }
                 } else {
                     setState({ ...state, error: 'No matching user found.' });
                 }
             } else if (state.userType === 'signup') {
-                const { email, password, clientName, address, contactNumber } = state;
+                const { clientName, email, password, clientType, address, contactNumber } = state;
 
-                if (!email || !password || !clientName || !address || !contactNumber) {
+                if (!clientName || !email || !password || !clientType || !address || !contactNumber) {
                     setState({ ...state, error: 'All information is required.' });
+                    return;
+                }
+
+                // Password length validation (8 characters)
+                const isLengthValid = password.length >= 8;
+
+                // Password complexity validation (uppercase, lowercase, numbers, special characters)
+                const isComplexityValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(password);
+            
+                // Check for sequential or repeated characters
+                const hasSequentialOrRepeated = /(.)\1\1/.test(password);
+            
+                const isValid = isLengthValid && isComplexityValid && !hasSequentialOrRepeated;
+            
+                if (!isValid) {
+                    setValidPassword(false);
                     return;
                 }
 
                 const signUpData = {
                     clientName,
+                    clientType,
                     email,
                     password,
                     address,
@@ -164,83 +192,109 @@ export function LoginSignup() {
                 <h5><em>One call away from making your day</em></h5>
 
                 {state.userType === 'login' && (
-                    <div className='input-group'>
-                        <div className='form-group, email-input'>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                value={state.email}
-                                onChange={handleInputChange}
-                                required
-                            />
-                            <small id="emailHelp" class="form-text text-muted"><em>We'll never share your email with anyone else.</em></small>
+                    <>
+                        <div className='input-group'>
+                            <div className='form-group, email-input'>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    value={state.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <small id="emailHelp" class="form-text text-muted"><em>We'll never share your email with anyone else.</em></small>
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={state.password}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
                         </div>
-                        <div className='form-group'>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                value={state.password}
-                                onChange={handleInputChange}
-                                required
-                            />
+                        <div className='error-div'>
+                            {error && <p style={{color: "red"}}>{error}</p>}
                         </div>
-                    </div>
+                    </>
                 )}
                 {state.userType === 'signup' && (
-                    <div className='input-group'>
-                        <div className='form-group'>
-                            <input
-                                type="text"
-                                name="clientName"
-                                placeholder="Full Name"
-                                value={state.clientName}
-                                onChange={handleInputChange}
-                                required
-                            />
+                    <>
+                        <div className='input-group signup-div'>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="clientName"
+                                    placeholder="Full Name"
+                                    value={state.clientName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    value={state.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={state.password}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    placeholder="Address"
+                                    value={state.address}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="contactNumber"
+                                    placeholder="Contact Number"
+                                    value={state.contactNumber}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div> 
+                            <div className='form-group acc-type-select'>
+                                <select
+                                    name="clientType"
+                                    id="clientType"
+                                    value={state.clientType}
+                                    onChange={handleClientTypeChange}
+                                    required
+                                >
+                                    <option selected value="" disabled> Select Account Type</option>
+                                    <option value="Individual">Individual</option>
+                                    <option value="Business">Business</option>
+                                </select>
+                            </div>                    
                         </div>
-                        <div className='form-group'>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                                value={state.email}
-                                onChange={handleInputChange}
-                                required
-                            />
+                        <div className='error-div'>
+                            {error && <p style={{color: "red"}}>{error}</p>}
+                            {!validPassword && (
+                                <p style={{ color: "red" }}>Password must be at least 8 characters long, include uppercase and lowercase letters, <br></br>numbers, and special characters, and not contain repeated characters.</p>
+                            )}
                         </div>
-                        <div className='form-group'>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                value={state.password}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div className='form-group'>
-                            <input
-                                type="text"
-                                name="address"
-                                placeholder="Address"
-                                value={state.address}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-                        <div className='form-group'>
-                            <input
-                                type="text"
-                                name="contactNumber"
-                                placeholder="Contact Number"
-                                value={state.contactNumber}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>                     
-                    </div>
+                    </>
                 )}
 
                 <button onClick={handleLogin} className='btn-login-signup'>
@@ -252,7 +306,6 @@ export function LoginSignup() {
                         {state.userType === 'login' ? 'Sign up here' : 'Login here'}
                     </span>
                 </p>
-                {error && <p style={{color: "red"}}>{error}</p>}
             </div>
                 <div
                     style={{

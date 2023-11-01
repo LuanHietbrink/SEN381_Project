@@ -37,6 +37,10 @@ public partial class PremierSolutionsContext : DbContext
             entity.HasIndex(e => e.ClientId, "idxClient_ClientID");
 
             entity.Property(e => e.ClientId).HasColumnName("ClientID");
+            entity.Property(e => e.ClientType)
+                .HasMaxLength(10)
+                .UseCollation("utf8mb3_general_ci")
+                .HasCharSet("utf8mb3");
             entity.Property(e => e.Address)
                 .HasMaxLength(50)
                 .UseCollation("utf8mb3_general_ci")

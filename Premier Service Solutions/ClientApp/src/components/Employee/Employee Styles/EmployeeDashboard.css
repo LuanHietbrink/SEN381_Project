@@ -1,0 +1,20 @@
+.modal-header .modal-heading {
+    position: relative;
+    left: 25%;
+}
+
+.modal-header .modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add {
+    border: 3px outset #2d2c54;
+    background-color: white;
+    color: #2d2c54;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add:hover {
+    background-color: #f1f1f1;
+}

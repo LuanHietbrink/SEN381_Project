@@ -1,0 +1,202 @@
+.client-main-wrapper {
+    margin-top: 80px;
+    font-family: 'Montserrat', 'Sans Serif';
+}
+
+.client-main-wrapper .client-main-heading {
+    text-align: center;
+}
+
+.client-main-wrapper .client-main-heading h1 {
+    font-weight: bold;
+}
+
+.client-wrapper {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3em 0 3em 0;
+}
+
+.add-client, .delete-client, .edit-client {
+    border: 2px inset #2d2c54;
+    width: 136px;
+    padding: 14px;
+    border-radius: 4px;
+    margin: 0 1em;
+}
+
+.add-client .add-client-icon i, .delete-client .delete-client-icon i, .edit-client .edit-client-icon i {
+    font-size: 50px;
+    color: #2d2c54;
+}
+
+.add-client:hover, .delete-client:hover, .edit-client:hover {
+    cursor: pointer;
+    background-color: #f3f1f1;
+    transition: 0.5s
+}
+
+.add-client .add-client-text p, .delete-client .delete-client-text p, .edit-client .edit-client-text p {
+    color: gray;
+    margin: 0;
+    margin-top: 0.5em;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+}
+
+.select-client, .email-search {
+    width: 250px;
+    margin: 0.8em 0em 1.2em 0;
+    border-radius: 8px;
+    height: 30px;
+}
+
+.select-client {
+    margin-right: 5em;
+}
+
+.email-search {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 300px;
+}
+
+.search-icon {
+    padding: 0 5px;
+    padding-right: 8px;
+    margin-bottom: 5px;
+    height: 30px;
+    background-color: #2d2c54;
+    color: white;
+    font-size: 23px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.search-icon:hover {
+    cursor: pointer;
+}
+
+.table-inputs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    bottom: 1em;
+}
+
+.cm-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.clients-table-wrapper {
+    overflow: auto;
+    height: 355px;
+    width: 1200px;
+}
+  
+.clients-table {
+    width: 100%;
+    position: relative;
+    z-index: -1;
+}
+  
+.clients-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 0;
+}
+  
+.clients-table th, .clients-table td {
+    width: 105px;
+}
+
+.clients-table-wrapper th:nth-child(1),
+.clients-table-wrapper td:nth-child(1) {
+    width: 10px;
+}
+
+.clients-table-wrapper th:nth-child(2),
+.clients-table-wrapper td:nth-child(2) {
+    width: 180px;
+}
+
+.clients-table-wrapper th:nth-child(5),
+.clients-table-wrapper td:nth-child(5) {
+    width: 200px;
+}
+
+.modal-dialog {
+    position: relative;
+    top: 7em;
+}
+
+.modal-content {
+    border: 3px groove #2d2c54;
+}
+
+.modal-body {
+    padding: 1.7em 0 0 0;
+}
+
+.modal-header {
+    padding: 0.5em 1.5em;
+    background-color: #2d2c54;
+    color: white;
+}
+
+.close-modal-button {
+    background-color: inherit;
+    color: white;
+    font-size: 25px;
+    padding: 0%;
+    border: none;
+}
+
+.modal-header .add-modal-heading {
+    position: relative;
+    left: 31%;
+}
+
+.modal-header .add-modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-header .delete-modal-heading {
+    position: relative;
+    left: 26%;
+}
+
+.modal-header .delete-modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 0;
+    background-color: #2d2c54;
+}
+
+.modal-footer .btn-add, .modal-footer .btn-delete {
+    border: 3px outset #2d2c54;
+    background-color: white;
+    color: #2d2c54;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add:hover, .modal-footer .btn-delete:hover {
+    background-color: #f1f1f1;
+}

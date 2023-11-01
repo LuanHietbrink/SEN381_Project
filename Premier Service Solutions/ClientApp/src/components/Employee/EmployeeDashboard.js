@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav';
 import { useData } from '../DataContext';
+import "./Employee Styles/EmployeeDashboard.css"
 
 export function EmployeeDashboard() {
     // Access privateData and navigate functions from the DataContext
@@ -65,42 +66,48 @@ export function EmployeeDashboard() {
         }
     };
 
+    const modalComponent = (
+        <div className={`modal ${isModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isModalOpen ? 'block' : 'none' }}>
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <div className='modal-heading'>
+                            <h5 className="modal-title">Add Employee</h5>
+                        </div>
+                        <div>
+                            <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsModalOpen(false)}></button>
+                        </div>
+                    </div>
+                    <div className="modal-body">
+                        <div className='input-group'>
+                            <div className='form-group'>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-add" onClick={addEmployee}>Add Employee</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div>
             <EmployeeDashboardNav />
             {storedEmployeeData.firstName !== null ? (
                 <>
                     <h2>Employee Dashboard</h2>
-
                     <button onClick={() => setIsModalOpen(true)}>Add Employee</button>
-
-                    <div className={`modal ${isModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isModalOpen ? 'block' : 'none' }}>
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Add an Employee</h5>
-                                    <button type="button" className="close" data-dismiss="modal" onClick={() => setIsModalOpen(false)}>
-                                        <span>&times;</span>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder="Email"
-                                        value={email}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-primary" onClick={addEmployee}>
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {modalComponent}
                 </>
             ) : (
                 navigate('/account-setup', { replace: true })

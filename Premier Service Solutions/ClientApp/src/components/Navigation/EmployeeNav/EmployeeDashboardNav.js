@@ -81,11 +81,7 @@ export default function EmployeeDashboardNav(props) {
                         className={`burger-menu ${isOpen ? 'open' : ''}`}
                         onClick={toggleMenu}
                     >
-                        <div className="burger-icon">
-                            <div className="bar"></div>
-                            <div className="bar"></div>
-                            <div className="bar"></div>
-                        </div>
+                        <i class="fa-solid fa-arrow-left back-arrow" style={{fontSize: "30px"}}></i>
                         <ul className="menu">
                             <li><a href="/service-department">Service Dept.</a></li>
                             <li><a href="/call-center">Call Center Dept.</a></li>
