@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import "./Dept Styles/Service.css";
-import ServiceDeptNav from './Dept Navs/ServiceDeptNav';
+import ServiceDeptNav from '../Navigation/ServiceDept/ServiceDeptNav';
 
 export class ServiceDept extends Component {
     static displayName = ServiceDept.name;
@@ -40,7 +40,7 @@ export class ServiceDept extends Component {
     render() {
         return (
             <div>
-                <ServiceDeptNav></ServiceDeptNav>
+                <ServiceDeptNav />
                 <div className="center-head">
                     
                     <div className="line"></div>
@@ -92,14 +92,14 @@ export class ServiceDept extends Component {
                 {this.state.isEscalateJobsModalOpen && (
                     <div className="tj-modal">
                         <div className="tj-modal-content">
-                            <p className="assign-">Track Jobs</p>
+                            <p className="assign-">Escalate Jobs</p>
                             <button className="back-button-" onClick={this.closeEscalateJobsModal}>Close</button>
                             <div className="label-and-select">
-                                <label htmlFor="jobDropdown" style={{ fontSize: '25px', fontWeight: 'bold' }}>Jobs:</label>
+                                <label htmlFor="jobDropdown" style={{ fontSize: '25px', fontWeight: 'bold' }}>Priority:</label>
                                 <select className="jobDropdown" name="jobDropdown">
-                                    <option value="job1">Job 1</option>
-                                    <option value="job2">Job 2</option>
-                                    <option value="job3">Job 3</option>
+                                    <option value="job1">Low</option>
+                                    <option value="job2">Medium</option>
+                                    <option value="job3">High</option>
                                 </select>
                             </div>
                             <div className="buttons">

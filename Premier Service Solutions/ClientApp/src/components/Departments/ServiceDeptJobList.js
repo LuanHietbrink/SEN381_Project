@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import "./Dept Styles/Service.css";
 import DateFilter from "../DateFilter";
+import ServiceNav from "../Navigation/ServiceDept/ServiceDeptNav";
 
 export class ServiceDeptJobList extends Component {
   constructor(props) {
@@ -110,15 +112,15 @@ assignTechnician = () => {
   const { selectedJob, selectedTechnician } = this.state;
 
   axios.post('/api/assign-technician', {
-  //   requestId: selectedJob.requestId,
-  //   technicianId: selectedTechnician,
-  // })
-  // .then(() => {
-  //   this.closeModal();
-  // })
-  // .catch((error) => {
-  //   console.error('Error assigning technician:', error);
-  // });
+     requestId: selectedJob.requestId,
+     technicianId: selectedTechnician,
+   })
+   .then(() => {
+     this.closeModal();
+   })
+   .catch((error) => {
+     console.error('Error assigning technician:', error);
+   });
 
 };
 
@@ -133,7 +135,7 @@ assignTechnician = () => {
       selectedStartDate,
       selectedStatus,
       filterId,
-      selectedTechnician,
+      //selectedTechnician,
     } = this.state;
 
 
@@ -149,7 +151,7 @@ assignTechnician = () => {
 
     return (
       <div>
-        <h1 className="center-tech">Premier Service Solutions</h1>
+        <ServiceNav />
         <div className="user-info">
           <span>Hello, {this.state.user.username}</span>
           <img
@@ -232,3 +234,11 @@ class Modal extends Component {
     );
   }
 }
+
+Modal.propTypes = {
+  job: PropTypes.shape({
+    requestDetails: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
+};

@@ -16,13 +16,18 @@
     margin-left: 10px;
 }
 
-.left-align {
-    text-align: left;
+.-align {
+    margin-top: 30px;
+}
+
+.-heading {
+    text-align: center;
+    color: #2D2C54;
 }
 
 .-name {
     text-align: center;
-    font-size: 30px;
+    font-size: 25px;
     color: #2D2C54;
     font-weight:600;
 }

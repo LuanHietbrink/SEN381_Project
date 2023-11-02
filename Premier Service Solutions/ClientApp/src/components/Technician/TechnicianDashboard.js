@@ -51,7 +51,6 @@ export class TechDashboard extends Component {
         return (
             <div>
                 <TechnicianNav />
-                <h1 className="center">Premier Service Solutions</h1>
                 <div className="user-info">
                     <img
                         src={this.state.user.profilePicture}
@@ -60,14 +59,14 @@ export class TechDashboard extends Component {
                     />
                     <span>{this.state.user.username}</span>
                 </div>
-                <div className="left-align">
-                    <h2>Technician Dashboard</h2>
+                <div className="-align">
+                    <h2 className = "-heading">Technician Dashboard</h2>
                     <div className="line"></div>
                     <p className="-name">Assigned Jobs</p>
                 </div>
                 <div className="ticket-list">
-                    {this.state.jobs.map((job, index) => (
-                        <div key={index} className="ticket">
+                    {this.state.jobs.map((job) => (
+                        <div key={job.number} className="ticket">
                             <h3>{job.number} | {job.name}</h3>
                             <p></p>
                             <div className="discription-container">
