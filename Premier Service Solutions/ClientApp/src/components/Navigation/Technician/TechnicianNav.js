@@ -79,6 +79,8 @@ export default function TechnicianNav() {
                         </div>
                         <ul className="menu">
                             <li><a href="/services-offered">Services Offered</a></li>
+                            <li><a href="/technician-dashboard">Technician Dashboard</a></li>
+                            <li><a href="/service-department">Service Dept.</a></li>
                             <li><a href="/" onClick={handleLogout}>Logout</a></li>
                         </ul>
                     </div>

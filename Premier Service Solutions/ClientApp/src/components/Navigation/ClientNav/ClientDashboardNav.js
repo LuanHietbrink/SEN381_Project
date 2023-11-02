@@ -133,11 +133,7 @@ export default function ClientDashboardNav(props) {
                         className={`client-burger-menu ${isOpen ? 'open' : ''}`}
                         onClick={toggleMenu}
                     >
-                        <div className="burger-icon">
-                            <div className="bar"></div>
-                            <div className="bar"></div>
-                            <div className="bar"></div>
-                        </div>
+                        <i class="fa-solid fa-arrow-left back-arrow" style={{fontSize: "30px"}}></i>
                         <ul className="menu">
                             {hasServiceDetails && isAccountActive && <li><a href="/maintenance-tab">Maintenance Tab</a></li>}
                             <li><a href="/services-offered">Services Offered</a></li>

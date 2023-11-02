@@ -31,32 +31,34 @@ namespace PremierSolutions.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-          if (_context.Employees == null)
-          {
-              return NotFound();
-          }
+            if (_context.Employees == null)
+            {
+                return NotFound();
+            }
+            
             return await _context.Employees.ToListAsync();
         }
 
-        // GET: api/employees/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        // GET: api/employees/find-employee
+        [HttpGet("find-employee/{email}")]
+        public async Task<ActionResult<Employee>> GetEmployee(string email)
         {
-          if (_context.Employees == null)
-          {
-              return NotFound();
-          }
-            var employee = await _context.Employees.FindAsync(id);
-
-            if (employee == null)
+            if (_context.Employees == null)
             {
                 return NotFound();
             }
 
-            return employee;
+            var existingEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
+            
+            if (existingEmployee == null)
+            {
+                return NotFound();
+            }
+
+            return existingEmployee;
         }
 
-        // PUT: api/employees/email
+        // PUT: api/employees/edit-employee/{email}
         [HttpPut("edit-employee/{email}")]
         public async Task<IActionResult> PutEmployee(string email, [FromBody] Employee employee)
         {
@@ -152,21 +154,23 @@ namespace PremierSolutions.Controllers
             return CreatedAtAction("GetEmployee", new { id = employee.EmpId }, employee);
         }
 
-        // DELETE: api/employees/5
+        // DELETE: api/employees/delete-employee/
         [HttpDelete("delete-employee/{email}")]
         public async Task<IActionResult> DeleteEmployee(string email)
         {
             if (_context.Employees == null)
             {
-                return NotFound();
+                return Problem("Entity set 'PremierSolutionsContext.Employees'  is null.");
             }
-            var employee = await _context.Employees.FindAsync(email);
-            if (employee == null)
+
+            var existingEmployee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
+            
+            if (existingEmployee == null)
             {
                 return NotFound();
             }
 
-            _context.Employees.Remove(employee);
+            _context.Employees.Remove(existingEmployee);
             await _context.SaveChangesAsync();
 
             return NoContent();

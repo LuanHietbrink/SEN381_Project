@@ -1,0 +1,94 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', 'Sans Serif';
+    text-align: center;
+    margin-top: 70px;
+}
+
+.heading h3 {
+    font-weight: bolder;
+    color: #2d2c54;
+    margin: 1em 0 1em 0;
+}
+
+.packages, .promo-packages {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 13px;
+    padding: 0 1.5em;
+    margin: 1em 0 3em 0;
+}
+
+.packages .package div h4, .promo-packages .promo-package div h4{
+    font-size: 23px;
+    margin-bottom: 1em;
+    font-weight: bold;
+    color: #2d2c54;
+}
+
+.package {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 3.5em;
+    width: 430px;
+}
+
+.promo-package {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 3.5em;
+    width: 500px;
+}
+
+.package-price {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.package .package-info p {
+    text-align: center;
+}
+
+.package .package-info {
+    height: 420px;
+}
+
+.promo-package-info {
+    height: 530px;
+}
+
+.promo-timer {
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 1.5em 0;
+}
+
+.btn-apply {
+    background-color: #2d2c54;
+    color: white;
+    margin-bottom: 0.7em;
+}
+
+.btn-apply:hover {
+    background-color: #39359d;
+    color: white;
+}
+
+.divide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5em;
+}
+
+.divide .divider {
+    height: 500px;
+    border: 0.134em solid #2d2c54;
+    border-radius: 30px;
+}

@@ -105,6 +105,10 @@
   font-weight: 500;
 }
 
+.servcie-button:hover{
+    background-color: #2D2C54;
+    color: white;
+}
 .display {
   border: solid 1px #2d2c54;
   border-radius: 5px;

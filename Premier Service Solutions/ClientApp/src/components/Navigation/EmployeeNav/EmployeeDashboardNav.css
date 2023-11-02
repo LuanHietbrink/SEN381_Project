@@ -45,7 +45,7 @@
   left: 0;
   background-color: #2d2c54;
   color: white;
-  width: max-content;
+  width: fit-content;
   height: 100%;
   z-index: 9999;
   transform: translateX(-100%);
@@ -85,21 +85,10 @@
   cursor: pointer;
 }
 
-.burger-icon {
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.bar {
-  position: relative;
-  top: 20px;
-  left: 20px;
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  margin: 3px 0;
-  cursor: pointer;
+.back-arrow {
+position: relative;
+top: 25px;
+left: 30px;
 }
 
 .menu {
@@ -133,4 +122,9 @@ padding-bottom: 2.5em;
 position: absolute;
 bottom: 0;
 padding-bottom: 4.8em;
+}
+
+.heading a, .header-right p a {
+text-decoration: none;
+color: white;
 }

@@ -1,0 +1,84 @@
+.emp-dash-wrapper {
+    margin-top: 80px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.emp-dash-wrapper .emp-dash-heading {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.emp-dash-wrapper .emp-dash-heading h1 {
+    font-weight: bold;
+}
+
+.modal-header .modal-heading {
+    position: relative;
+    left: 25%;
+}
+
+.modal-header .modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add {
+    border: 3px outset #2d2c54;
+    background-color: white;
+    color: #2d2c54;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add:hover {
+    background-color: #f1f1f1;
+}
+
+.assigned-job-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+}
+
+.assigned-job-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    max-height: 480px;
+    overflow-y: auto;
+    width: 897px;
+}
+
+.assigned-job-list h5 {
+    text-decoration: underline;
+    text-align: left;
+}
+
+.assigned-job {
+    border: 1px solid #ccc;
+    padding: 1em 2em;
+    width: 837px;
+    margin: 10px;
+    text-align: left;
+    border-radius: 12px;
+    background-color: lightgrey;
+    color: #2d2c54;
+}
+
+.assigned-job:hover {
+    background-color: rgb(223, 221, 221);
+    cursor: pointer;
+}
+
+.assigned-job-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assigned-job-content p {
+    max-width: 80%;
+    margin: 0.5em 0 0 2em;
+}

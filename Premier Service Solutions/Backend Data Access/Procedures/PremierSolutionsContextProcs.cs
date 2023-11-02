@@ -36,6 +36,7 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.StartDate);
             entity.Property(e => e.EndDate);
             entity.Property(e => e.ContractType);
+            entity.Property(e => e.ServiceLevel);
         });
                 
         modelBuilder.Entity<GetActiveJobs>(entity =>
@@ -53,6 +54,7 @@ public partial class PremierSolutionsContextProcs : DbContext
         {
             entity.HasNoKey();
             entity.Property(e => e.ClientId);
+            entity.Property(e => e.ClientType);
             entity.Property(e => e.ClientName);
             entity.Property(e => e.Email);
             entity.Property(e => e.ContactNumber);
@@ -71,6 +73,7 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.HasNoKey();
             entity.Property(e => e.ClientId);
             entity.Property(e => e.ClientName);
+            entity.Property(e => e.ClientType);
             entity.Property(e => e.Email);
             entity.Property(e => e.Password);
             entity.Property(e => e.Address);
@@ -102,6 +105,8 @@ public partial class PremierSolutionsContextProcs : DbContext
         modelBuilder.Entity<GetEmployeeDetails>(entity =>
         {
             entity.HasNoKey(); 
+            entity.Property(e => e.EmpId);
+            entity.Property(e => e.EmployeeType);
             entity.Property(e => e.FirstName);
             entity.Property(e => e.LastName);
             entity.Property(e => e.Email);

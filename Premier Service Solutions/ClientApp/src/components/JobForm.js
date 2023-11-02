@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { createTechnicianUser, createChannel, botJoinChannel, botMessage, checkUserExists } from './SendBird';
+import "./JobForm.css"
+import TechnicianNav from './Navigation/Technician/TechnicianNav';
 const JobForm = () => {
     const [technicianId, setTechnicianId] = useState('');
     const [technicianName, setTechnicianName] = useState('');
@@ -32,54 +34,75 @@ const JobForm = () => {
     
     
     return (
+       
         <div>
-            <h2>Assign a Job Test</h2>
             <div>
-                <label>Technician ID:</label>
-                <input
-                    type="text"
-                    value={technicianId}
-                    onChange={(e) => setTechnicianId(e.target.value)}
-                />
+                <TechnicianNav/>
             </div>
-            <div>
-                <label>Technician Name:</label>
-                <input
-                    type="text"
-                    value={technicianName}
-                    onChange={(e) => setTechnicianName(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Address:</label>
-                <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Job Title:</label>
-                <input
-                    type="text"
-                    value={jobTitle}
-                    onChange={(e) => setJobTitle(e.target.value)}
-                />
-            </div>
-            <div>
-                <label>Job Description:</label>
-                <input
-                    type="text"
-                    value={jobDescription}
-                    onChange={(e) => setJobDescription(e.target.value)}
-                />
-            </div>
-            <button onClick={handleCreateUser} disabled={!technicianId || !technicianName}>Create Technician User</button>
-            {jobAssigned ? (
-                <p>Job has been assigned. Check your messages.</p>
-            ) : (
-                <button onClick={handleAssignJob} disabled={!technicianId || !technicianName || !jobTitle || !jobDescription || !address}>Assign Job</button>
-            )}
+            
+            
+            <form>
+                <h2>Assign a Job Test</h2>
+
+                <div>
+                    <label for="technicianId">Technician ID:</label>
+                    <input
+                        type="text"
+                        id="technicianId"
+                        value={technicianId}
+                        onChange={(e) => setTechnicianId(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label for="technicianName">Technician Name:</label>
+                    <input
+                        type="text"
+                        id="technicianName"
+                        value={technicianName}
+                        onChange={(e) => setTechnicianName(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label for="address">Address:</label>
+                    <input
+                        type="text"
+                        id="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label for="jobTitle">Job Title:</label>
+                    <input
+                        type="text"
+                        id="jobTitle"
+                        value={jobTitle}
+                        onChange={(e) => setJobTitle(e.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label for="jobDescription">Job Description:</label>
+                    <input
+                        type="text"
+                        id="jobDescription"
+                        value={jobDescription}
+                        onChange={(e) => setJobDescription(e.target.value)}
+                    />
+                </div>
+
+                <button type="button" onClick={handleCreateUser} disabled={!technicianId || !technicianName}>Create Technician User</button>
+
+                {jobAssigned ? (
+                    <p>Job has been assigned. Check your messages.</p>
+                ) : (
+                    <button type="button" onClick={handleAssignJob} disabled={!technicianId || !technicianName || !jobTitle || !jobDescription || !address}>Assign Job</button>
+                )}
+            </form>
+
         </div>
     );
 };

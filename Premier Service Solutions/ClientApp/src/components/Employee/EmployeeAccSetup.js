@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../DataContext';
+import "./Employee Styles/EmployeeAccSetup.css"
 
 export function EmployeeAccSetup() {
     // Use the useNavigate hook to handle navigation
     const navigate = useNavigate();
     const { privateData, setPrivateData } = useData();
     const empData = privateData.data;
+    const [validPassword, setValidPassword] = useState(true);
 
     // State variables to manage employee information
     const [state, setState] = useState({
@@ -65,6 +67,24 @@ export function EmployeeAccSetup() {
     const handleShowEmployeeDashboard = () => {
         const { firstName, lastName, password, contactNumber, emgContact, skills } = state;
 
+        // Password length validation (8 characters)
+        const isLengthValid = password.length >= 8;
+
+        // Password complexity validation (uppercase, lowercase, numbers, special characters)
+        const isComplexityValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/.test(password);
+    
+        // Check for sequential or repeated characters
+        const hasSequentialOrRepeated = /(.)\1\1/.test(password);
+
+        if (!isLengthValid || !isComplexityValid || hasSequentialOrRepeated) {
+            // Display an error message for invalid passwords
+            setValidPassword(false);
+            return;
+        } else {
+            // Reset the validPassword state if the password is valid
+            setValidPassword(true);
+        }
+
         setPrivateData({
             ...privateData,
             newEmployeeData: {
@@ -86,6 +106,7 @@ export function EmployeeAccSetup() {
             skills,
         };
 
+        // Function to update new employee details
         fetch(`/api/employees/edit-employee/${storedEmployeeData.email}`, {
             method: 'PUT',
             headers: {
@@ -147,6 +168,14 @@ export function EmployeeAccSetup() {
                             <input type="text" name="skills" value={state.skills} onChange={handleChange} required />
                         </label>
                     </form>
+
+                    <div className='error-div'>
+                        {!validPassword && (
+                            <p style={{ color: "red" }}>
+                                Password must be at least 8 characters long, include uppercase and lowercase letters, numbers, special characters, and not contain sequential or repeated characters.
+                            </p>
+                        )}  
+                    </div>
 
                     <button onClick={handleShowEmployeeDashboard} disabled={!isInfoComplete}>
                         Save

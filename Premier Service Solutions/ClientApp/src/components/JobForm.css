@@ -1,0 +1,52 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+form{
+    
+}
+div {
+    margin-bottom: 15px;
+}
+
+h2 {
+    color: #333;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #2D2C54;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    button:hover {
+        background-color: #2D2C54;
+    }
+
+p {
+    color: #2D2C54;
+    font-weight: bold;
+}

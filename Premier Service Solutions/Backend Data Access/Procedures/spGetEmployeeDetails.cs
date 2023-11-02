@@ -2,6 +2,10 @@ namespace PremierSolutions.Procedures
 {
     public class GetEmployeeDetails
     {
+        public int? EmpId { get; set; }
+
+        public string? EmployeeType { get; set; }
+
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
