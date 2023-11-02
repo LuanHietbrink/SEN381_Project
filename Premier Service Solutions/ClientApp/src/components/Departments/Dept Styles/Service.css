@@ -1,207 +1,222 @@
 ﻿.center {
-    text-align: center;
+  text-align: center;
 }
 
 .center-head {
-    margin-top: 50px;
-    text-align: center;
+  margin-top: 50px;
+  text-align: center;
 }
 
 .user-info {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
 }
 
 .profile-picture {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-left: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 10px;
 }
 
 .left-align {
-    text-align: left;
-    padding: 10px;
+  text-align: left;
+  padding: 10px;
 }
 
 .line {
-    width: 100%;
-    height: 2px;
-    background-color: #000000;
+  width: 100%;
+  height: 2px;
+  background-color: #000000;
 }
 
 .assign- {
-    color: #2D2C54;
-    text-align: center;
-    font-weight: 700;
-    font-size: x-large;
+  color: #2d2c54;
+  text-align: center;
+  font-weight: 700;
+  font-size: x-large;
 }
 
 .ticket-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px; 
+}
+
+.ticket-list h5 {
+  text-decoration: underline;
+  text-align: left;
+}
+
+.ticket {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* 
+.ticket-list {
     display: flex;
-    flex-direction: column; /* Display tickets in a vertical order */
+    flex-direction: column; 
     align-items: center;
     padding: 10px;
 }
-
-    .ticket-list h5 {
-        text-decoration: underline;
-        text-align: left;
-    }
-
 .ticket {
     border: 1px solid #ccc;
     padding: 10px;
-    width: 70%; /* Make each ticket 70% of the page width */
-    margin: 10px; /* Add spacing between tickets */
+    width: 70%; 
+    margin: 10px;
     text-align: left;
     border-radius: 12px;
     background-color: lightgrey;
-}
+}   */
+
 
 .ticket-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-    .ticket-content p {
-        max-width: 80%;
-    }
+.ticket-content p {
+  max-width: 80%;
+}
 
 .button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
 }
 
 .servcie-button {
-    background-color: white;
-    color: #2D2C54;
-    border: solid 1px #2D2C54;
-    padding: 10px 20px;
-    margin: 50px; /* Add spacing between buttons */
-    cursor: pointer;
-    border-radius: 5px;
-    width: 225px;
-    font-size: 20px;
-    font-weight: 500;
+  background-color: white;
+  color: #2d2c54;
+  border: solid 1px #2d2c54;
+  padding: 10px 20px;
+  margin: 50px; /* Add spacing between buttons */
+  cursor: pointer;
+  border-radius: 5px;
+  width: 225px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .display {
-    border: solid 1px #2D2C54;
-    border-radius: 5px;
-    text-align: center; /* Horizontal alignment of text */
-    display: flex; /* Use flexbox to align items horizontally */
-    justify-content: center;
-    height: 30vh;
-    align-items: center; /* Center vertically within the container */
-    margin: 20px;
+  border: solid 1px #2d2c54;
+  border-radius: 5px;
+  text-align: center; /* Horizontal alignment of text */
+  display: flex; /* Use flexbox to align items horizontally */
+  justify-content: center;
+  height: 30vh;
+  align-items: center; /* Center vertically within the container */
+  margin: 20px;
 }
 
 .stat-container {
-    text-align: center;
-    margin: 10px 50px 0; /* Optional margin between label and input */
+  text-align: center;
+  margin: 10px 50px 0; /* Optional margin between label and input */
 }
 
 .titles {
-    color: #2D2C54;
-    font-weight: 700;
-    font-size: 25px;
-    margin-right: 10px; /* Add spacing to the right of the text */
-    max-width: 250px;
+  color: #2d2c54;
+  font-weight: 700;
+  font-size: 25px;
+  margin-right: 10px; /* Add spacing to the right of the text */
+  max-width: 250px;
 }
 
 input {
-    width: 50px; /* Expand input to fill the container width */
+  width: 50px; /* Expand input to fill the container width */
 }
 
 .tj-modal {
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 999; /* Adjust the z-index as needed to ensure it appears above other content */
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999; /* Adjust the z-index as needed to ensure it appears above other content */
 }
 
 .tj-modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    width: 25%;
-    padding: 20px;
-    margin: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 25%;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .back-button- {
-    background-color: #2D2C54;
-    border: none;
-    color: white;
-    font-weight: 500;
-    padding: 10px 20px;
-    width: 100px;
-    height: 50px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 20px;
+  background-color: #2d2c54;
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .select-button- {
-    background-color: #2D2C54;
-    border: none;
-    color: white;
-    font-weight: 500;
-    padding: 10px 20px;
-    width: 100px;
-    height: 50px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
+  background-color: #2d2c54;
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 
 .label-and-select {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 10px 20px; /* Add spacing between the label and select */
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 10px 20px; /* Add spacing between the label and select */
 }
 
 select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
 }
 
 .title- {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* To distribute elements horizontally */
-    width: 100%; /* Expand the width to 100% to keep buttons in place */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* To distribute elements horizontally */
+  width: 100%; /* Expand the width to 100% to keep buttons in place */
 }
 
 .jobDropdown {
-    display: flex;
-    align-items: center;
-    width: 250px;
-    text-align: center; /* Center the text horizontally within the select box */
-    margin: 10px 50px; /* Add spacing between the label and select */
-    background-color: #2D2C54;
-    color: white;
+  display: flex;
+  align-items: center;
+  width: 250px;
+  text-align: center; /* Center the text horizontally within the select box */
+  margin: 10px 50px; /* Add spacing between the label and select */
+  background-color: #2d2c54;
+  color: white;
 }
 
-.filter-container{
-    text-align: center;
+.filter-container {
+  text-align: center;
 }

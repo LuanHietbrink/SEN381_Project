@@ -21,11 +21,22 @@ export class ServiceDeptJobList extends Component {
       selectedStartDate: null,
       selectedEndDate: null,
       selectedStatus: "In Progress",
+      filterId:"",
+      selectedTechnician:"",  
+      technicians: [],
     };
   }
 
   componentDidMount() {
     fetch("/api/service-requests")
+      .then((response) => response.json())
+      .then((data) => {
+        this.originalServiceRequests = data;
+        this.setState({ serviceRequests: data });
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+
+      fetch("/api/employees")
       .then((response) => response.json())
       .then((data) => {
         this.originalServiceRequests = data;
@@ -41,6 +52,11 @@ export class ServiceDeptJobList extends Component {
   handleNameFilterChange = (e) => {
     this.setState({ filterName: e.target.value });
   };
+
+  handleIdilterChange = (e) => {
+    this.setState({ filterId: e.target.value });
+  };
+  
 
 handleStartDateChange = (date) => {
     this.setState({ selectedStartDate: date }, () => {
@@ -58,6 +74,14 @@ handleStatusFilterChange = (e) => {
     this.setState({ selectedStatus: e.target.value });
 };
 
+handleTechnicianSelect = (selectedTechnician) => {
+  this.setState({ selectedTechnician });
+};
+
+closeModal = () => {
+    this.setState({ isModalOpen: false });
+  };
+  
 
 
 filterServiceRequestsByDate = () => {
@@ -81,9 +105,22 @@ const extractDatePart = (date) => new Date(date.getFullYear(), date.getMonth(), 
   }
 };
 
-  
-  
+assignTechnician = () => {
+  // Implement the logic to assign the selected technician to the job
+  const { selectedJob, selectedTechnician } = this.state;
 
+  axios.post('/api/assign-technician', {
+  //   requestId: selectedJob.requestId,
+  //   technicianId: selectedTechnician,
+  // })
+  // .then(() => {
+  //   this.closeModal();
+  // })
+  // .catch((error) => {
+  //   console.error('Error assigning technician:', error);
+  // });
+
+};
 
 
   render() {
@@ -95,13 +132,19 @@ const extractDatePart = (date) => new Date(date.getFullYear(), date.getMonth(), 
       selectedEndDate,
       selectedStartDate,
       selectedStatus,
+      filterId,
+      selectedTechnician,
     } = this.state;
 
 
     const filteredServiceRequests = serviceRequests.filter((request) =>
     (selectedStatus === "" || request.status === selectedStatus) &&
-    (filterName === "" || request.requestDetails.toLowerCase().includes(filterName.toLowerCase()))
-    );
+    (filterName === "" || request.requestDetails.toLowerCase().includes(filterName.toLowerCase())) &&
+    (filterId === "" || request.requestId === filterId)
+    
+
+  );
+
 
 
     return (
@@ -163,7 +206,7 @@ const extractDatePart = (date) => new Date(date.getFullYear(), date.getMonth(), 
                   className="view-details"
                   onClick={() => this.handleViewDetails(request)}
                 >
-                  View Details
+                  Assign Technician
                 </button>
               </div>
             </div>
