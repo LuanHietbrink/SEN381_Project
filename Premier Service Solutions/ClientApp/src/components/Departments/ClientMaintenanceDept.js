@@ -16,7 +16,6 @@ export function ClientMaintenanceDept() {
     // State variables to manage employee information
     const [state, setState] = useState({
         searchClientEmail: '',
-        targetEmail: '',
 
         addClientName: '',
         addClientType: '',
@@ -25,12 +24,6 @@ export function ClientMaintenanceDept() {
         addContactNumber: '',
 
         deleteClientEmail: '',
-
-        editClientName: '',
-        editClientType: '',
-        editEmail: '',
-        editAddress: '',
-        editContactNumber: '',
     });
 
     // useEffect hook to fetch data based on the selected option
@@ -110,22 +103,20 @@ export function ClientMaintenanceDept() {
         const { searchClientEmail } = state;
 
         try {
-            const employeeResponse = await fetch(`api/clients/client-info/${searchClientEmail}`);
-            if (employeeResponse.ok) {
-                const fetchedData = await employeeResponse.json();
+            const clientResponse = await fetch(`api/clients/client-info/${searchClientEmail}`);
+            if (clientResponse.ok) {
+                const fetchedData = await clientResponse.json();
 
                 if (fetchedData.length !== 0) {
                     setClientSearch(fetchedData);
                     setLoading(false);
                     setShowClientFound(true);
-                    // state.searchClientEmail = '';
                 } else {
                     setLoading(true);
                     setShowClientFound(false);
-                    // state.searchClientEmail = '';
                 }
             } else {
-                console.error('Failed to fetch client information:', employeeResponse.status);
+                console.error('Failed to fetch client information:', clientResponse.status);
             }
         } catch (error) {
             console.error('An error occurred while fetching client information:', error);
@@ -205,9 +196,6 @@ export function ClientMaintenanceDept() {
 
     // Function to handle input changes
     const handleSearchChange = (e) => {
-        // setSearchClientEmail(e.target.value);
-        // setState({ ...state, [e.target.name]: e.target.value });
-
         setState({
             ...state,
             searchClientEmail: e.target.value,
@@ -385,7 +373,7 @@ export function ClientMaintenanceDept() {
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-delete" onClick={deleteClient}>Delete Client</button>
+                        <button type="button" className="btn btn-delete" onClick={deleteClient}>Delete</button>
                     </div>
                 </div>
             </div>

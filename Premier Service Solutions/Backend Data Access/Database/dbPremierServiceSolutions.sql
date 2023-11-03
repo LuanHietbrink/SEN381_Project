@@ -67,6 +67,7 @@ CREATE PROCEDURE spGetClientDetails (IN Client_Email VARCHAR(50))
 BEGIN
     SELECT
         C.ClientID,
+        C.ClientType,
         C.ClientName,
         C.Email,
         C.ContactNumber,

@@ -3,11 +3,12 @@ import { EmployeeDashboard } from "./components/Employee/EmployeeDashboard";
 import { CallCenterDept } from "./components/Departments/CallCenterDept";
 import { ClientMaintenanceDept } from "./components/Departments/ClientMaintenanceDept";
 import { ContractMaintenanceDept } from "./components/Departments/ContractMaintenanceDept";
-import { TechDashboard } from "./components/Technician/TechnicianDashboard";
+import { TechnicianDashboard } from "./components/Employee/TechnicianDashboard";
 import { ServiceDept } from "./components/Departments/ServiceDept";
 import { ServiceDeptJobList } from "./components/Departments/ServiceDeptJobList";
 import { LoginSignup } from "./components/Login-Signup";
 import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
+import { ClientAccSetup } from "./components/Client/ClientAccSetup";
 import { ServicesOffered } from "./components/Client/ServicesOffered"
 import { EmployeeSettings } from "./components/Employee/EmployeeSettings"
 import { MaintenanceTab } from "./components/Client/MaintenanceTab";
@@ -44,7 +45,7 @@ const AppRoutes = [
   },
   {
     path: '/technician-dashboard',
-    element: <TechDashboard />
+    element: <TechnicianDashboard />
   },
   {
     path: '/call-center',
@@ -71,11 +72,15 @@ const AppRoutes = [
     element: <ClientSettings />
   },
   {
+    path: '/client-account-setup',
+    element: <ClientAccSetup />
+  },
+  {
     path: '/employee-account-settings',
     element: <EmployeeSettings />
   },
   {
-    path: '/account-setup',
+    path: '/employee-account-setup',
     element: <EmployeeAccSetup />
   },
   {

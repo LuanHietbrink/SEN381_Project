@@ -194,12 +194,7 @@ namespace PremierSolutions.Controllers
                 StartDate = details.StartDate,
                 EndDate = details.EndDate,
                 ContractType = details.ContractType,
-                ServiceLevel = details.ServiceLevel,
-
-                RequestId = details.RequestId ,
-                RequestDate = details.RequestDate,
-                RequestDetails = details.RequestDetails,
-                Status = details.Status
+                ServiceLevel = details.ServiceLevel
             }).ToList();
 
             return result;
@@ -211,6 +206,26 @@ namespace PremierSolutions.Controllers
             return await _contextProcedures.SpGetAllClientDetails
                 .FromSqlRaw("call spGetAllClientDetails({0})", clientEmail)
                 .ToListAsync();
+        }
+
+        [HttpPost("new-client-login/{email}")]
+        public async Task<ActionResult> NewClientLogin(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var clientDetails = await _contextProcedures.SpGetAllClientDetails
+                .FromSqlRaw("call spGetAllClientDetails({0})", email)
+                .ToListAsync();
+
+            if (clientDetails.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok("Login successful");
         }
 
         // Stored procedure to get details for a specific client for login verification

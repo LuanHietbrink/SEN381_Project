@@ -4,6 +4,7 @@
 
 .wrapper {
     position: relative;
+    bottom: 2em;
 }
 
 .wrapper h1 {

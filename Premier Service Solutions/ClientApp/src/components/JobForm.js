@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createTechnicianUser, createChannel, botJoinChannel, botMessage, checkUserExists } from './SendBird';
 import "./JobForm.css"
-import TechnicianNav from './Navigation/Technician/TechnicianNav';
+import EmployeeDashboardNav from './Navigation/EmployeeNav/EmployeeDashboardNav';
 const JobForm = () => {
     const [technicianId, setTechnicianId] = useState('');
     const [technicianName, setTechnicianName] = useState('');
@@ -37,7 +37,7 @@ const JobForm = () => {
        
         <div>
             <div>
-                <TechnicianNav/>
+                <EmployeeDashboardNav />
             </div>
             
             

@@ -6,6 +6,7 @@ import './Login-Signup.css'
 export function LoginSignup() {
     const navigate = useNavigate();
     const [validPassword, setValidPassword] = useState(true);
+    const [validContactNumber, setValidContactNumber] = useState(true);
 
     // Initialize the component's state using the useState hook
     const [state, setState] = useState({
@@ -130,6 +131,27 @@ export function LoginSignup() {
                 if (!isValid) {
                     setValidPassword(false);
                     return;
+                } else {
+                    setValidPassword(true);
+                }
+
+                const isContactNumberValid = (contactNumber) => {
+                    // Check if it starts with "+27" and is 12 characters long
+                    const startsWithPlus27 = contactNumber.startsWith('+27') && contactNumber.length === 12;
+                    // Check if it starts with "0" and is 10 characters long
+                    const startsWithZero = contactNumber.startsWith('0') && contactNumber.length === 10;
+            
+                    return startsWithPlus27 || startsWithZero;
+                }
+
+                // Check if the contact number is valid
+                const isNumberValid = isContactNumberValid(state.contactNumber);
+
+                if (!isNumberValid) {
+                    setValidContactNumber(false);
+                    return;
+                } else {
+                    setValidContactNumber(true);
                 }
 
                 const signUpData = {
@@ -291,7 +313,10 @@ export function LoginSignup() {
                         <div className='error-div'>
                             {error && <p style={{color: "red"}}>{error}</p>}
                             {!validPassword && (
-                                <p style={{ color: "red" }}>Password must be at least 8 characters long, include uppercase and lowercase letters, <br></br>numbers, and special characters, and not contain repeated characters.</p>
+                                <p style={{ color: "red" }}>Password must be at least 8 characters long, include uppercase and lowercase letters, <br />numbers, and special characters, and not contain repeated characters.</p>
+                            )}
+                            {!validContactNumber && (
+                                <p style={{ color: "red" }}>Contact number must start with "+27" and be 12 characters long or <br />start with "0" and be 10 characters long.</p>
                             )}
                         </div>
                     </>

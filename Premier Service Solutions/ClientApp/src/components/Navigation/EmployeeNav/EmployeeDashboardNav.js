@@ -110,6 +110,7 @@ export default function EmployeeDashboardNav(props) {
                             <li><a href="/call-center">Call Center Dept.</a></li>
                             <li><a href="/contract-maintenance">Contract Maintenance Dept.</a></li>
                             <li><a href="/client-maintenance">Client Maintenance Dept.</a></li>
+                            <li><a href="/technician-dashboard">My Jobs</a></li>
                             {employeeType === 'Manager' && (
                                 <li><a href="/employee-management">Employee Management</a></li>
                             )}

@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../DataContext';
-import "./Employee Styles/EmployeeAccSetup.css"
+import "./Client Styles/ClientAccSetup.css"
 
-export function EmployeeAccSetup() {
+export function ClientAccSetup() {
     // Use the useNavigate hook to handle navigation
     const navigate = useNavigate();
     const { privateData, setPrivateData } = useData();
-    const empData = privateData.data;
+    const cltData = privateData.data;
+
     const [validPassword, setValidPassword] = useState(true);
     const [validContactNumber, setValidContactNumber] = useState(true);
     const [validEmgContactNumber, setValidEmgContactNumber] = useState(true);
 
     // State variables to manage employee information
     const [state, setState] = useState({
-        firstName: '',
-        lastName: '',
+        clientName: '',
+        clientType: '',
         password: '',
+        address: '',
         contactNumber: '',
-        emgContact: '',
-        skills: '',
         isInfoComplete: false,
         isDashboardVisible: false,
     });
@@ -27,25 +27,25 @@ export function EmployeeAccSetup() {
     // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
         try {
-            if (empData) {
-                localStorage.setItem('empData', JSON.stringify(empData));
+            if (cltData) {
+                localStorage.setItem('clientData', JSON.stringify(cltData));
             }
         } catch (error) {
-            console.error('Error storing employeeData in local storage:', error);
+            console.error('Error storing clientData in local storage:', error);
         }
-    }, [empData]);
+    }, [cltData]);
 
     // Initialize an object to store employee data retrieved from local storage
-    let storedEmployeeData = {};
+    let storedClientData = {};
 
     // Try to retrieve employee data from local storage
     try {
-        const storedData = localStorage.getItem('empData');
+        const storedData = localStorage.getItem('clientData');
         if (storedData) {
-            storedEmployeeData = JSON.parse(storedData);
+            storedClientData = JSON.parse(storedData);
         }
     } catch (error) {
-        console.error('Error retrieving employeeData from local storage:', error);
+        console.error('Error retrieving clientData from local storage:', error);
     }
 
     // Function to handle input changes
@@ -55,19 +55,19 @@ export function EmployeeAccSetup() {
 
     // Function to check if employee information is complete
     const checkInfoCompleteness = () => {
-        const { firstName, lastName, password, contactNumber, emgContact, skills } = state;
-        const isInfoComplete = firstName && lastName && password && contactNumber && emgContact && skills;
+        const { clientName, clientType, password, address, contactNumber } = state;
+        const isInfoComplete = clientName && clientType && password && address && contactNumber;
         setState({ ...state, isInfoComplete });
     };
 
     // Use useEffect to check if employee information is complete
     useEffect(() => {
         checkInfoCompleteness();
-    }, [state.firstName, state.lastName, state.password, state.contactNumber, state.emgContact, state.skills]);
+    }, [state.clientName, state.clientType, state.password, state.address, state.contactNumber]);
 
     // Function to show the employee dashboard
     const handleShowEmployeeDashboard = () => {
-        const { firstName, lastName, password, contactNumber, emgContact, skills } = state;
+        const { clientName, clientType, password, address, contactNumber } = state;
 
         // Password length validation (8 characters)
         const isLengthValid = password.length >= 8;
@@ -125,32 +125,30 @@ export function EmployeeAccSetup() {
 
         setPrivateData({
             ...privateData,
-            newEmployeeData: {
-                newFirstName: firstName,
-                newLastName: lastName,
+            newClientData: {
+                newClientName: clientName,
+                newClientType: clientType,
                 newPassword: password,
+                newAddress: address,
                 newContactNumber: contactNumber,
-                newEmgContact: emgContact,
-                newSkills: skills,
             },
         });
 
-        const employeeData = {
-            firstName,
-            lastName,
+        const clientData = {
+            clientName,
+            clientType,
             password,
+            address,
             contactNumber,
-            emgContact,
-            skills,
         };
 
         // Function to update new employee details
-        fetch(`/api/employees/edit-employee/${storedEmployeeData.email}`, {
+        fetch(`/api/clients/edit-client/${storedClientData.email}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(employeeData),
+            body: JSON.stringify(clientData),
         })
             .then((response) => {
                 if (response.ok) {
@@ -182,20 +180,9 @@ export function EmployeeAccSetup() {
                                     <input
                                         type="text"
                                         name="firstName"
-                                        value={state.firstName}
+                                        value={state.clientName}
                                         onChange={handleChange}
                                         placeholder="First Name"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        name="lastName"
-                                        value={state.lastName}
-                                        onChange={handleChange}
-                                        placeholder="Last Name"
                                         required
                                     />
                                 </div>
@@ -214,6 +201,17 @@ export function EmployeeAccSetup() {
                                 <div className="form-group">
                                     <input
                                         type="text"
+                                        name="address"
+                                        value={state.address}
+                                        onChange={handleChange}
+                                        placeholder="Address"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <input
+                                        type="text"
                                         name="contactNumber"
                                         value={state.contactNumber}
                                         onChange={handleChange}
@@ -222,27 +220,6 @@ export function EmployeeAccSetup() {
                                     />
                                 </div>
 
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        name="emgContact"
-                                        value={state.emgContact}
-                                        onChange={handleChange}
-                                        placeholder="Emergency Contact"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <input
-                                        type="text"
-                                        name="skills"
-                                        value={state.skills}
-                                        onChange={handleChange}
-                                        placeholder="Skills"
-                                        required
-                                    />
-                                </div>
                             </div>
                             <div className='btn-wrap'>
                                 <button className='btn btn-save' onClick={handleShowEmployeeDashboard} disabled={!isInfoComplete}>

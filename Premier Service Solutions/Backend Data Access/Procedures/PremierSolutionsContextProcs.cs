@@ -62,10 +62,6 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.EndDate);
             entity.Property(e => e.ContractType);
             entity.Property(e => e.ServiceLevel);
-            entity.Property(e => e.RequestId);
-            entity.Property(e => e.RequestDate);
-            entity.Property(e => e.RequestDetails);
-            entity.Property(e => e.Status);
         });        
         
         modelBuilder.Entity<GetAllClientDetails>(entity =>
