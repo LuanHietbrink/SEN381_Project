@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { CustomerList } from './CustomerList.js'
-import './style.css'
+import React, { useEffect, useState } from 'react';
+import { CustomerList } from './CustomerList.js';
+import './style.css';
 
 export function CallCenterDept() {
     let [clients, setClients] = useState([]);
@@ -13,11 +13,9 @@ export function CallCenterDept() {
             setTimeout(() => {
                 setCallDuration(callDuration + 1);
             }, 1000);
-        }
-        else {
+        } else {
             setCallDuration(0);
         }
-
     }, [isActiveCall, callDuration]);
 
     useEffect(() => {
@@ -28,7 +26,7 @@ export function CallCenterDept() {
         }
 
         fetchData();
-    }, [])
+    }, []);
 
     function searchChange() {
         setSearch(document.getElementById('searchClient').value);
@@ -39,9 +37,8 @@ export function CallCenterDept() {
 
         if (!btn.classList.contains('callCenterBtnClicked')) {
             btn.classList.add('callCenterBtnClicked');
-            btn.innerHTML = "End Call"
+            btn.innerHTML = "End Call";
             setIsActiveCall(true);
-
         } else {
             btn.classList.remove('callCenterBtnClicked');
             btn.innerHTML = "Answer call";
@@ -59,24 +56,47 @@ export function CallCenterDept() {
             <div className="container">
                 <div className="row my-5">
                     <div className="col">
-                        <button id="answerCall" className="callCenterBtn mb-5" onClick={callClick}>Answer call</button>
-                        {callDuration > 0 ? (<p>Call duration: {callDuration} seconds</p>) : (<></>)}
+                        <button
+                            id="answerCall"
+                            className="callCenterBtn mb-5"
+                            onClick={callClick}
+                        >
+                            Answer call
+                        </button>
+                        {callDuration > 0 ? (
+                            <p>Call duration: {callDuration} seconds</p>
+                        ) : (
+                            <></>
+                        )}
                     </div>
                 </div>
 
-                <input id="searchClient" onChange={searchChange} className="searchBox mb-5" type="email" placeholder="Search: "></input>
+                <input
+                    id="searchClient"
+                    onChange={searchChange}
+                    className="searchBox mb-5"
+                    placeholder="Search by Name or Cellphone"
+                ></input>
 
                 {
-                    clients.length !== 0 ?
-                        search === '' ?
-                            (<CustomerList data={clients} />)
-                            :
-                            (<CustomerList data={clients.filter(client => { return client.clientName.includes(search) })} />)
-                        :
-                    (<></>)
+                    clients.length !== 0 ? (
+                        search === '' ? (
+                            <CustomerList data={clients} />
+                        ) : (
+                            <CustomerList
+                                data={clients.filter((client) => {
+                                    return (
+                                        client.clientName.includes(search) ||
+                                        client.contactNumber.includes(search)
+                                    );
+                                })}
+                            />
+                        )
+                    ) : (
+                        <></>
+                    )
                 }
-                    
             </div>
         </>
-    )
+    );
 }

@@ -12,11 +12,12 @@ export function RequestForm(props) {
 
     async function createRequest() {
         const clientId = props.selectedItem.clientId;
-        const empId = document.getElementById('empNumber').value * 1;
+        //const empId = document.getElementById('empNumber').value * 1;
+        const empId = null;
         const requestDate = new Date();
         const requestDetails = document.getElementById('details').value;
-
-        const data = { clientId, empId, requestDate, requestDetails };
+        const status = "Incomplete"
+        const data = { clientId, empId, requestDate, requestDetails, status };
 
         const res = await fetch('api/service-requests', {
             method: 'POST',
@@ -24,6 +25,12 @@ export function RequestForm(props) {
             body: JSON.stringify(data)
         });
 
+        if (res.status === 201) {
+            alert('Submission was successful!');
+            closeForm();
+        } else {
+            alert('Submission failed. Please try again.');
+        }
         const message = await res.json();
         console.log(message);
     }
@@ -41,8 +48,6 @@ export function RequestForm(props) {
                         <form>
                             <label className="form-label" htmlFor="name">Name:</label>
                             <input className="form-control mb-3" type="text" id="name" value={props.selectedItem.clientName} readOnly></input>
-                            <label className="form-label" htmlFor="name">Employee Number:</label>
-                            <input className="form-control mb-2" type="number" id="empNumber" min="1" defaultValue="1"></input>
                             <label className="form-label" htmlFor="details">Details:</label>
                             <textarea className="form-control" rows="5" id="details" name="text"></textarea>
                         </form>
