@@ -11,11 +11,11 @@ public partial class Servicerequest
 
     public int? EmpId { get; set; }
 
-    public DateTime RequestDate { get; set; }
+    public DateTime? RequestDate { get; set; }
 
-    public string RequestDetails { get; set; } = null!;
+    public string? RequestDetails { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
+    public string? Status { get; set; } = null!;
 
     public virtual Client? Client { get; set; }
 

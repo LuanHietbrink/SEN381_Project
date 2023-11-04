@@ -53,20 +53,46 @@ namespace PremierSolutions.Controllers
             return servicerequest;
         }
 
-        // PUT: api/service-requests/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutServicerequest(int id, Servicerequest servicerequest)
+        // PUT: api/service-requests/edit-request/5
+        [HttpPut("edit-request/{id}")]
+        public async Task<IActionResult> PutServiceRequest(int id, Servicerequest servicerequest)
         {
-            if (id != servicerequest.RequestId)
+            var existingServiceRequest = await _context.Servicerequests.FirstOrDefaultAsync(sr => sr.RequestId == id);
+
+            if (existingServiceRequest == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(servicerequest).State = EntityState.Modified;
+            if (servicerequest.ClientId != null)
+            {
+                existingServiceRequest.ClientId = servicerequest.ClientId;
+            }
+
+            if (servicerequest.EmpId != null)
+            {
+                existingServiceRequest.EmpId = servicerequest.EmpId;
+            }
+
+            if (servicerequest.RequestDate != null)
+            {
+                existingServiceRequest.RequestDate = servicerequest.RequestDate;
+            }
+
+            if (!string.IsNullOrEmpty(servicerequest.RequestDetails))
+            {
+                existingServiceRequest.RequestDetails = servicerequest.RequestDetails;
+            }
+
+            if (!string.IsNullOrEmpty(servicerequest.Status))
+            {
+                existingServiceRequest.Status = servicerequest.Status;
+            }
 
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok("Changes has been saved.");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,8 +105,6 @@ namespace PremierSolutions.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/service-requests/log-request
