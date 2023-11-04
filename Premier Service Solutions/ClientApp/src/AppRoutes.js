@@ -7,7 +7,6 @@ import { ServiceDept } from "./components/Departments/ServiceDept";
 import { LoginSignup } from "./components/Login-Signup";
 import { EmployeeAccSetup } from "./components/Employee/EmployeeAccSetup";
 import { FetchData } from "./components/FetchData";
-
 //Messaging
 import Messaging from "./components/Messaging";
 import JobForm from "./components/JobForm";

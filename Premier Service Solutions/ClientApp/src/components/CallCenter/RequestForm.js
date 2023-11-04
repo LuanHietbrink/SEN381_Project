@@ -12,11 +12,10 @@ export function RequestForm(props) {
 
     async function createRequest() {
         const clientId = props.selectedItem.clientId;
-        //const empId = document.getElementById('empNumber').value * 1;
         const empId = null;
         const requestDate = new Date();
         const requestDetails = document.getElementById('details').value;
-        const status = "Incomplete"
+        const status = "Pending"
         const data = { clientId, empId, requestDate, requestDetails, status };
 
         const res = await fetch('api/service-requests', {

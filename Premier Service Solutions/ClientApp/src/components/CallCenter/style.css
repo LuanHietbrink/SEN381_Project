@@ -21,7 +21,7 @@
     border: none;
 }
 
-.customer-list{
+.customer-list, .service-request-list{
     border: 1px solid black;
     overflow-x: hidden;
     overflow-y: auto;
@@ -29,7 +29,7 @@
     padding: 0;
 }
 
-.customer-list-item{
+.customer-list-item, .service-request-list-item{
     position: relative;
     padding: 10px;
     border-bottom: 1px solid gray;

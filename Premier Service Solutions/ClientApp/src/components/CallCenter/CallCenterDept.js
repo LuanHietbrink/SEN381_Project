@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CustomerList } from './CustomerList.js';
 import './style.css';
-
+import { Link } from 'react-router-dom';
 export function CallCenterDept() {
     let [clients, setClients] = useState([]);
     let [search, setSearch] = useState('');
@@ -68,7 +68,10 @@ export function CallCenterDept() {
                         ) : (
                             <></>
                         )}
+
+                        
                     </div>
+                    
                 </div>
 
                 <input
@@ -77,6 +80,7 @@ export function CallCenterDept() {
                     className="searchBox mb-5"
                     placeholder="Search by Name or Cellphone"
                 ></input>
+
 
                 {
                     clients.length !== 0 ? (
@@ -95,6 +99,7 @@ export function CallCenterDept() {
                     ) : (
                         <></>
                     )
+                    
                 }
             </div>
         </>
