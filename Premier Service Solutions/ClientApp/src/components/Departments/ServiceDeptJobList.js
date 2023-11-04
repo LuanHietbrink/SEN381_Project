@@ -42,7 +42,8 @@ export function ServiceDeptJobList() {
 
         axios.get('/api/employees')
             .then(response => {
-                setTechnicians(response.data);
+                const technicianList = response.data.filter(tech => tech.employeeType === 'Technician');
+                setTechnicians(technicianList);
             })
             .catch(error => console.error('Error fetching technicians:', error));
     }, []);
@@ -203,16 +204,19 @@ export function ServiceDeptJobList() {
                     <div className="modal-body">
                         <div className='input-group'>
                             <div className='form-group id-input-wrap'>
-                                <div>
-                                    <label>Employee ID: </label>
-                                </div>
-                                <div className='id-input'>
-                                    <input
-                                        type="number"
-                                        value={inputEmpId}
-                                        onChange={(e) => setInputEmpId(e.target.value)}
-                                    />
-                                </div>
+                            </div>
+                            <div className='id-input'>
+                                <select
+                                    value={inputEmpId}
+                                    onChange={(e) => setInputEmpId(e.target.value)}
+                                >
+                                    <option value="">Select Technician</option>
+                                    {technicians.map((technician) => (
+                                        <option key={technician.empId} value={technician.empId}>
+                                            #{technician.empId} | {technician.firstName} {technician.lastName}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
                     </div>
