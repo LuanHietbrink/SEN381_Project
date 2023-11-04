@@ -20,7 +20,7 @@ public partial class PremierSolutionsContextProcs : DbContext
     public virtual DbSet<GetAllClientDetails> SpGetAllClientDetails { get; set; } = null!;
 
     public virtual DbSet<GetClientServiceReq> SpGetClientServiceReqs { get; set; } = null!;
-
+    
     public virtual DbSet<GetMaintenanceJobs> SpGetMaintenanceJobs { get; set; } = null!;
 
     public virtual DbSet<GetEmployeeDetails> SpGetEmployeeDetails { get; set; } = null!;
@@ -36,6 +36,7 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.StartDate);
             entity.Property(e => e.EndDate);
             entity.Property(e => e.ContractType);
+            entity.Property(e => e.ServiceLevel);
         });
                 
         modelBuilder.Entity<GetActiveJobs>(entity =>
@@ -53,11 +54,14 @@ public partial class PremierSolutionsContextProcs : DbContext
         {
             entity.HasNoKey();
             entity.Property(e => e.ClientId);
+            entity.Property(e => e.ClientType);
             entity.Property(e => e.ClientName);
             entity.Property(e => e.Email);
             entity.Property(e => e.ContactNumber);
-            entity.Property(e => e.ContractType);
+            entity.Property(e => e.StartDate);
             entity.Property(e => e.EndDate);
+            entity.Property(e => e.ContractType);
+            entity.Property(e => e.ServiceLevel);
         });        
         
         modelBuilder.Entity<GetAllClientDetails>(entity =>
@@ -65,6 +69,7 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.HasNoKey();
             entity.Property(e => e.ClientId);
             entity.Property(e => e.ClientName);
+            entity.Property(e => e.ClientType);
             entity.Property(e => e.Email);
             entity.Property(e => e.Password);
             entity.Property(e => e.Address);
@@ -80,7 +85,7 @@ public partial class PremierSolutionsContextProcs : DbContext
             entity.Property(e => e.RequestDate);
             entity.Property(e => e.RequestDetails);
             entity.Property(e => e.Status);
-        });        
+        });         
         
         modelBuilder.Entity<GetMaintenanceJobs>(entity =>
         {
@@ -96,6 +101,8 @@ public partial class PremierSolutionsContextProcs : DbContext
         modelBuilder.Entity<GetEmployeeDetails>(entity =>
         {
             entity.HasNoKey(); 
+            entity.Property(e => e.EmpId);
+            entity.Property(e => e.EmployeeType);
             entity.Property(e => e.FirstName);
             entity.Property(e => e.LastName);
             entity.Property(e => e.Email);

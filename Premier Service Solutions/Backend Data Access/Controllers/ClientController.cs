@@ -39,42 +39,78 @@ namespace PremierSolutions.Controllers
             return await _context.Clients.ToListAsync();
         }
 
-        // GET: api/clients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(int id)
+        // GET: api/clients/find-client
+        [HttpGet("find-client/{email}")]
+        public async Task<ActionResult<Client>> GetClient(string email)
         {
-          if (_context.Clients == null)
-          {
-              return NotFound();
-          }
-            var client = await _context.Clients.FindAsync(id);
-
-            if (client == null)
+            if (_context.Clients == null)
             {
                 return NotFound();
             }
 
-            return client;
-        }
-
-        // PUT: api/clients/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutClient(int id, Client client)
-        {
-            if (id != client.ClientId)
+            var existingClient = await _context.Clients.FirstOrDefaultAsync(e => e.Email == email);
+            
+            if (existingClient == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(client).State = EntityState.Modified;
+            return existingClient;
+        }
+
+        // PUT: api/clients/edit-client/{email}
+        [HttpPut("edit-client/{email}")]
+        public async Task<IActionResult> PutClient(string email, Client client)
+        {
+            var existingClient = await _context.Clients.FirstOrDefaultAsync(e => e.Email == email);
+
+            if (existingClient == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(client.ClientName))
+            { existingClient.ClientName = client.ClientName; }
+
+            if (!string.IsNullOrEmpty(client.ClientType))
+            { existingClient.ClientType = client.ClientType; }   
+
+            if (!string.IsNullOrEmpty(client.Email))
+            { existingClient.Email = client.Email; }
+
+            if (!string.IsNullOrEmpty(client.Password))
+            {
+                int iterations = 4;
+                int memorySize = 65536;
+                int parallelism = 4;
+
+                using var hasher = new Argon2id(Encoding.UTF8.GetBytes(client.Password));
+                hasher.Salt = Encoding.UTF8.GetBytes("YourSaltHere");
+                hasher.DegreeOfParallelism = parallelism;
+                hasher.MemorySize = memorySize;
+                hasher.Iterations = iterations;
+
+                byte[] hash = hasher.GetBytes(32);
+                existingClient.Password = Convert.ToBase64String(hash);
+            }
+
+            if (!string.IsNullOrEmpty(client.ContactNumber))
+            { existingClient.ContactNumber = client.ContactNumber; }
+
+            if (!string.IsNullOrEmpty(client.Address))
+            { existingClient.Address = client.Address; }
+
+            if (!string.IsNullOrEmpty(client.ContactNumber))
+            { existingClient.ContactNumber = client.ContactNumber; }
 
             try
             {
                 await _context.SaveChangesAsync();
+                return Ok("Changes has been saved.");
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClientExists(id))
+                if (!ClientExists(email))
                 {
                     return NotFound();
                 }
@@ -83,8 +119,6 @@ namespace PremierSolutions.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/clients
@@ -111,10 +145,6 @@ namespace PremierSolutions.Controllers
                 byte[] hash = hasher.GetBytes(32);
                 client.Password = Convert.ToBase64String(hash);
             }
-            else 
-            {
-                return BadRequest("Password is null or empty.");
-            }
 
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
@@ -124,21 +154,22 @@ namespace PremierSolutions.Controllers
             return CreatedAtAction("GetClient", new { id = client.ClientId }, client);
         }
 
-        // DELETE: api/clients/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClient(int id)
+        // DELETE: api/clients/delete-client
+        [HttpDelete("delete-client/{email}")]
+        public async Task<IActionResult> DeleteClient(string email)
         {
             if (_context.Clients == null)
             {
                 return NotFound();
             }
-            var client = await _context.Clients.FindAsync(id);
-            if (client == null)
+
+            var existingClient = await _context.Clients.FirstOrDefaultAsync(e => e.Email == email);
+            
+            if (existingClient == null)
             {
                 return NotFound();
             }
-
-            _context.Clients.Remove(client);
+            _context.Clients.Remove(existingClient);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -148,9 +179,25 @@ namespace PremierSolutions.Controllers
         [HttpGet("client-details/{clientEmail}")]
         public async Task<IEnumerable<GetClientDetails>> GetClientDetails(string clientEmail)
         {
-            return await _contextProcedures.SpGetClientDetails
-                .FromSqlRaw("call spGetClientDetails({0})", clientEmail)
-                .ToListAsync();
+            var clientDetails = await _contextProcedures.SpGetClientDetails
+                                .FromSqlRaw("call spGetClientDetails({0})", clientEmail)
+                                .ToListAsync();
+
+            var result = clientDetails.Select(details => new GetClientDetails
+            {
+                ClientId = details.ClientId,
+                ClientType = details.ClientType,
+                ClientName = details.ClientName,
+                Email = details.Email,
+                ContactNumber = details.ContactNumber,
+
+                StartDate = details.StartDate,
+                EndDate = details.EndDate,
+                ContractType = details.ContractType,
+                ServiceLevel = details.ServiceLevel
+            }).ToList();
+
+            return result;
         }
 
         [HttpGet("client-info/{clientEmail}")]
@@ -159,6 +206,26 @@ namespace PremierSolutions.Controllers
             return await _contextProcedures.SpGetAllClientDetails
                 .FromSqlRaw("call spGetAllClientDetails({0})", clientEmail)
                 .ToListAsync();
+        }
+
+        [HttpPost("new-client-login/{email}")]
+        public async Task<ActionResult> NewClientLogin(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var clientDetails = await _contextProcedures.SpGetAllClientDetails
+                .FromSqlRaw("call spGetAllClientDetails({0})", email)
+                .ToListAsync();
+
+            if (clientDetails.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok("Login successful");
         }
 
         // Stored procedure to get details for a specific client for login verification
@@ -221,9 +288,9 @@ namespace PremierSolutions.Controllers
             return diff == 0;
         }
 
-        private bool ClientExists(int id)
+        private bool ClientExists(string email)
         {
-            return (_context.Clients?.Any(e => e.ClientId == id)).GetValueOrDefault();
+            return (_context.Clients?.Any(e => e.Email == email)).GetValueOrDefault();
         }
     }
 }

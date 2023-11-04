@@ -1,0 +1,307 @@
+.emp-management-wrapper {
+    margin-top: 80px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.emp-management-wrapper .employee-main-heading {
+    text-align: center;
+}
+
+.emp-management-wrapper .employee-main-heading h1 {
+    font-weight: bold;
+}
+
+.employee-wrapper {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3em 0 3em 0;
+}
+
+.add-employee, .delete-employee {
+    border: 2px inset #2d2c54;
+    width: 136px;
+    padding: 14px;
+    border-radius: 4px;
+    margin: 0 1em;
+}
+
+.add-employee .add-employee-icon i, .delete-employee .delete-employee-icon i {
+    font-size: 50px;
+    color: #2d2c54;
+}
+
+.add-employee:hover, .delete-employee:hover {
+    cursor: pointer;
+    background-color: #f3f1f1;
+    transition: 0.5s
+}
+
+.add-employee .add-employee-text p, .delete-employee .delete-employee-text p {
+    color: gray;
+    margin: 0;
+    margin-top: 1em;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+}
+
+.select-employee, .email-search {
+    width: 250px;
+    margin: 0.8em 0em 1.2em 0;
+    border-radius: 8px;
+    height: 30px;
+}
+
+.select-employee {
+    margin-right: 5em;
+    padding: 0 0.5em;
+}
+
+.email-search {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 300px;
+}
+
+.search-icon {
+    padding: 0 5px;
+    padding-right: 8px;
+    margin-bottom: 5px;
+    height: 30px;
+    background-color: #2d2c54;
+    color: white;
+    font-size: 23px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.search-icon:hover {
+    cursor: pointer;
+}
+
+.table-inputs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    bottom: 1em;
+}
+
+.cm-table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.employee-table-wrapper {
+    overflow: auto;
+    height: 355px;
+    width: 1400px;
+}
+  
+.employee-table {
+    width: 100%;
+    position: relative;
+    z-index: -1;
+}
+  
+.employee-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f2f2f2;
+    z-index: 0;
+}
+  
+.employee-table th, .employee-table td {
+    width: 105px;
+}
+
+.employee-table-wrapper th:nth-child(1),
+.employee-table-wrapper td:nth-child(1) {
+    width: 10px;
+}
+
+.employee-table-wrapper th:nth-child(2),
+.employee-table-wrapper td:nth-child(2) {
+    width: 120px;
+}
+
+.employee-table-wrapper th:nth-child(5),
+.employee-table-wrapper td:nth-child(5) {
+    width: 100px;
+}
+
+.employee-table-wrapper th:nth-child(6),
+.employee-table-wrapper td:nth-child(6) {
+    width: 70px;
+}
+
+.employee-table-wrapper th:nth-child(7),
+.employee-table-wrapper td:nth-child(7) {
+    width: 70px;
+}
+
+.employee-table-wrapper th:nth-child(8),
+.employee-table-wrapper td:nth-child(8) {
+    width: 240px;
+}
+
+.modal-dialog {
+    position: relative;
+    top: 7em;
+}
+
+.modal-content {
+    border: 3px groove #2d2c54;
+}
+
+.modal-body {
+    padding: 1.7em 0 0 0;
+}
+
+.modal-header {
+    padding: 0.5em 1.5em;
+    background-color: #2d2c54;
+    color: white;
+}
+
+.close-modal-button {
+    background-color: inherit;
+    color: white;
+    font-size: 25px;
+    padding: 0%;
+    border: none;
+}
+
+.modal-header .add-modal-heading {
+    position: relative;
+    left: 24%;
+}
+
+.modal-header .add-modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-header .delete-modal-heading {
+    position: relative;
+    left: 20%;
+}
+
+.modal-header .delete-modal-heading h5 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 0;
+    background-color: #2d2c54;
+}
+
+.modal-footer .btn-add, .modal-footer .btn-delete {
+    border: 3px outset #2d2c54;
+    background-color: white;
+    color: #2d2c54;
+    font-weight: bold;
+}
+
+.modal-footer .btn-add:hover, .modal-footer .btn-delete:hover {
+    background-color: #f1f1f1;
+}
+
+/* Modal Popup */
+.popup-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup-modal-dialog {
+    padding: 1.5em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 300px;
+    height: fit-content;
+    background-color: white;
+    position: relative;
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup-modal-icon i {
+    color: #313074;
+    font-size: 110px;
+}
+
+.popup-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.5em 0 0 0;
+}
+
+.popup-heading p {
+    font-size: 2rem;
+    font-weight: bolder;
+    text-align: center;
+    margin: 0;
+}
+
+.popup-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.8em 0 0 0;
+}
+
+.popup-message {
+    margin: 0.5em 0 0em 0;
+    text-align: center;
+}
+
+.popup-message p {
+    width: 250px;
+}
+
+.popup-btn-div button {
+    border: 1px inset white;
+    background-color: #313074;
+    color: white;
+    font-weight: bold;
+}
+
+.popup-btn-div button:hover {
+    border: 1px inset #313074;
+    background-color: white;
+    color: #313074;
+    transition: 0.5s;
+}
+
+.popup-btn-wrap {
+    display: flex;
+    flex-direction: row;
+    margin: 0.5em 0 0 0;
+}
+
+.popup-btn-wrap .btn-no {
+    margin: 0 1.5em 0 0;
+}

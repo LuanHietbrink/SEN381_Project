@@ -1,0 +1,356 @@
+﻿.job-list-wrapper, .service-wrapper {
+  margin: 90px 0 0 0;
+}
+
+.id-input-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.id-input-wrap label {
+  font-size: 1.5rem;
+}
+
+.id-input-wrap .id-input {
+  margin: 0;
+}
+
+.id-input-wrap .id-input input {
+  width: 100px;
+}
+ 
+.btn-save-tech {
+  border: 2px outset white ;
+  background-color: white;
+  color: #2D2C54;
+}
+
+.btn-save-tech:hover {
+  border: 2px outset white;
+  color: white;
+  transition: 0.3s;
+}
+
+/* Modal Popup */
+.popup-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.popup-modal-dialog {
+  padding: 1.5em;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 300px;
+  height: fit-content;
+  background-color: white;
+  position: relative;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup-modal-icon i {
+  color: #313074;
+  font-size: 110px;
+}
+
+.popup-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5em 0 0 0;
+}
+
+.popup-heading p {
+  font-size: 2rem;
+  font-weight: bolder;
+  text-align: center;
+  margin: 0;
+}
+
+.popup-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.8em 0 0 0;
+}
+
+.popup-message {
+  margin: 0.5em 0 0em 0;
+  text-align: center;
+}
+
+.popup-message p {
+  width: 250px;
+}
+
+.popup-btn-div button {
+  border: 1px inset white;
+  background-color: #313074;
+  color: white;
+  font-weight: bold;
+}
+
+.popup-btn-div button:hover {
+  border: 1px inset #313074;
+  background-color: white;
+  color: #313074;
+  transition: 0.5s;
+}
+
+.popup-btn-wrap {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5em 0 0 0;
+}
+
+.popup-btn-wrap .btn-no {
+  margin: 0 1.5em 0 0;
+}
+
+.ticket:hover {
+  cursor: pointer;
+  background-color: rgb(246, 245, 245);
+}
+
+/* ============================ */
+
+.center {
+  text-align: center;
+}
+
+.center-head {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.user-info {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}
+
+.profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+.left-align {
+  text-align: left;
+  padding: 10px;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #000000;
+}
+
+.assign- {
+  color: #2d2c54;
+  text-align: center;
+  font-weight: 700;
+  font-size: x-large;
+}
+
+.ticket-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px; 
+}
+
+.ticket-list h5 {
+  text-decoration: underline;
+  text-align: left;
+}
+
+.ticket {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* 
+.ticket-list {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    padding: 10px;
+}
+.ticket {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 70%; 
+    margin: 10px;
+    text-align: left;
+    border-radius: 12px;
+    background-color: lightgrey;
+}   */
+
+
+.ticket-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-content p {
+  max-width: 80%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.servcie-button {
+  background-color: white;
+  color: #2d2c54;
+  border: solid 1px #2d2c54;
+  padding: 10px 20px;
+  margin: 50px; /* Add spacing between buttons */
+  cursor: pointer;
+  border-radius: 5px;
+  width: 225px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.servcie-button:hover{
+    background-color: #2D2C54;
+    color: white;
+}
+.display {
+  border: solid 1px #2d2c54;
+  border-radius: 5px;
+  text-align: center; /* Horizontal alignment of text */
+  display: flex; /* Use flexbox to align items horizontally */
+  justify-content: center;
+  height: 30vh;
+  align-items: center; /* Center vertically within the container */
+  margin: 20px;
+}
+
+.stat-container {
+  text-align: center;
+  margin: 10px 50px 0; /* Optional margin between label and input */
+}
+
+.titles {
+  color: #2d2c54;
+  font-weight: 700;
+  font-size: 25px;
+  margin-right: 10px; /* Add spacing to the right of the text */
+  max-width: 250px;
+}
+
+input {
+  width: 50px; /* Expand input to fill the container width */
+}
+
+.tj-modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999; /* Adjust the z-index as needed to ensure it appears above other content */
+}
+
+.tj-modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  width: 25%;
+  padding: 20px;
+  margin: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-button- {
+  background-color: #2d2c54;
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.select-button- {
+  background-color: #2d2c54;
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.label-and-select {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 10px 20px; /* Add spacing between the label and select */
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.title- {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* To distribute elements horizontally */
+  width: 100%; /* Expand the width to 100% to keep buttons in place */
+}
+
+.jobDropdown {
+  display: flex;
+  align-items: center;
+  width: 250px;
+  text-align: center; /* Center the text horizontally within the select box */
+  margin: 10px 50px; /* Add spacing between the label and select */
+  background-color: #2d2c54;
+  color: white;
+}
+
+.filter-container {
+  text-align: center;
+}

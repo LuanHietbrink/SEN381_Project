@@ -4,6 +4,7 @@ USE `Premier_Service_Solutions`;
 -- Create tables
 CREATE TABLE Client (
     ClientID INT AUTO_INCREMENT PRIMARY KEY,
+    ClientType VARCHAR(10),
     ClientName VARCHAR(100),
     Email VARCHAR(50),
     Password VARCHAR(50),
@@ -13,6 +14,7 @@ CREATE TABLE Client (
 
 CREATE TABLE Employee (
     EmpID INT AUTO_INCREMENT PRIMARY KEY,
+    EmployeeType VARCHAR(10),
     FirstName VARCHAR(50),
     LastName VARCHAR(50),
     Email VARCHAR(50),
@@ -45,9 +47,9 @@ CREATE TABLE ServiceRequest (
     RequestID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT,
     EmpID INT,
-    RequestDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    RequestDate DATETIME DEFAULT CURRENT_TIMESTAMP(),
     RequestDetails VARCHAR(100) NOT NULL,
-    Status VARCHAR(50) NOT NULL DEFAULT 'In Progress',
+    Status VARCHAR(50) DEFAULT 'In Progress',
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID),
     FOREIGN KEY (EmpID) REFERENCES Employee(empID)    
 );
@@ -65,11 +67,14 @@ CREATE PROCEDURE spGetClientDetails (IN Client_Email VARCHAR(50))
 BEGIN
     SELECT
         C.ClientID,
+        C.ClientType,
         C.ClientName,
         C.Email,
         C.ContactNumber,
+        SC.StartDate,
+        SC.EndDate,
         SC.ContractType,
-        SC.EndDate
+        SC.ServiceLevel
     FROM
         Client C
     INNER JOIN
