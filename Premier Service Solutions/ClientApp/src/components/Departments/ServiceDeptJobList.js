@@ -114,24 +114,6 @@ export function ServiceDeptJobList() {
         (filterId === '' || request.requestId === filterId)
     );
 
-    // assignTechnician = () => {
-    //     const { selectedJob, selectedTechnician } = this.state;
-    
-    //     if (selectedTechnician) {
-    //       axios
-    //         .post("/api/assign-technician", {
-    //           requestId: selectedJob.requestId,
-    //           technicianId: selectedTechnician,
-    //         })
-    //         .then(() => {
-    //           this.closeModal();
-    //         })
-    //         .catch((error) => {
-    //           console.error("Error assigning technician:", error);
-    //         });
-    //     }
-    //   };
-
     // =============================================================================================
     const formatDate = (date) => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -149,13 +131,13 @@ export function ServiceDeptJobList() {
 
     const assignTechnician = (requestId, empId) => {
         // Make a PUT request to update empId for the selected request
-        axios.put(`/api/service-requests/edit-request/${requestId}`, { empId })
+        axios.put(`/api/service-requests/edit-request/${requestId}`, { empId, status: 'In Progress' })
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {
-                    setState({ ...state, successMessage: 'Technician assigned successfully!', isMessageModalOpen: true });
+                    setState({ ...state, successMessage: 'Technician assigned successfully!', isTechModalOpen: false,  isMessageModalOpen: true });
                 } else {
-                    setState({ ...state, errorMessage: 'Technician assignment is unsuccessful.', isMessageModalOpen: true });
+                    setState({ ...state, errorMessage: 'Technician assignment is unsuccessful.', isTechModalOpen: false, isMessageModalOpen: true });
                 }
             })
             .catch(error => console.error('Error updating empId:', error));
@@ -169,7 +151,7 @@ export function ServiceDeptJobList() {
                 if (response.status === 200) {
                     setState({ ...state, successMessage: 'Technician re-assigned successfully!', isTechModalOpen: false, isMessageModalOpen: true });
                 } else {
-                    setState({ ...state, errorMessage: 'Technician re-assignment is unsuccessful.', isMessageModalOpen: true });
+                    setState({ ...state, errorMessage: 'Technician re-assignment is unsuccessful.', isTechModalOpen: false, isMessageModalOpen: true });
                 }
             })
             .catch(error => console.error('Error updating empId:', error));
