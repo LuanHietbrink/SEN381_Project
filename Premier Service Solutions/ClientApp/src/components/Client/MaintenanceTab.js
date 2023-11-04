@@ -15,7 +15,14 @@ export function MaintenanceTab() {
     // State variable to store input values
     const [state, setState] = useState({
         newRequestDetails: '',
+
+        isErrorModalOpen: false,
+        isSuccessModalOpen: false,
+        error: null,
+        successMessage: null,
     });
+
+    const { isErrorModalOpen, isSuccessModalOpen, error, successMessage } = state;
 
     // Use useEffect to store client data in local storage when it changes
     useEffect(() => {
@@ -25,7 +32,7 @@ export function MaintenanceTab() {
             }
         } catch (error) {
             console.error('Error storing clientData in local storage:', error);
-            window.alert('Error storing clientData in local storage');
+            setState({ ...state, error: 'Error storing clientData in local storage.', isErrorModalOpen: true });
         }
     }, [clientData]);
 
@@ -40,7 +47,7 @@ export function MaintenanceTab() {
         }
     } catch (error) {
         console.error('Error retrieving clientData from local storage:', error);
-        window.alert('Error retrieving clientData from local storage');
+        setState({ ...state, error: 'Error retrieving clientData from local storage.', isErrorModalOpen: true });
     }
 
     // Handle input changes and update form modification status
@@ -64,11 +71,11 @@ export function MaintenanceTab() {
                 }
             } else {
                 console.error('Failed to fetch client details:', clientResponse.status);
-                window.alert('Failed to fetch client details');
+                setState({ ...state, error: 'Failed to fetch client details.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('An error occurred while fetching client details:', error);
-            window.alert('An error occurred while fetching client details');
+            setState({ ...state, error: 'An error occurred while fetching client details.', isErrorModalOpen: true });
         }
     };
 
@@ -76,6 +83,14 @@ export function MaintenanceTab() {
     useEffect(() => {
         fetchClientDetails(storedClientData.email);
     }, [storedClientData.email]);
+
+    // Function to handle modals
+    const closeErrorModal = () => {
+        setState({ ...state, isErrorModalOpen: false });
+    };
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
+    };
 
     // Function to log a new maintenance request
     const logRequest = async () => {
@@ -96,22 +111,74 @@ export function MaintenanceTab() {
 
                 if (response.ok) {
                     console.log('Request successfully logged.');
-                    window.alert('Request successfully logged.');
+                    setState({ ...state, successMessage: 'Request successfully logged!', isSuccessModalOpen: true });
                     fetchClientDetails(storedClientData.email);
                     state.newRequestDetails = '';
                 } else {
                     console.error('Failed to log request:', response.status);
-                    window.alert('Failed to log request');
+                    setState({ ...state, error: 'Failed to log request.', isErrorModalOpen: true });
                 }
             } catch (error) {
                 console.error('An error occurred while logging the request:', error);
-                window.alert('An error occurred while logging the request');
+                setState({ ...state, error: 'An error occurred while logging the request.', isErrorModalOpen: true });
+
             }
         } else {
             console.log('Request details cannot be empty.');
-            window.alert('Request details cannot be empty.');
+            setState({ ...state, error: 'Request details cannot be empty.', isErrorModalOpen: true });
         }
     };
+
+    const errorModal = (
+        <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div className='popup-heading'>
+                                    <p>Error!</p>
+                                </div>
+                                <div className='popup-message'>
+                                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeErrorModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return(
         <>
@@ -161,7 +228,6 @@ export function MaintenanceTab() {
                                 {fetchedRequestData.map((request, index) => (
                                     <tr key={index}>
                                         <td>{request.requestId || "n/a"}</td>
-                                        {/* <td>{new Date(request.requestDate).toLocaleDateString() || "n/a"}</td> */}
                                         <td>{request.requestDate ? new Date(request.requestDate).toLocaleDateString() : "n/a"}</td>
                                         <td>{request.requestDetails || "n/a"}</td>
                                         <td>{request.status || "n/a"}</td>
@@ -171,6 +237,8 @@ export function MaintenanceTab() {
                         </table>
                     </div>
                 </div>
+                {isErrorModalOpen && errorModal}
+                {isSuccessModalOpen && successModal}
             </div>
         </>
     );

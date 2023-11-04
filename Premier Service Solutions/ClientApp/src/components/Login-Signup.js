@@ -5,8 +5,6 @@ import './Login-Signup.css'
 
 export function LoginSignup() {
     const navigate = useNavigate();
-    const [validPassword, setValidPassword] = useState(true);
-    const [validContactNumber, setValidContactNumber] = useState(true);
 
     // Initialize the component's state using the useState hook
     const [state, setState] = useState({
@@ -18,6 +16,9 @@ export function LoginSignup() {
         contactNumber: '',
         userType: 'login', // User type (login or signup)
         error: null,
+        isErrorModalOpen: false,
+        isSuccessModalOpen: false,
+        successMessage: 'You have successfully signed up!',
         clientData: null,
         employeeData: null,
     });
@@ -25,7 +26,7 @@ export function LoginSignup() {
     // Event handler for input changes
     const handleInputChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
-    }
+    }    
 
     // Event handler for selecting client type
     const handleClientTypeChange = (e) => {
@@ -45,6 +46,14 @@ export function LoginSignup() {
         });
     }
 
+    // Function to handle modal closing
+    const closeErrorModal = () => {
+        setState({ ...state, isErrorModalOpen: false });
+    };
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
+    };
+
     // Event handler for user login or signup
     const handleLogin = async () => {
         try {
@@ -62,7 +71,7 @@ export function LoginSignup() {
                 if (employeeData.length === 1) {
                     // Handle employee login
                     if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (!password))) {
-                        setState({ ...state, error: 'Password is required.' });
+                        setState({ ...state, error: 'Password is required.', isErrorModalOpen: true });
                         return;
                     } else if (((employeeData[0].email !== null) && (employeeData[0].password == null)) && ((email !== null) && (!password))) {
                         const response = await fetch(`api/employees/new-employee-login/${email}`, {
@@ -86,11 +95,11 @@ export function LoginSignup() {
                         if (response.status === 200) {
                             setState({ userType: 'employee', employeeData: employeeData[0], error: null });
                         } else if (response.status === 400) {
-                            setState({ ...state, error: 'Invalid details.' });
+                            setState({ ...state, error: 'Invalid details.', isErrorModalOpen: true });
                         }
                     }
                 } else if (!email || !password) {
-                    setState({ ...state, error: 'Email and password are required.' });
+                    setState({ ...state, error: 'Email and password are required.', isErrorModalOpen: true });
                     return;
                 } else if (clientData.length === 1) {
                     // Handle client login
@@ -104,17 +113,17 @@ export function LoginSignup() {
                     if (response.status === 200) {
                         setState({ userType: 'client', clientData: clientData[0], error: null });
                     } else if (response.status === 400) {
-                        setState({ ...state, error: 'Invalid details.' });
+                        setState({ ...state, error: 'Invalid details.', isErrorModalOpen: true });
                     }
                 } else {
-                    setState({ ...state, error: 'No matching user found.' });
+                    setState({ ...state, error: 'No matching user found.', isErrorModalOpen: true });
                 }
             } else if (state.userType === 'signup') {
                 const { clientName, email, password, clientType, address, contactNumber } = state;
 
                 if (!clientName || !email || !password || !clientType || !address || !contactNumber) {
-                    setState({ ...state, error: 'All information is required.' });
-                    return;
+                    setState({ ...state, error: 'All information is required.', isErrorModalOpen: true });
+                    return; 
                 }
 
                 // Password length validation (8 characters)
@@ -129,10 +138,8 @@ export function LoginSignup() {
                 const isValid = isLengthValid && isComplexityValid && !hasSequentialOrRepeated;
             
                 if (!isValid) {
-                    setValidPassword(false);
+                    setState({ ...state, error: 'Password must be at least 8 characters long, include uppercase and lowercase letters, numbers, and special characters, and not contain repeated characters.', isErrorModalOpen: true });
                     return;
-                } else {
-                    setValidPassword(true);
                 }
 
                 const isContactNumberValid = (contactNumber) => {
@@ -148,10 +155,8 @@ export function LoginSignup() {
                 const isNumberValid = isContactNumberValid(state.contactNumber);
 
                 if (!isNumberValid) {
-                    setValidContactNumber(false);
+                    setState({ ...state, error: 'Contact number must start with "+27" and be 12 characters long or start with "0" and be 10 characters long.', isErrorModalOpen: true });
                     return;
-                } else {
-                    setValidContactNumber(true);
                 }
 
                 const signUpData = {
@@ -172,19 +177,71 @@ export function LoginSignup() {
                 });
 
                 if (response.status === 201) {
-                    setState({ userType: 'login', error: null });
-                    window.alert('You have successfully signed up!');
+                    setState({ userType: 'login', error: null, isSuccessModalOpen: true });
                 } else {
-                    setState({ ...state, error: 'Error signing up.' });
+                    setState({ ...state, error: 'Error signing up.', isErrorModalOpen: true });
                 }
             }
         } catch (error) {
-            setState({ ...state, error: 'Error fetching user data.' });
+            setState({ ...state, error: 'Error fetching user data.', isErrorModalOpen: true });
         }
     }
 
+    // Modal to log errors
+    const { userType, error, clientData, employeeData, isErrorModalOpen, isSuccessModalOpen, successMessage } = state;
+
+    const errorModal = (
+        <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''} modal-overlay`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div className='popup-heading'>
+                                    <p>Error!</p>
+                                </div>
+                                <div className='popup-message'>
+                                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeErrorModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     // Destructure the state variables and data management functions
-    const { userType, error, clientData, employeeData } = state;
     const { setPrivateData } = useData();
 
     if (userType === 'client' && clientData) {
@@ -238,14 +295,11 @@ export function LoginSignup() {
                                 />
                             </div>
                         </div>
-                        <div className='login-error-div'>
-                            {error && <p style={{color: "red"}}>{error}</p>}
-                        </div>
                     </>
                 )}
                 {state.userType === 'signup' && (
                     <>
-                        <div className='input-group signup-div'>
+                        <div className='input-group'>
                             <div className='form-group'>
                                 <input
                                     type="text"
@@ -310,15 +364,6 @@ export function LoginSignup() {
                                 </select>
                             </div>                    
                         </div>
-                        <div className='error-div'>
-                            {error && <p style={{color: "red"}}>{error}</p>}
-                            {!validPassword && (
-                                <p style={{ color: "red" }}>Password must be at least 8 characters long, include uppercase and lowercase letters, <br />numbers, and special characters, and not contain repeated characters.</p>
-                            )}
-                            {!validContactNumber && (
-                                <p style={{ color: "red" }}>Contact number must start with "+27" and be 12 characters long or <br />start with "0" and be 10 characters long.</p>
-                            )}
-                        </div>
                     </>
                 )}
 
@@ -344,6 +389,9 @@ export function LoginSignup() {
                         clipPath: 'circle(50% at 120% 50%)',
                     }}
                 ></div>
+
+            {isErrorModalOpen && errorModal}
+            {isSuccessModalOpen && successModal}
         </div>
     );
 }

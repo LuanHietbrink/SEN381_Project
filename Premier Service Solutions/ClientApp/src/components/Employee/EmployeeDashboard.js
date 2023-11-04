@@ -380,7 +380,7 @@ export function EmployeeDashboard() {
                                 <h1><b>Package Tracking</b></h1>
                             </div>
 
-                            <div style={{display: "flex", justifyContent: "center", margin: "1.5em 0"}}><hr style={{width: "20%"}}></hr></div>   
+                            <div style={{display: "flex", justifyContent: "center", margin: "1.5em 0", zIndex: "-1"}}><hr style={{width: "20%", zIndex: "-1"}}></hr></div>   
 
                             {/* Sales Stats */}
                             <div className='chart-wrapper'>
@@ -397,7 +397,7 @@ export function EmployeeDashboard() {
                                 </div>
                             </div> 
 
-                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0"}}><hr style={{width: "50%"}}></hr></div>                   
+                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0", zIndex: "-1"}}><hr style={{width: "50%", zIndex: "-1"}}></hr></div>                   
 
                             {/* Package Stats */}
                             <div className="package-list">
@@ -476,7 +476,7 @@ export function EmployeeDashboard() {
                                 </div>
                             </div>  
 
-                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0"}}><hr style={{width: "50%"}}></hr></div> 
+                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0", zIndex: "-1"}}><hr style={{width: "50%", zIndex: "-1"}}></hr></div> 
 
                             <div className='chart-wrapper'>
                                 <div className='chart-titles'>
@@ -492,7 +492,7 @@ export function EmployeeDashboard() {
                                 </div>
                             </div>    
 
-                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0"}}><hr style={{width: "50%"}}></hr></div>
+                            <div style={{display: "flex", justifyContent: "center", margin: "3em 0", zIndex: "-1"}}><hr style={{width: "50%", zIndex: "-1"}}></hr></div> 
 
                             <div className='chart-wrapper'>
                                 <div className='chart-titles'>

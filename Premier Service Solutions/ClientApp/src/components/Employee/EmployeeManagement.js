@@ -21,7 +21,14 @@ export function EmployeeManagement() {
         addEmployeeEmail: '',
 
         deleteEmployeeEmail: '',
+
+        error: null,
+        isErrorModalOpen: false,
+        isSuccessModalOpen: false,
+        successMessage: null,
     });
+
+    const { isErrorModalOpen, isSuccessModalOpen, error, successMessage } = state;
 
     // useEffect hook to fetch data based on the selected option
     useEffect(() => {
@@ -223,10 +230,10 @@ export function EmployeeManagement() {
 
             if (response.ok) {
                 setIsAddModalOpen(false);
-                window.alert('Employee added successfully');
+                setState({ ...state, successMessage: 'Employee added successfully!', isSuccessModalOpen: true });
                 window.location.reload();
             } else {
-                window.alert('Failed to add employee');
+                setState({ ...state, error: 'Failed to add employee.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('Error adding employee:', error);
@@ -247,10 +254,10 @@ export function EmployeeManagement() {
 
             if (response.ok) {
                 setIsDeleteModalOpen(false);
-                window.alert('Employee deleted successfully');
+                setState({ ...state, successMessage: 'Employee deleted successfully!', isSuccessModalOpen: true });
                 window.location.reload();
             } else {
-                window.alert('Failed to delete employee');
+                setState({ ...state, error: 'Failed to delete employee.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('Error deleting employee:', error);
@@ -271,6 +278,14 @@ export function EmployeeManagement() {
     };
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
+    };
+
+    // Function to handle modals
+    const closeErrorModal = () => {
+        setState({ ...state, isErrorModalOpen: false });
+    };
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
     };
 
     // Define the modal as a separate JSX element
@@ -347,6 +362,57 @@ export function EmployeeManagement() {
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-delete" onClick={deleteEmployee}>Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const errorModal = (
+        <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div className='popup-heading'>
+                                    <p>Error!</p>
+                                </div>
+                                <div className='popup-message'>
+                                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeErrorModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -443,6 +509,8 @@ export function EmployeeManagement() {
 
                 {isAddModalOpen && addEmployeeModal}
                 {isDeleteModalOpen && deleteEmployeeModal}
+                {isErrorModalOpen && errorModal}
+                {isSuccessModalOpen && successModal}
             </div>
         </>
     );

@@ -24,7 +24,14 @@ export function ClientMaintenanceDept() {
         addContactNumber: '',
 
         deleteClientEmail: '',
+
+        error: null,
+        isErrorModalOpen: false,
+        isSuccessModalOpen: false,
+        successMessage: null,
     });
+
+    const { isErrorModalOpen, isSuccessModalOpen, error, successMessage } = state;
 
     // useEffect hook to fetch data based on the selected option
     useEffect(() => {
@@ -225,10 +232,10 @@ export function ClientMaintenanceDept() {
 
             if (response.ok) {
                 setIsAddModalOpen(false);
-                window.alert('Client added successfully');
+                setState({ ...state, successMessage: 'Client added successfully!', isSuccessModalOpen: true });
                 window.location.reload();
             } else {
-                window.alert('Failed to add client');
+                setState({ ...state, error: 'Failed to add client.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('Error adding client:', error);
@@ -249,10 +256,10 @@ export function ClientMaintenanceDept() {
 
             if (response.ok) {
                 setIsDeleteModalOpen(false);
-                window.alert('Client deleted successfully');
+                setState({ ...state, successMessage: 'Client deleted successfully!', isSuccessModalOpen: true });
                 window.location.reload();
             } else {
-                window.alert('Failed to delete client');
+                setState({ ...state, error: 'Failed to delete client.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('Error deleting client:', error);
@@ -274,6 +281,14 @@ export function ClientMaintenanceDept() {
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };    
+
+    // Function to handle modals
+    const closeErrorModal = () => {
+        setState({ ...state, isErrorModalOpen: false });
+    };
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
+    };
 
     const addModalContent = (
         <div className={`modal ${isAddModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isAddModalOpen ? 'block' : 'none' }}>
@@ -380,6 +395,57 @@ export function ClientMaintenanceDept() {
         </div>
     );
 
+    const errorModal = (
+        <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div className='popup-heading'>
+                                    <p>Error!</p>
+                                </div>
+                                <div className='popup-message'>
+                                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeErrorModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return(
         <>
             <EmployeeDashboardNav />
@@ -470,6 +536,8 @@ export function ClientMaintenanceDept() {
 
                 {isAddModalOpen && addModalContent}
                 {isDeleteModalOpen && deleteModalContent}
+                {isErrorModalOpen && errorModal}
+                {isSuccessModalOpen && successModal}
             </div>
         </>
     );

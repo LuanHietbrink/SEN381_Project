@@ -22,7 +22,11 @@ export function ClientAccSetup() {
         contactNumber: '',
         isInfoComplete: false,
         isDashboardVisible: false,
+        isSuccessModalOpen: false,
+        successMessage: null,
     });
+
+    const { isSuccessModalOpen, successMessage } = state;
 
     // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
@@ -51,6 +55,10 @@ export function ClientAccSetup() {
     // Function to handle input changes
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
+    };
+
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
     };
 
     // Function to check if employee information is complete
@@ -152,8 +160,7 @@ export function ClientAccSetup() {
         })
             .then((response) => {
                 if (response.ok) {
-                    window.alert('Your account setup is now complete!');
-                    setState({ ...state, isDashboardVisible: true });
+                    setState({ ...state, isDashboardVisible: true, successMessage: 'Your account setup is now complete!', isSuccessModalOpen: true });
                 } else {
                     console.error('Error updating employee details');
                 }
@@ -165,6 +172,30 @@ export function ClientAccSetup() {
     
     // Destructure state variables
     const { isInfoComplete, isDashboardVisible } = state;
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -180,9 +211,20 @@ export function ClientAccSetup() {
                                     <input
                                         type="text"
                                         name="firstName"
-                                        value={state.clientName}
+                                        value={state.firstName}
                                         onChange={handleChange}
                                         placeholder="First Name"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={state.lastName}
+                                        onChange={handleChange}
+                                        placeholder="Last Name"
                                         required
                                     />
                                 </div>
@@ -201,17 +243,6 @@ export function ClientAccSetup() {
                                 <div className="form-group">
                                     <input
                                         type="text"
-                                        name="address"
-                                        value={state.address}
-                                        onChange={handleChange}
-                                        placeholder="Address"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <input
-                                        type="text"
                                         name="contactNumber"
                                         value={state.contactNumber}
                                         onChange={handleChange}
@@ -220,6 +251,27 @@ export function ClientAccSetup() {
                                     />
                                 </div>
 
+                                <div className="form-group">
+                                    <input
+                                        type="text"
+                                        name="emgContact"
+                                        value={state.emgContact}
+                                        onChange={handleChange}
+                                        placeholder="Emergency Contact"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <input
+                                        type="text"
+                                        name="skills"
+                                        value={state.skills}
+                                        onChange={handleChange}
+                                        placeholder="Skills"
+                                        required
+                                    />
+                                </div>
                             </div>
                             <div className='btn-wrap'>
                                 <button className='btn btn-save' onClick={handleShowEmployeeDashboard} disabled={!isInfoComplete}>
@@ -244,6 +296,7 @@ export function ClientAccSetup() {
                     </div>
                 )}
             </div>
+            {isSuccessModalOpen && successModal}
         </div>
     );
 }

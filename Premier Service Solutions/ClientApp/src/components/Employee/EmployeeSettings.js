@@ -29,8 +29,13 @@ export function EmployeeSettings() {
         password: '',
         contactNumber: '',
         emgContact: '',
-        skills: ''
+        skills: '',
+        isCertaintyModalOpen: false,
+        confirmSave: false,
+        confimationMessage: 'Are you sure you want to save these changes? Note: Changing your email will log you out.'
     });
+
+    const { isCertaintyModalOpen, confirmSave, confimationMessage } = state;
 
     // Use useEffect to store client data in local storage when it changes
     useEffect(() => {
@@ -89,9 +94,19 @@ export function EmployeeSettings() {
         fetchEmployeeInfo();
     }, [fetchEmployeeInfo]);
 
-    const handleSaveChanges = () => {
-        const confirmSave = window.confirm("Are you sure you want to save these changes? \n\nNote: Changing your email will log you out.");
-    
+    // Function to handle modal closing
+    const closeCertaintyModalNo = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmSave: false });
+    };
+
+    // Function to handle modal closing
+    const closeCertaintyModalYes = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmSave: true });
+    };
+
+    const handleSaveChanges = () => {   
+        setState({ ...state, isCertaintyModalOpen: true });
+
         if (!confirmSave) {
             // User canceled the save operation
             return;
@@ -165,14 +180,44 @@ export function EmployeeSettings() {
         window.location.reload();
     };
 
+    const certaintyModal = (
+        <div className={`popup-modal ${isCertaintyModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isCertaintyModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-message'>
+                                    <p>{confimationMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-wrap'>
+                                <div className='btn-no'>
+                                    <button type="button" className="btn btn-danger" onClick={closeCertaintyModalNo}>No</button>
+                                </div>
+                                <div>
+                                    <button type="button" className="btn btn-success" onClick={closeCertaintyModalYes}>Yes</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return(
         <>
             <EmployeeDashboardNav theFirstName={fetchedFirstName} theLastName={fetchedLastName} />
-            <div className="settings-wrapper">
-                <div className="main-heading">
+            <div className="employee-settings-wrapper">
+                <div className="emp-main-heading">
                     <h2>Account Settings</h2>
                 </div>
-                <div className="section-div">
+                <div className="emp-section-div">
                     <h3>Personal Details -</h3>
                 </div>
                 <div className='input-group' style={{ width: 'fit-content', margin: '0 auto' }}>
@@ -240,10 +285,14 @@ export function EmployeeSettings() {
                         />
                     </div>  
                     <div>
-                        <button onClick={handleSaveChanges} disabled={!isFormModified} className="btn btn-save">Save Changes</button>
+                        <button onClick={handleSaveChanges} disabled={!isFormModified} className="btn emp-btn-save">Save Changes</button>
                     </div>                  
                 </div>
+
+                {isCertaintyModalOpen && certaintyModal}
+
             </div>
+
         </>
     );
 }

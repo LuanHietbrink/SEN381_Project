@@ -18,6 +18,18 @@ export function ServicesOffered() {
     const [disableApplyButtons, setDisableApplyButtons] = useState(false);
     const [fetchedClientId, setFetchedClientId] = useState('');
 
+    const [state, setState] = useState({
+        isErrorModalOpen: false,
+        isSuccessModalOpen: false,
+        isCertaintyModalOpen: false,
+        error: null,
+        successMessage: null,
+        confirmApply: false,
+        confimationMessage: 'Are you sure you want to apply for this contract?'
+    });
+
+    const { isErrorModalOpen, isSuccessModalOpen, isCertaintyModalOpen, error, successMessage, confirmApply, confimationMessage } = state;
+
     // Use useEffect to store client data in local storage when it changes
     useEffect(() => {
         try {
@@ -108,11 +120,11 @@ export function ServicesOffered() {
                 }
             } else {
                 console.error('Failed to fetch client details:', clientResponse.status);
-                window.alert('Failed to fetch client details');
+                setState({ ...state, error: 'Failed to fetch client details.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('An error occurred while fetching client details:', error);
-            window.alert('An error occurred while fetching client details');
+            setState({ ...state, error: 'An error occurred while fetching client details.', isErrorModalOpen: true });
         }
     };
 
@@ -133,11 +145,11 @@ export function ServicesOffered() {
                 }
             } else {
                 console.error('Failed to fetch client details:', clientResponse.status);
-                window.alert('Failed to fetch client details');
+                setState({ ...state, error: 'Failed to fetch client details.', isErrorModalOpen: true });
             }
         } catch (error) {
             console.error('An error occurred while fetching client details:', error);
-            window.alert('An error occurred while fetching client details');
+            setState({ ...state, error: 'An error occurred while fetching client details.', isErrorModalOpen: true });
         }
     };
 
@@ -145,6 +157,21 @@ export function ServicesOffered() {
     useEffect(() => {
         fetchClientInfo(storedClientData.email);
     }, [storedClientData.email]);
+
+    // Function to handle modal closing
+    const closeErrorModal = () => {
+        setState({ ...state, isErrorModalOpen: false });
+    };
+    const closeSuccessModal = () => {
+        setState({ ...state, isSuccessModalOpen: false });
+    };
+    const closeCertaintyModalNo = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmApply: false });
+    };
+    // Function to handle modal closing
+    const closeCertaintyModalYes = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmApply: true });
+    };
 
     // Function to send an application for a service package
     const sendApplication = async (packageId, contractType, serviceLevel) => {
@@ -171,26 +198,107 @@ export function ServicesOffered() {
             });
 
             if (response.ok) {
-                window.alert("Application Successful!")
+                setState({ ...state, successMessage: 'Application Successful!', isSuccessModalOpen: true });
                 window.location.reload();
             } else {               
                 console.error("Failed to apply for the package:", response.status);
-                window.alert("Failed to apply for the package");
+                setState({ ...state, error: 'Failed to apply for the package.', isErrorModalOpen: true });
             }
         } catch (error) {            
             console.error("An error occurred while applying for the package:", error);
-            window.alert("An error occurred while applying for the package:", error);
+            setState({ ...state, error: 'An error occurred while applying for the package.', isErrorModalOpen: true });
         }
     };
     
     // Function to handle Apply button click
     const handleApplyButtonClick = (packageId, contractType, serviceLevel) => {
-        const confirmApply = window.confirm("Are you sure you want to apply for this contract?");
+        setState({ ...state, isCertaintyModalOpen: true });
         
         if (confirmApply) {
             sendApplication(packageId, contractType, serviceLevel);
         }
     };
+
+    const errorModal = (
+        <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <div className='popup-heading'>
+                                    <p>Error!</p>
+                                </div>
+                                <div className='popup-message'>
+                                    <p style={{ color: "red", textAlign: "center" }}>{error}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeErrorModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const successModal = (
+        <div className={`popup-modal ${isSuccessModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isSuccessModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-heading'>
+                                    <p>{successMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-div'>
+                                <button type="button" className="btn btn-popup" onClick={closeSuccessModal}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const certaintyModal = (
+        <div className={`popup-modal ${isCertaintyModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isCertaintyModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='popup-message'>
+                                    <p>{confimationMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-wrap'>
+                                <div className='btn-no'>
+                                    <button type="button" className="btn btn-danger" onClick={closeCertaintyModalNo}>No</button>
+                                </div>
+                                <div>
+                                    <button type="button" className="btn btn-success" onClick={closeCertaintyModalYes}>Yes</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 
     return(
         <div className="wrapper">
@@ -384,6 +492,9 @@ export function ServicesOffered() {
                     </div>
                 </>
             )}
+            {isErrorModalOpen && errorModal}
+            {isSuccessModalOpen && successModal}
+            {isCertaintyModalOpen && certaintyModal}
         </div>
     );
 }

@@ -38,7 +38,12 @@ export function ClientSettings() {
         clientName: '',
         address: '',
         contactNumber: '',
+        isCertaintyModalOpen: false,
+        confirmSave: false,
+        confimationMessage: 'Are you sure you want to save these changes? Note: Changing your email will log you out.'
     });
+
+    const { isCertaintyModalOpen, confirmSave, confimationMessage } = state;
 
     // Use useEffect to store client data in local storage when it changes
     useEffect(() => {
@@ -95,8 +100,18 @@ export function ClientSettings() {
         fetchClientInfo();
     }, [storedClientData.email]);
 
+    // Function to handle modal closing
+    const closeCertaintyModalNo = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmSave: false });
+    };
+
+    // Function to handle modal closing
+    const closeCertaintyModalYes = () => {
+        setState({ ...state, isCertaintyModalOpen: false, confirmSave: true });
+    };
+
     const handleSaveChanges = () => {
-        const confirmSave = window.confirm("Are you sure you want to save these changes? \n\nNote: Changing your email will log you out.");
+        setState({ ...state, isCertaintyModalOpen: true });
     
         if (!confirmSave) {
             // User canceled the save operation
@@ -220,6 +235,36 @@ export function ClientSettings() {
         checkAccountStatus();
     }, [fetchedEndDate]);
 
+    const certaintyModal = (
+        <div className={`popup-modal ${isCertaintyModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isCertaintyModalOpen ? 'flex' : 'none' }}>
+            <div className="popup-modal-dialog">
+                <div className="popup-modal-content">
+                    <div className="popup-modal-body">
+                        <div className='popup-content'>
+                            <div className='popup-modal-icon'>
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+                            <div className='popup-details'>
+                                <div className='emp-popup-message'>
+                                    <p>{confimationMessage}</p>
+                                </div>
+                            </div>
+                            <div className='popup-btn-wrap'>
+                                <div className='btn-no'>
+                                    <button type="button" className="btn btn-danger" onClick={closeCertaintyModalNo}>No</button>
+                                </div>
+                                <div>
+                                    <button type="button" className="btn btn-success" onClick={closeCertaintyModalYes}>Yes</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return(
         <>
             <ClientDashboardNav theClientName={fetchedClientName} />
@@ -317,6 +362,7 @@ export function ClientSettings() {
                         </div>
                     )}
                 </div>
+                {isCertaintyModalOpen && certaintyModal}
             </div>
         </>
     );
