@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import axios from 'axios';
+import axios from "axios";
 import PropTypes from "prop-types";
 import "./Dept Styles/Service.css";
 import DateFilter from "../DateFilter";
 import ServiceNav from "../Navigation/ServiceDept/ServiceDeptNav";
+import { Link } from "react-router-dom";
 
 export class ServiceDeptJobList extends Component {
   constructor(props) {
@@ -14,23 +15,21 @@ export class ServiceDeptJobList extends Component {
         username: "John Doe",
         profilePicture: "/profile.jpg",
       },
-      serviceRequests: [], // Service requests data
+      serviceRequests: [],
       selectedJob: null,
       isModalOpen: false,
-      totalOpenRequests: 0,
-      totalAssignedJobs: 0,
-      techniciansAvailable: 0,
       filterName: "",
       selectedStartDate: null,
       selectedEndDate: null,
       selectedStatus: "In Progress",
-      filterId:"",
-      selectedTechnician:"",  
+      filterId: "",
+      selectedTechnician: "",
       technicians: [],
     };
   }
 
   componentDidMount() {
+    
     fetch("/api/service-requests")
       .then((response) => response.json())
       .then((data) => {
@@ -39,17 +38,21 @@ export class ServiceDeptJobList extends Component {
       })
       .catch((error) => console.error("Error fetching data:", error));
 
-      fetch("/api/employees")
+    fetch("/api/employees")
       .then((response) => response.json())
       .then((data) => {
-        this.originalServiceRequests = data;
-        this.setState({ serviceRequests: data });
+        this.setState({ technicians: data });
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      .catch((error) => console.error("Error fetching technicians:", error));
   }
 
-  handleViewDetails = (job) => {
-    this.setState({ selectedJob: job, isModalOpen: true });
+  handleViewDetails = (request) => {
+    this.setState({
+      selectedJob: request,
+      isModalOpen: true,
+      selectedTechnician: null,
+    });
+    console.log("ASSIGN BUTTON PRESSED");
   };
 
   handleNameFilterChange = (e) => {
@@ -59,72 +62,73 @@ export class ServiceDeptJobList extends Component {
   handleIdilterChange = (e) => {
     this.setState({ filterId: e.target.value });
   };
-  
 
-handleStartDateChange = (date) => {
+  handleStartDateChange = (date) => {
     this.setState({ selectedStartDate: date }, () => {
-        this.filterServiceRequestsByDate();
+      this.filterServiceRequestsByDate();
     });
-};
+  };
 
-handleEndDateChange = (date) => {
+  handleEndDateChange = (date) => {
     this.setState({ selectedEndDate: date }, () => {
-        this.filterServiceRequestsByDate();
+      this.filterServiceRequestsByDate();
     });
-};
+  };
 
-handleStatusFilterChange = (e) => {
+  handleStatusFilterChange = (e) => {
     this.setState({ selectedStatus: e.target.value });
-};
+  };
 
-handleTechnicianSelect = (selectedTechnician) => {
-  this.setState({ selectedTechnician });
-};
+  handleTechnicianSelect = (selectedTechnician) => {
+    this.setState({ selectedTechnician });
+  };
 
-closeModal = () => {
+  closeModal = () => {
     this.setState({ isModalOpen: false });
   };
-  
 
+  filterServiceRequestsByDate = () => {
+    const extractDatePart = (date) =>
+      new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-filterServiceRequestsByDate = () => {
-const extractDatePart = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const { selectedStartDate, selectedEndDate } = this.state;
+    const { originalServiceRequests } = this;
 
-  const { selectedStartDate, selectedEndDate } = this.state;
-  const { originalServiceRequests } = this;
+    if (selectedStartDate && selectedEndDate) {
+      const filteredRequests = originalServiceRequests.filter((request) => {
+        const requestDate = new Date(request.requestDate);
+        const requestDateOnly = extractDatePart(requestDate);
+        const selectedStartDateOnly = extractDatePart(selectedStartDate);
+        const selectedEndDateOnly = extractDatePart(selectedEndDate);
 
-  if (selectedStartDate && selectedEndDate) {
-    const filteredRequests = originalServiceRequests.filter((request) => {
-      const requestDate = new Date(request.requestDate);
-      const requestDateOnly = extractDatePart(requestDate);
-      const selectedStartDateOnly = extractDatePart(selectedStartDate);
-      const selectedEndDateOnly = extractDatePart(selectedEndDate);
+        return (
+          requestDateOnly >= selectedStartDateOnly &&
+          requestDateOnly <= selectedEndDateOnly
+        );
+      });
+      this.setState({ serviceRequests: filteredRequests });
+    } else {
+      this.setState({ serviceRequests: originalServiceRequests });
+    }
+  };
 
-      return requestDateOnly >= selectedStartDateOnly && requestDateOnly <= selectedEndDateOnly;
-    });
-    this.setState({ serviceRequests: filteredRequests });
-  } else {
-    this.setState({ serviceRequests: originalServiceRequests });
-  }
-};
+  assignTechnician = () => {
+    const { selectedJob, selectedTechnician } = this.state;
 
-assignTechnician = () => {
-  // Implement the logic to assign the selected technician to the job
-  const { selectedJob, selectedTechnician } = this.state;
-
-  axios.post('/api/assign-technician', {
-     requestId: selectedJob.requestId,
-     technicianId: selectedTechnician,
-   })
-   .then(() => {
-     this.closeModal();
-   })
-   .catch((error) => {
-     console.error('Error assigning technician:', error);
-   });
-
-};
-
+    if (selectedTechnician) {
+      axios
+        .post("/api/assign-technician", {
+          requestId: selectedJob.requestId,
+          technicianId: selectedTechnician,
+        })
+        .then(() => {
+          this.closeModal();
+        })
+        .catch((error) => {
+          console.error("Error assigning technician:", error);
+        });
+    }
+  };
 
   render() {
     const {
@@ -136,19 +140,18 @@ assignTechnician = () => {
       selectedStartDate,
       selectedStatus,
       filterId,
-      //selectedTechnician,
+      selectedTechnician,
     } = this.state;
 
-
-    const filteredServiceRequests = serviceRequests.filter((request) =>
-    (selectedStatus === "" || request.status === selectedStatus) &&
-    (filterName === "" || request.requestDetails.toLowerCase().includes(filterName.toLowerCase())) &&
-    (filterId === "" || request.requestId === filterId)
-    
-
-  );
-
-
+    const filteredServiceRequests = serviceRequests.filter(
+      (request) =>
+        (selectedStatus === "" || request.status === selectedStatus) &&
+        (filterName === "" ||
+          request.requestDetails
+            .toLowerCase()
+            .includes(filterName.toLowerCase())) &&
+        (filterId === "" || request.requestId === filterId)
+    );
 
     return (
       <div>
@@ -181,7 +184,6 @@ assignTechnician = () => {
             onStartDateChange={this.handleStartDateChange}
             onEndDateChange={this.handleEndDateChange}
           />
-
         </div>
         <div className="filter-container">
           <select
@@ -206,7 +208,7 @@ assignTechnician = () => {
                   {request.status}, request created on {request.requestDate}
                 </p>
                 <button
-                  className="view-details"
+                  className="assign"
                   onClick={() => this.handleViewDetails(request)}
                 >
                   Assign Technician
@@ -215,7 +217,16 @@ assignTechnician = () => {
             </div>
           ))}
         </div>
-        {isModalOpen && <Modal job={selectedJob} onClose={this.closeModal} />}
+        {isModalOpen && (
+          <Modal
+            //job={selectedJob}
+            onClose={this.closeModal}
+            technicians={this.state.technicians}
+            selectedTechnician={selectedTechnician}
+            onTechnicianSelect={this.handleTechnicianSelect}
+            onAssignTechnician={this.assignTechnician}
+          />
+        )}
       </div>
     );
   }
@@ -223,12 +234,37 @@ assignTechnician = () => {
 
 class Modal extends Component {
   render() {
-    const { job, onClose } = this.props;
+    const {
+      job,
+      onClose,
+      technicians,
+      selectedTechnician,
+      onTechnicianSelect,
+      onAssignTechnician,
+    } = this.props;
     return (
       <div className="modal">
         <div className="modal-content">
           <h3>{job.requestDetails}</h3>
           <p>{job.status}</p>
+          <div>
+            <select
+              value={selectedTechnician || ""}
+              onChange={onTechnicianSelect}
+            >
+              <option value="">Select Technician</option>
+              {technicians
+                .filter(
+                  (technician) => technician.employeeType === "Technician"
+                )
+                .map((technician) => (
+                  <option key={technician.empId} value={technician.empId}>
+                    {technician.firstName} {technician.lastName}
+                  </option>
+                ))}
+            </select>
+            <button onClick={onAssignTechnician}>Assign Technician</button>
+          </div>
           <button onClick={onClose}>Close</button>
         </div>
       </div>
