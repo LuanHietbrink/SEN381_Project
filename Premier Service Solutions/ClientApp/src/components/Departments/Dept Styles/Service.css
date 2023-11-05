@@ -352,5 +352,19 @@ select {
 }
 
 .filter-container {
-  text-align: center;
+  width: 200px;
+  margin: 10px; /* Add margin between filter elements if needed */
+}
+
+/* If you want to style the select element itself, you can use the following CSS */
+.filter-container select, input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px; /* Include padding and border in the width */
+}
+
+.-container- {
+  display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -263,7 +263,8 @@ export function ServiceDeptJobList() {
                     <div className="line"></div>
                     <p className="assign">List of Jobs</p>
                 </div>
-                <div className="filter-container">
+               <div className='-container-'>
+               <div className="filter-container">
                     <input
                         type="text"
                         placeholder="Search"
@@ -271,7 +272,7 @@ export function ServiceDeptJobList() {
                         onChange={handleNameFilterChange}
                     />
                 </div>
-                <div className="filter-container">
+                <div className="filter-container-data">
                     <DateFilter
                         selectedStartDate={selectedStartDate}
                         selectedEndDate={selectedEndDate}
@@ -291,6 +292,7 @@ export function ServiceDeptJobList() {
                         <option value="Pending">Pending</option>
                     </select>
                 </div>
+               </div>
 
                 {/* ========== */}
                 <div className="ticket-list">

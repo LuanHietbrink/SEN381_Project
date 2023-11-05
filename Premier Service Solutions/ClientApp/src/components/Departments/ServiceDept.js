@@ -4,6 +4,11 @@ import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav
 import './Dept Styles/Service.css';
 
 export function ServiceDept() {
+    const [user, setUser] = useState({
+        username: 'John Doe',
+        profilePicture: '/profile.jpg',
+    });
+    const [isTrackJobsModalOpen, setTrackJobsModalOpen] = useState(false);
     const [isEscalateJobsModalOpen, setEscalateJobsModalOpen] = useState(false);
     const [statistics, setStatistics] = useState({
         totalServiceRequests: 0,
@@ -11,6 +16,16 @@ export function ServiceDept() {
         totalAssignedJobs: 0,
         techniciansAvailable: 0,
     });
+
+    // Function to open the "Track Jobs" modal
+    const openTrackJobsModal = () => {
+        setTrackJobsModalOpen(true);
+    };
+
+    // Function to close the "Track Jobs" modal
+    const closeTrackJobsModal = () => {
+        setTrackJobsModalOpen(false);
+    };
 
     // Function to open the "Escalate Jobs" modal
     const openEscalateJobsModal = () => {
@@ -45,71 +60,88 @@ export function ServiceDept() {
                 console.error('Error fetching data from the API', error);
             });
     }, []);
-
     return (
-        <>
+        <div>
             <EmployeeDashboardNav />
-            <div className='service-wrapper'>
-                <div className="center-head">
-                    <h1><b>Service Dashboard</b></h1>
+            <div className="user-info">
+                <span>Hello, {user.username}</span>
+                <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className="profile-picture"
+                />
+            </div>
+            <div className="left-align">
+                <h2>Service Dashboard</h2>
+                <div className="line"></div>
+            </div>
+            <div className="button-container">
+                <Link to="/jobs-list">
+                    <button className="servcie-button">View Jobs</button>
+                </Link>
+                <button className="servcie-button" onClick={openTrackJobsModal}>Track Jobs</button>
+                <button className="servcie-button" onClick={openEscalateJobsModal}>Escalate Job</button>
+            </div>
+            <h1 className="center-head">Job Statistics</h1>
+            <div className="display">
+            <div className="stat-container">
+                    <p className="titles">Total Service Requests:</p>
+                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalServiceRequests} />
                 </div>
-                <div className="button-container">
-                    <Link to="/jobs-list">
-                        <button className="servcie-button">View Jobs</button>
-                    </Link>
-                    <button className="servcie-button" onClick={openEscalateJobsModal}>
-                        Escalate Job
-                    </button>
+                <div className="stat-container">
+                    <p className="titles">Open Service Requests:</p>
+                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalOpenServiceRequests} />
                 </div>
-                <h1 className="center-head">Job Statistics</h1>
-                <div className="display">
-                    <div className="stat-container">
-                        <p className="titles">Total Service Requests:</p>
-                        <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalServiceRequests} />
-                    </div>
-                    <div className="stat-container">
-                        <p className="titles">Open Service Requests:</p>
-                        <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalOpenServiceRequests} />
-                    </div>
-                    <div className="stat-container">
-                        <p className="titles">Total Assigned Jobs:</p>
-                        <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalAssignedJobs} />
-                    </div>
-                    <div className="stat-container">
-                        <p className="titles">Technicians Available:</p>
-                        <input type="text" id="jobId" name="jobId" readOnly value={statistics.techniciansAvailable} />
-                    </div>
+                <div className="stat-container">
+                    <p className="titles">Total Assigned Jobs:</p>
+                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalAssignedJobs} />
                 </div>
+                <div className="stat-container">
+                    <p className="titles">Technicians Available:</p>
+                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.techniciansAvailable} />
+                </div>
+            </div>
 
-                {isEscalateJobsModalOpen && (
-                    <div className="tj-modal">
-                        <div className="tj-modal-content">
-                            <p className="assign-">Escalate Jobs</p>
-                            <button className="back-button-" onClick={closeEscalateJobsModal}>
-                                Close
-                            </button>
-                            <div className="label-and-select">
-                                <label
-                                    htmlFor="jobDropdown"
-                                    style={{ fontSize: '25px', fontWeight: 'bold' }}
-                                >
-                                    Priority:
-                                </label>
-                                <select className="jobDropdown" name="jobDropdown">
-                                    <option value="job1">Low</option>
-                                    <option value="job2">Medium</option>
-                                    <option value="job3">High</option>
-                                </select>
-                            </div>
-                            <div className="buttons">
-                                <button className="select-button-" onClick={closeEscalateJobsModal}>
-                                    Select
-                                </button>
-                            </div>
+            {isTrackJobsModalOpen && (
+                <div className="tj-modal">
+                    <div className="tj-modal-content">
+                        <p className="assign-">Track Jobs</p>
+                        <button className="back-button-" onClick={closeTrackJobsModal}>Close</button>
+                        <div className="label-and-select">
+                            <label htmlFor="jobDropdown" style={{ fontSize: '25px', fontWeight: 'bold' }}>Jobs:</label>
+                            <select className="jobDropdown" name="jobDropdown">
+                                <option value="job1">Job 1</option>
+                                <option value="job2">Job 2</option>
+                                <option value="job3">Job 3</option>
+                            </select>
+                        </div>
+                        <div className="buttons">
+                            <button className="select-button-" onClick={closeTrackJobsModal}>Select</button>
                         </div>
                     </div>
-                )}
-            </div>
-        </>
+                </div>
+            )}
+
+            {isEscalateJobsModalOpen && (
+                <div className="tj-modal">
+                    <div className="tj-modal-content">
+                        <p className="assign-">Escalate Jobs</p>
+                        <button className="back-button-" onClick={closeEscalateJobsModal}>Close</button>
+                        <div className="label-and-select">
+                            <label htmlFor="jobDropdown" style={{ fontSize: '25px', fontWeight: 'bold' }}>Priority:</label>
+                            <select className="jobDropdown" name="jobDropdown">
+                                <option value="job1">Low</option>
+                                <option value="job2">Medium</option>
+                                <option value="job3">High</option>
+                            </select>
+                        </div>
+                        <div className="buttons">
+                            <button className="select-button-" onClick={closeEscalateJobsModal}>Select</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }
+export default ServiceDept;
