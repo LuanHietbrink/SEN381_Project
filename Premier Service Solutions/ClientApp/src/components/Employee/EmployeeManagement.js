@@ -212,11 +212,32 @@ export function EmployeeManagement() {
 
     // Function to add an employee
     const addEmployee = async () => {
-        const { addEmployeeType, addEmployeeEmail } = state;
+        const { 
+            addEmployeeType, 
+            addEmployeeEmail,
+            addEmployeeFirstName,  
+            addEmployeeLastName,   
+            addEmployeeContactNo,  
+            addEmployeeEmgContact, 
+            addEmployeeSkills      
         
+        
+        } = state;
+
+        if (!addEmployeeType || !addEmployeeEmail || !addEmployeeFirstName || !addEmployeeLastName) {
+            setState({ ...state, error: 'Please fill in all required fields.', isErrorModalOpen: true});
+            setIsAddModalOpen(false)
+            return;
+        }
+
         const employeeData = {
             employeeType: addEmployeeType,
-            email: addEmployeeEmail
+            email: addEmployeeEmail,
+            firstName: addEmployeeFirstName,  
+            lastName: addEmployeeLastName,   
+            contactNo: addEmployeeContactNo,  
+            emgContact: addEmployeeEmgContact, 
+            skills: addEmployeeSkills
         };
 
         try {
@@ -325,6 +346,56 @@ export function EmployeeManagement() {
                                     required
                                 />
                             </div>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="addEmployeeFirstName"
+                                    placeholder="First Name"
+                                    value={state.addEmployeeFirstName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="addEmployeeLastName"
+                                    placeholder="Last Name"
+                                    value={state.addEmployeeLastName}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="tel"
+                                    name="addEmployeeContactNo"
+                                    placeholder="Contact No."
+                                    value={state.addEmployeeContactNo}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="tel"
+                                    name="addEmployeeEmgContact"
+                                    placeholder="Emergency Contact (optional)"
+                                    value={state.addEmployeeEmgContact}
+                                    onChange={handleInputChange}
+                                    
+                                />
+                            </div>
+                            <div className='form-group'>
+                                <input
+                                    type="text"
+                                    name="addEmployeeSkills"
+                                    placeholder="Skills"
+                                    value={state.addEmployeeSkills}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="modal-footer">
@@ -334,6 +405,7 @@ export function EmployeeManagement() {
             </div>
         </div>
     );
+    
 
     const deleteEmployeeModal = (
         <div className={`modal ${isDeleteModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isDeleteModalOpen ? 'block' : 'none' }}>

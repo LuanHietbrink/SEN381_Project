@@ -13,7 +13,7 @@ function DateFilter({ selectedStartDate, selectedEndDate, onStartDateChange, onE
                 startDate={selectedStartDate}
                 endDate={selectedEndDate}
                 placeholderText="Start Date"
-            />
+            /> 
             <DatePicker
                 selected={selectedEndDate}
                 onChange={onEndDateChange}
