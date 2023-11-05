@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import DateFilter from "../DateFilter";
 import EmployeeDashboardNav from "../Navigation/EmployeeNav/EmployeeDashboardNav";
 import "./Dept Styles/Service.css";
+import { SendEmail } from "../SendEmail";
+import { createTechnicianUser, botMessage, checkUserExists, createChannel } from "../SendBird"
 
 export function ServiceDeptJobList() {
   const [serviceRequests, setServiceRequests] = useState([]);
@@ -220,17 +222,35 @@ export function ServiceDeptJobList() {
     setInputEmpId(empId);
   };
 
-  const handleSave = () => {
-    if (selectedRequestId !== null) {
-      if (selectedEmpId !== null) {
-        // Reassign Job
-        reassignTechnician(selectedRequestId, inputEmpId);
-      } else {
-        // Assign Job
-        assignTechnician(selectedRequestId, inputEmpId);
+  const handleSave = async () => {
+    try {
+      if (selectedRequestId !== null) {
+        if (selectedEmpId !== null) {
+          // Reassign Job
+          await reassignTechnician(selectedRequestId, inputEmpId);
+          if (!checkUserExists(inputEmpId)) {
+            await createTechnicianUser(inputEmpId, getEmployeeName(inputEmpId));
+          }
+        } else {
+          // Assign Job
+          await assignTechnician(selectedRequestId,inputEmpId)
+          if (!checkUserExists(inputEmpId)) {
+            await createTechnicianUser(inputEmpId, getEmployeeName(inputEmpId));
+          }
+        }
+  
+        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
+        const message = `You have been assigned a new job \n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
+        if(channelUrl){          
+          await botMessage(channelUrl, inputEmpId, getEmployeeName(inputEmpId), message);
+        }
       }
+    } catch (err) {
+      console.log('Error creating user or sending notification on SendBird', err);
     }
   };
+  
 
   const closeTechModal = () => {
     setState({ ...state, isTechModalOpen: false });
