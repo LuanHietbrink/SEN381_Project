@@ -10,7 +10,9 @@ export function MaintenanceTab() {
 
     // State variables to store fetched request data and track form modifications
     const [fetchedRequestData, setFetchedRequestData] = useState([]);
+    const [fetchedRequestDetails, setFetchedRequestDetails] = useState([]);
     const [isFormModified, setIsFormModified] = useState(false);
+    const [clientID, setClientID] = useState(null);
 
     // State variable to store input values
     const [state, setState] = useState({
@@ -84,6 +86,36 @@ export function MaintenanceTab() {
         fetchClientDetails(storedClientData.email);
     }, [storedClientData.email]);
 
+    const fetchRequestDetails = async (clientID) => {
+        try {
+            const clientResponse = await fetch(`api/service-requests/client-requests/${clientID}`);
+            if (clientResponse.ok) {
+                const fetchedData = await clientResponse.json();
+                if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+                    fetchedData.sort((a, b) => new Date(a.requestDate) - new Date(b.requestDate));
+                    setFetchedRequestDetails(fetchedData);
+                } else {
+                    setFetchedRequestDetails([]);
+                }
+            } else {
+                console.error('Failed to fetch request details:', clientResponse.status);
+                setState({ ...state, error: 'Failed to fetch request details.', isErrorModalOpen: true });
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching request details:', error);
+            setState({ ...state, error: 'An error occurred while fetching request details.', isErrorModalOpen: true });
+        }
+    };
+        
+    // Use useEffect to fetch client details when the email changes
+    useEffect(() => {
+        if (fetchedRequestData[0] !== undefined) {
+            const newClientID = fetchedRequestData[0].clientId;
+            setClientID(newClientID);
+            fetchRequestDetails(newClientID);
+        }
+    }, [fetchedRequestData]);
+    
     // Function to handle modals
     const closeErrorModal = () => {
         setState({ ...state, isErrorModalOpen: false });
@@ -225,7 +257,7 @@ export function MaintenanceTab() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {fetchedRequestData.map((request, index) => (
+                                {fetchedRequestDetails.map((request, index) => (
                                     <tr key={index}>
                                         <td>{request.requestId || "n/a"}</td>
                                         <td>{request.requestDate ? new Date(request.requestDate).toLocaleDateString() : "n/a"}</td>

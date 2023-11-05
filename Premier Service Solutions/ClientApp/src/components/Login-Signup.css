@@ -51,6 +51,7 @@
     border-bottom: 2px solid #2d2c54;
     border-radius: 4px;
     color: black;
+    margin: 0 0 0 0;
 }
 
 .acc-type-select select option[disabled]:first-child {
@@ -120,18 +121,18 @@
     font-size: 110px;
 }
 
-.popup-heading {
+.signup-popup-heading {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0.5em 0 0 0;
 }
 
-.popup-heading p {
+.signup-popup-heading p {
     font-size: 2rem;
     font-weight: bolder;
     text-align: center;
-    margin: 0;
+    margin: 0 0 0.8em 0;
 }
 
 .popup-details {

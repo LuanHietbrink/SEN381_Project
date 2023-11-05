@@ -23,6 +23,8 @@ export function LoginSignup() {
         employeeData: null,
     });
 
+    const { error, isErrorModalOpen, isSuccessModalOpen, successMessage } = state;
+
     // Event handler for input changes
     const handleInputChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -56,6 +58,7 @@ export function LoginSignup() {
 
     // Event handler for user login or signup
     const handleLogin = async () => {
+
         try {
             if (state.userType === 'login') {
                 const { email, password } = state;
@@ -63,7 +66,7 @@ export function LoginSignup() {
                 // Attempt to fetch employee data by email
                 const employeeResponse = await fetch(`api/employees/employee-info/${email}`);
                 const employeeData = await employeeResponse.json();
-
+        
                 // Attempt to fetch client data by email
                 const clientResponse = await fetch(`api/clients/client-info/${email}`);
                 const clientData = await clientResponse.json();
@@ -125,6 +128,10 @@ export function LoginSignup() {
                     setState({ ...state, error: 'All information is required.', isErrorModalOpen: true });
                     return; 
                 }
+        
+                // Attempt to fetch client data by email
+                const clientResponse = await fetch(`api/clients/client-info/${email}`);
+                const clientData = await clientResponse.json();
 
                 // Password length validation (8 characters)
                 const isLengthValid = password.length >= 8;
@@ -142,6 +149,27 @@ export function LoginSignup() {
                     return;
                 }
 
+                // Email validation
+                const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                // Validate email format
+                if (!emailFormat.test(email)) {
+                    setState({ ...state, error: 'Invalid email format.', isErrorModalOpen: true });
+                    return;
+                }
+
+                // Check for common syntax errors
+                if (email.includes('..') || email.includes('.@') || email.includes('@.') || email.includes(' ')) {
+                    setState({ ...state, error: 'Invalid email format.', isErrorModalOpen: true });
+                    return;
+                }
+
+                if (clientData.length !== 0) {
+                    setState({ ...state, error: 'This email already exists.', isErrorModalOpen: true });
+                    return;
+                }
+
+                // Contact number validation
                 const isContactNumberValid = (contactNumber) => {
                     // Check if it starts with "+27" and is 12 characters long
                     const startsWithPlus27 = contactNumber.startsWith('+27') && contactNumber.length === 12;
@@ -177,7 +205,7 @@ export function LoginSignup() {
                 });
 
                 if (response.status === 201) {
-                    setState({ userType: 'login', error: null, isSuccessModalOpen: true });
+                    setState({ userType: 'login', error: null, successMessage: 'Sign-up successful!', isSuccessModalOpen: true });
                 } else {
                     setState({ ...state, error: 'Error signing up.', isErrorModalOpen: true });
                 }
@@ -187,9 +215,9 @@ export function LoginSignup() {
         }
     }
 
-    // Modal to log errors
-    const { userType, error, clientData, employeeData, isErrorModalOpen, isSuccessModalOpen, successMessage } = state;
+    const { userType, clientData, employeeData } = state;
 
+    // Modal to log errors
     const errorModal = (
         <div className={`popup-modal ${isErrorModalOpen ? 'show' : ''} modal-overlay`} tabIndex="-1" role="dialog" style={{ display: isErrorModalOpen ? 'flex' : 'none' }}>
             <div className="popup-modal-dialog">
@@ -227,7 +255,7 @@ export function LoginSignup() {
                                 <i class="fa-solid fa-circle-check"></i>
                             </div>
                             <div className='popup-details'>
-                                <div className='popup-heading'>
+                                <div className='signup-popup-heading'>
                                     <p>{successMessage}</p>
                                 </div>
                             </div>
