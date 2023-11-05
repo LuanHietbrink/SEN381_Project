@@ -180,11 +180,6 @@ public partial class PremierSolutionsContext : DbContext
                 .HasDefaultValueSql("'In Progress'")
                 .UseCollation("utf8mb3_general_ci")
                 .HasCharSet("utf8mb3");
-            entity.Property(e => e.Priority)
-                .HasMaxLength(10)
-                .HasDefaultValueSql("'Low'")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
 
             entity.HasOne(d => d.Client).WithMany(p => p.Servicerequests)
                 .HasForeignKey(d => d.ClientId)
