@@ -4,8 +4,9 @@
     align-items: center;
     justify-content: center;
     font-family: 'Montserrat', 'Sans Serif';
-    text-align: center;
-    margin-top: 70px;
+    margin-top: 80px;
+    padding-top: 4em;
+    height: 700px;
 }
 
 .heading h3 {
@@ -35,6 +36,8 @@
     align-items: center;
     padding: 0 3.5em;
     width: 430px;
+    text-align: center;
+
 }
 
 .promo-package {

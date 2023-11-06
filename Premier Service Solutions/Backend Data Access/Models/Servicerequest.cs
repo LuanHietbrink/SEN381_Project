@@ -17,6 +17,8 @@ public partial class Servicerequest
 
     public string? Status { get; set; } = null!;
 
+    public string? Priority { get; set; }
+
     public virtual Client? Client { get; set; }
 
     public virtual Employee? Emp { get; set; }
