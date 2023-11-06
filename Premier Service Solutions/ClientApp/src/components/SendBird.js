@@ -1,10 +1,14 @@
 import axios from 'axios';
 
+const apitoken = "a5e50ec52416219b8fb261bc1a07d7560417cbdb";
+const baseUrl = "https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com"
+
 export async function createTechnicianUser(technicianId, technicianName) {
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/users`;
+    const url = baseUrl.concat('/v3/users');
+
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
     const params = {
         user_id: technicianId,
@@ -29,10 +33,10 @@ export async function createTechnicianUser(technicianId, technicianName) {
 }
 
 export async function checkUserExists(userId) {
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/users`;
+    const url = baseUrl.concat('/v3/users');
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
 
     try {
@@ -41,7 +45,8 @@ export async function checkUserExists(userId) {
         const userExists = users.some(user => user.user_id === userId);
         return userExists;
     } catch (err) {
-        console.error('Failed to check if user exists on Sendbird', err);
+        console.log('Failed to check if user exists on Sendbird', err);
+        alert('Failed to check if user exists on Sendbird', err)
         if (err.response) {
             console.error('Error Response:', err.response.data);
         } else {
@@ -53,12 +58,11 @@ export async function checkUserExists(userId) {
 
 export async function createChannel(userIds) {
 
-    const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels'
-
+    const url = baseUrl.concat('/v3/group_channels')
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
 
     const params = {
@@ -81,17 +85,17 @@ export async function createChannel(userIds) {
     } catch (err) {
         console.error('Failed to create channel on sendbird', err);
         console.error('Error Response:', err.response.data);
+        alert('Error Response:', err.response.data)
     }
 }
 
 export async function getChannels(technicianId) {
-    const url = 'https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels'
 
-
+    const url = baseUrl.concat('/v3/group_channels')
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
 
     try {
@@ -106,11 +110,11 @@ export async function getChannels(technicianId) {
 
 export async function deleteChannel(channelUrl) {
 
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels/${channelUrl}`
+    const url = baseUrl.concat(`/v3/group_channels/${channelUrl}`)
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     }
 
     try {
@@ -126,14 +130,12 @@ export async function deleteChannel(channelUrl) {
 export async function botJoinChannel(channelUrls) {
 
     const botUserId = 'Notification-Bot'
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/channels`
-
-
+    const url = baseUrl.concat(`/v3/bots/${botUserId}/channels`)
 
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
     const params = {
 
@@ -150,13 +152,13 @@ export async function botJoinChannel(channelUrls) {
 }
 
 export async function userJoinChannel(channelUrls, userId) {
+    
+    const url = baseUrl.concat(`/v3/group_channels/${channelUrl}/join`)
 
-    const botUserId = 'Notification-Bot'
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels/${channelUrls}/join`
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
     const params = {
 
@@ -176,11 +178,12 @@ export async function userJoinChannel(channelUrls, userId) {
 export async function botMessage(channelUrl, message) {
 
     const botUserId = 'Notification-Bot'
-    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`
+    const url = baseUrl.concat(`/v3/bots/${botUserId}/send`)
+
 
     const headers = {
         'Content-Type': 'application/json',
-        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+        'Api-Token': apitoken,
     };
     const params = {
 
@@ -195,6 +198,7 @@ export async function botMessage(channelUrl, message) {
     } catch (err) {
         console.error('Failed to send Bot message', err);
         console.error('Error Response:', err.response.data);
+        alert('Failed to send Bot message', err)
     }
 }
 

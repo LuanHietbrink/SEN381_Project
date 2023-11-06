@@ -1,5 +1,30 @@
 import React, { Component } from 'react';
 
+export const sendEmail = (email) => {
+  const apiUrl = `/api/auto-email/send-email/${email}`;
+
+  fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  })
+    .then(response => {
+      if (response.status === 200) {
+        alert('Email sent successfully!');
+      } else if (response.status === 500 || response.status === 404) {
+        alert('Error sending the email. Please try again.');
+      } else {
+        throw new Error('Unexpected error');
+      }
+    })
+    .catch(error => {
+      console.error('There was an error sending the email:', error);
+      alert('Error sending the email. Please try again.');
+    });
+};
+
 export class SendEmail extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +58,7 @@ export class SendEmail extends Component {
         alert('Error sending the email. Please try again.');
       });
   };
+
 
   handleInputChange = (e) => {
     this.setState({ email: e.target.value });

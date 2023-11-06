@@ -6,6 +6,7 @@ import EmployeeDashboardNav from "../Navigation/EmployeeNav/EmployeeDashboardNav
 import "./Dept Styles/Service.css";
 import { SendEmail } from "../SendEmail";
 import { createTechnicianUser, botMessage, checkUserExists, createChannel } from "../SendBird"
+import { sendEmail } from "../SendEmail";
 
 export function ServiceDeptJobList() {
   const [serviceRequests, setServiceRequests] = useState([]);
@@ -19,6 +20,7 @@ export function ServiceDeptJobList() {
   const [selectedTechnician, setSelectedTechnician] = useState("");
   const [technicians, setTechnicians] = useState([]);
   const [originalServiceRequests, setOriginalServiceRequests] = useState([]);
+  const [empData, setEmpData] = useState()
   // =================
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const [selectedEmpId, setSelectedEmpId] = useState(null);
@@ -41,6 +43,7 @@ export function ServiceDeptJobList() {
       .then((response) => {
         setOriginalServiceRequests(response.data);
         setServiceRequests(response.data);
+
       })
       .catch((error) => console.error("Error fetching data:", error));
 
@@ -54,7 +57,15 @@ export function ServiceDeptJobList() {
         console.log(technicianList)
       })
       .catch((error) => console.error("Error fetching technicians:", error));
+
   }, []);
+
+
+  useEffect(() => {
+    const empLocalData= localStorage.getItem("employeeData");
+      setEmpData(JSON.parse(empLocalData))    
+  }, []);
+
 
   const handleViewDetails = (request) => {
     setSelectedJob(request);
@@ -233,15 +244,19 @@ export function ServiceDeptJobList() {
           // Assign Job
           await assignTechnician(selectedRequestId, inputEmpId);
         }
-         
-        const empName = await getEmployeeName(inputEmpId)
 
-        const message = `Hi, you have been assigned a new job \n\n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const firstName = empData.firstName; 
+        const fullName = `${empData.firstName} ${empData.lastName}`
+        const email = empData.email
+
+         sendEmail(email)
+
+
+        const message = `Hi ${firstName}, you have been assigned a new job. \n\n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
         const sendBirduserExists = await checkUserExists(inputEmpId);
 
         if (!sendBirduserExists) {
-          console.log(empName)
-          const userCreated = await createTechnicianUser(inputEmpId, "Technician");
+          const userCreated = await createTechnicianUser(inputEmpId, fullName);
           if (userCreated) {
             const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
             botMessage(channelUrl, message);
@@ -249,6 +264,7 @@ export function ServiceDeptJobList() {
         } else {
           const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
           botMessage(channelUrl,message);
+          
         }
       }
     } catch (err) {
