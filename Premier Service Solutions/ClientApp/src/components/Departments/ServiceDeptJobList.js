@@ -51,6 +51,7 @@ export function ServiceDeptJobList() {
           (tech) => tech.employeeType === "Technician"
         );
         setTechnicians(technicianList);
+        console.log(technicianList)
       })
       .catch((error) => console.error("Error fetching technicians:", error));
   }, []);
@@ -159,7 +160,6 @@ export function ServiceDeptJobList() {
     if (assignedTechnician) {
       return `${assignedTechnician.firstName} ${assignedTechnician.lastName}`;
     }
-    return "";
   };
 
   const assignTechnician = (requestId, empId) => {
@@ -224,32 +224,39 @@ export function ServiceDeptJobList() {
 
   const handleSave = async () => {
     try {
+      const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
       if (selectedRequestId !== null) {
         if (selectedEmpId !== null) {
           // Reassign Job
           await reassignTechnician(selectedRequestId, inputEmpId);
-          if (!checkUserExists(inputEmpId)) {
-            await createTechnicianUser(inputEmpId, getEmployeeName(inputEmpId));
-          }
         } else {
           // Assign Job
-          await assignTechnician(selectedRequestId,inputEmpId)
-          if (!checkUserExists(inputEmpId)) {
-            await createTechnicianUser(inputEmpId, getEmployeeName(inputEmpId));
-          }
+          await assignTechnician(selectedRequestId, inputEmpId);
         }
-  
-        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
-        const message = `You have been assigned a new job \n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
-        const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
-        if(channelUrl){          
-          await botMessage(channelUrl, inputEmpId, getEmployeeName(inputEmpId), message);
+         
+        const empName = await getEmployeeName(inputEmpId)
+
+        const message = `Hi, you have been assigned a new job \n\n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const sendBirduserExists = await checkUserExists(inputEmpId);
+
+        if (!sendBirduserExists) {
+          console.log(empName)
+          const userCreated = await createTechnicianUser(inputEmpId, "Technician");
+          if (userCreated) {
+            const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
+            botMessage(channelUrl, message);
+          }
+        } else {
+          const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
+          botMessage(channelUrl,message);
         }
       }
     } catch (err) {
       console.log('Error creating user or sending notification on SendBird', err);
     }
   };
+  
+    
   
 
   const closeTechModal = () => {

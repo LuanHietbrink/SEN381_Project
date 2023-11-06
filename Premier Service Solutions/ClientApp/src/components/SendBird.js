@@ -173,7 +173,7 @@ export async function userJoinChannel(channelUrls, userId) {
     }
 }
 
-export async function botMessage(channelUrl, technicianId, technicianName, message) {
+export async function botMessage(channelUrl, message) {
 
     const botUserId = 'Notification-Bot'
     const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/bots/${botUserId}/send`

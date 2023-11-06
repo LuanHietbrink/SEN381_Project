@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav';
 import { useData } from '../DataContext';
 import "./Employee Styles/TechnicianDashboard.css"
-
+import Messaging from '../Messaging';
 export function TechnicianDashboard() {
     // Access privateData and navigate functions from the DataContext
     const { privateData } = useData();
@@ -12,6 +12,8 @@ export function TechnicianDashboard() {
 
     // State variables for email and modal visibility
     const [isIssueModalOpen, setIsIssueModalOpen] = useState(false);
+    const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+
     const [filteredServiceRequests, setFilteredServiceRequests] = useState([]);
 
     // Use useEffect to store employee data in local storage when it changes
@@ -42,6 +44,8 @@ export function TechnicianDashboard() {
     const reportIssue = async () => {
         setIsIssueModalOpen(true);
     };
+    
+
 
     // Function to fetch employee details and filter service requests
     const fetchEmployeeDetails = async (email) => {
@@ -115,6 +119,29 @@ export function TechnicianDashboard() {
         </div>
     );
 
+    const chatModal = (
+        
+        <div className={`modal ${isChatModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isChatModalOpen ? 'block' : 'none' }}>
+    <div className={`modal-dialog ${isChatModalOpen ? 'modal-bigger' : ''}`} role="document">            
+            <div className="modal-content" >
+                <div className="modal-header">
+                    <div className='modal-heading'>
+                    </div>
+                    <div>
+                        <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsChatModalOpen(false)}></button>
+                    </div>
+                </div>
+                    <div className="modal-form">                    
+                    {isChatModalOpen && <Messaging userId={storedEmployeeData.empId} />}                    
+                    </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-add" onClick={()=>setIsChatModalOpen(false)}>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    );
+
     return (
         <>
             <EmployeeDashboardNav />
@@ -124,8 +151,13 @@ export function TechnicianDashboard() {
                         <div className='emp-dash-heading'>
                             <h1>Technician Dashboard</h1>
                         </div>
-
+                        
                         <div style={{display: "flex", justifyContent: "center"}}><hr style={{width: "50%"}}></hr></div>
+                    
+                        <div class="draggable-container">
+                            <button class="message-button" onClick={() => setIsChatModalOpen(true)}>
+                            </button>
+                        </div>
 
                         <div className='assigned-job-wrapper'>
                             <div>
@@ -153,8 +185,8 @@ export function TechnicianDashboard() {
                             }
                             </div>   
                         </div>   
-
                         {reportIssueModal}
+                        {chatModal}
                     </>
                 ) : (
                     navigate('/account-setup', { replace: true })
@@ -163,3 +195,8 @@ export function TechnicianDashboard() {
         </>
     );
 }
+
+
+  
+
+    
