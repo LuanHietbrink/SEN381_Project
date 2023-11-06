@@ -50,7 +50,6 @@ CREATE TABLE ServiceRequest (
     RequestDate DATETIME DEFAULT CURRENT_TIMESTAMP(),
     RequestDetails VARCHAR(100) NOT NULL,
     Status VARCHAR(50) DEFAULT 'In Progress',
-    Priority VARCHAR(10) DEFAULT 'Low',
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID),
     FOREIGN KEY (EmpID) REFERENCES Employee(empID)    
 );

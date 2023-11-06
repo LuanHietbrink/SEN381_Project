@@ -149,6 +149,30 @@ export async function botJoinChannel(channelUrls) {
     }
 }
 
+export async function userJoinChannel(channelUrls, userId) {
+
+    const botUserId = 'Notification-Bot'
+    const url = `https://api-B52AC039-499A-47A3-8718-634BE259475F.sendbird.com/v3/group_channels/${channelUrls}/join`
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Api-Token': 'a5e50ec52416219b8fb261bc1a07d7560417cbdb',
+    };
+    const params = {
+
+        user_id: userId,
+        channel_urls: [channelUrls]
+    };
+
+    try {
+        const response = await axios.put(url, params, { headers });
+        console.log(`${userId} joined channel successfully`);
+    } catch (err) {
+        console.error(`${userId} failed to join channel`, err);
+        console.error('Error Response:', err.response.data);
+    }
+}
+
 export async function botMessage(channelUrl, technicianId, technicianName, message) {
 
     const botUserId = 'Notification-Bot'

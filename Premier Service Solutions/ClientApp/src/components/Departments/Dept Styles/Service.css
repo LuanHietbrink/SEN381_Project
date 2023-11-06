@@ -121,10 +121,7 @@
   margin: 0 1.5em 0 0;
 }
 
-.ticket:hover {
-  cursor: pointer;
-  background-color: rgb(246, 245, 245);
-}
+
 
 /* ============================ */
 
@@ -169,23 +166,61 @@
   font-size: x-large;
 }
 
+.ticket:hover {
+  cursor: pointer;
+  background-color: rgba(8, 0, 255, 0.274);
+
+}
+
+.ticket:active {
+  cursor: pointer;
+  background-color: rgba(8, 0, 255, 0.555);
+}
+
 .ticket-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr); 
   gap: 10px; 
 }
+.technician-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text within each paragraph */
 
+}
+#technician-title {
+  margin-bottom: 5px; /* Add some spacing between title and name */
+  color: #313074;
+  text-align: center; /* Optionally style the title */
+}
+#technician-name {
+  background-color: #313074;
+  border-radius: 10px;
+  color: white;
+  padding: 5px; /* Add padding for spacing between text and background */
+  min-width: 150px; /* Set a minimum width for consistency */
+}
+.status-text{
+  background-color: rgb(128, 0, 0);
+  padding: 5px;
+  border-radius: 10px;
+  color: white  ;
+}
 .ticket-list h5 {
   text-decoration: underline;
+  text-decoration: bold;
   text-align: left;
 }
 
 .ticket {
   width: 100%;
-  border: 1px solid #ccc;
+  border: 3px solid #313074;
+  background-color: #2d2c5444;
   padding: 10px;
   box-sizing: border-box;
   text-align: center;
+  border-radius: 10px;
 }
 
 /* 
@@ -210,6 +245,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
 }
 
 .ticket-content p {
@@ -351,17 +387,24 @@ select {
   color: white;
 }
 
+#status{
+  height: 40px;
+}
+
 .filter-container {
   width: 200px;
-  margin: 10px; /* Add margin between filter elements if needed */
+  padding: 15px; /* Add margin between filter elements if needed */
 }
 
 /* If you want to style the select element itself, you can use the following CSS */
 .filter-container select, input {
   width: 100%;
   box-sizing: border-box;
-  padding: 5px; /* Include padding and border in the width */
+  padding: 5px;
+  background-color: #313074;
+  color: white;
 }
+
 
 .-container- {
   display: flex;

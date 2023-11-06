@@ -7,7 +7,7 @@ const Messaging = () => {
             <SendbirdApp
                 // Add the two lines below.
                 appId="B52AC039-499A-47A3-8718-634BE259475F"
-                userId="888"       
+                userId="120"       
             />
         </div>
     );

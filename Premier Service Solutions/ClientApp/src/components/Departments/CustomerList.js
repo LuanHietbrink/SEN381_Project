@@ -29,8 +29,6 @@ export function CustomerList(props) {
                         <p>Email: {client.email}</p>
                         <p>Contact: {client.contactNumber}</p>
                         <button onClick={() => { handleClick(client) }} className="btn btn-outline-secondary listBtn">Capture details</button>
-                        <button className="callCenterBtn" onClick={()=>handleViewRequestsClick(client.clientId)}>View Service Requests</button>
-
                     </div>
                 ))}
             </div>

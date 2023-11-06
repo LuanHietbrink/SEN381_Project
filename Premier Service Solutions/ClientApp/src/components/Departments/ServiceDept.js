@@ -79,7 +79,6 @@ export function ServiceDept() {
                 <Link to="/jobs-list">
                     <button className="servcie-button">View Jobs</button>
                 </Link>
-                <button className="servcie-button" onClick={openTrackJobsModal}>Track Jobs</button>
                 <button className="servcie-button" onClick={openEscalateJobsModal}>Escalate Job</button>
             </div>
             <h1 className="center-head">Job Statistics</h1>
@@ -102,25 +101,6 @@ export function ServiceDept() {
                 </div>
             </div>
 
-            {isTrackJobsModalOpen && (
-                <div className="tj-modal">
-                    <div className="tj-modal-content">
-                        <p className="assign-">Track Jobs</p>
-                        <button className="back-button-" onClick={closeTrackJobsModal}>Close</button>
-                        <div className="label-and-select">
-                            <label htmlFor="jobDropdown" style={{ fontSize: '25px', fontWeight: 'bold' }}>Jobs:</label>
-                            <select className="jobDropdown" name="jobDropdown">
-                                <option value="job1">Job 1</option>
-                                <option value="job2">Job 2</option>
-                                <option value="job3">Job 3</option>
-                            </select>
-                        </div>
-                        <div className="buttons">
-                            <button className="select-button-" onClick={closeTrackJobsModal}>Select</button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {isEscalateJobsModalOpen && (
                 <div className="tj-modal">
