@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import DateFilter from "../DateFilter";
 import EmployeeDashboardNav from "../Navigation/EmployeeNav/EmployeeDashboardNav";
 import "./Dept Styles/Service.css";
-import { SendEmail } from "../SendEmail";
 import { createTechnicianUser, botMessage, checkUserExists, createChannel } from "../SendBird"
 import { sendEmail } from "../SendEmail";
 
@@ -54,16 +53,10 @@ export function ServiceDeptJobList() {
           (tech) => tech.employeeType === "Technician"
         );
         setTechnicians(technicianList);
-        console.log(technicianList)
+        console.log("Technicians:", technicianList);
       })
       .catch((error) => console.error("Error fetching technicians:", error));
 
-  }, []);
-
-
-  useEffect(() => {
-    const empLocalData= localStorage.getItem("employeeData");
-      setEmpData(JSON.parse(empLocalData))    
   }, []);
 
 
@@ -173,57 +166,118 @@ export function ServiceDeptJobList() {
     }
   };
 
-  const assignTechnician = (requestId, empId) => {
-    // Make a PUT request to update empId for the selected request
-    axios
-      .put(`/api/service-requests/edit-request/${requestId}`, {
-        empId,
-        status: "In Progress",
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          setState({
-            ...state,
-            successMessage: "Technician assigned successfully!",
-            isTechModalOpen: false,
-            isMessageModalOpen: true,
-          });
-        } else {
-          setState({
-            ...state,
-            errorMessage: "Technician assignment is unsuccessful.",
-            isTechModalOpen: false,
-            isMessageModalOpen: true,
-          });
-        }
-      })
-      .catch((error) => console.error("Error updating empId:", error));
+  const getEmployeeInfo = (empId) => {
+    const assignedTechnician = technicians.find((tech) => tech.empId === empId);
+    if (assignedTechnician) {
+      return {
+        name: `${assignedTechnician.firstName} ${assignedTechnician.lastName}`,
+        email: assignedTechnician.email,
+      };
+    }
+    return {
+      name: "",
+      email: "",
+    };
   };
 
-  const reassignTechnician = (requestId, empId) => {
-    // Make a PUT request to update empId for the selected request
-    axios
-      .put(`/api/service-requests/edit-request/${requestId}`, { empId })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          setState({
-            ...state,
-            successMessage: "Technician re-assigned successfully!",
-            isTechModalOpen: false,
-            isMessageModalOpen: true,
-          });
+  
+
+  const assignTechnician = async (requestId, empId) => {
+    try {
+      const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, {
+        empId,
+        status: "In Progress",
+      });
+      console.log(response);
+  
+      if (response.status === 200) {
+        setState({
+          ...state,
+          successMessage: "Technician assigned successfully!",
+          isTechModalOpen: false,
+          isMessageModalOpen: true,
+        });
+  
+        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
+        const { name } = await getEmployeeInfo(empId);
+        const message = `Hey, ${name}, you have been assigned a new job. \n\n JobID: #${requestId}: \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const sendBirdUserExists = await checkUserExists(empId);
+  
+        if (sendBirdUserExists) {
+          // If the user exists, create a channel with the technician
+          const userCreated = await createTechnicianUser(empId, name);
+          if (userCreated) {
+            const channelUrl = await createChannel(["Notification-Bot", empId]);
+            await botMessage(channelUrl, message); // Await for the message to be sent
+          }
         } else {
-          setState({
-            ...state,
-            errorMessage: "Technician re-assignment is unsuccessful.",
-            isTechModalOpen: false,
-            isMessageModalOpen: true,
-          });
+          // If the user doesn't exist, create a channel and send a message
+          const channelUrl = await createChannel(["Notification-Bot", empId]);
+          await botMessage(channelUrl, message); // Await for the message to be sent
         }
-      })
-      .catch((error) => console.error("Error updating empId:", error));
+  
+        console.log("Message sent successfully!");
+      } else {
+        setState({
+          ...state,
+          errorMessage: "Technician assignment is unsuccessful.",
+          isTechModalOpen: false,
+          isMessageModalOpen: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating empId:", error);
+    }
+  };
+
+  const reassignTechnician = async (requestId, empId) => {
+    // Make a PUT request to update empId for the selected request
+    try {
+      const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, { empId });
+      console.log(response);
+
+      if (response.status === 200) {
+        setState({
+          ...state,
+          successMessage: "Technician re-assigned successfully!",
+          isTechModalOpen: false,
+          isMessageModalOpen: true,
+        });
+
+        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
+        const {name} = await getEmployeeInfo(empId)
+        const message = `Hey, ${name}, you have been reassigned a job. \n\n (JobID: #${requestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+
+        const sendBirdUserExists = await checkUserExists(empId);
+
+        if (sendBirdUserExists) {
+          // If the user exists, create a channel with the technician
+          const userCreated = await createTechnicianUser(empId, {name});
+          console.log(name)
+          if (userCreated) {
+            const channelUrl = await createChannel(["Notification-Bot", empId]);
+            botMessage(channelUrl, message);
+          }
+        } else {
+          // If the user doesn't exist, create a channel and send a message
+          const channelUrl = await createChannel(["Notification-Bot", empId]);
+          botMessage(channelUrl, message);
+        }
+        console.log("Message sent successfully!");
+      }else {
+
+        setState({
+          ...state,
+          errorMessage: "Technician re-assignment is unsuccessful.",
+          isTechModalOpen: false,
+          isMessageModalOpen: true,
+
+        })
+      }
+
+    } catch (error) {
+        console.error("Error updating empId:", error);
+    }
   };
 
   const handleTicketClick = (requestId, empId) => {
@@ -236,6 +290,7 @@ export function ServiceDeptJobList() {
   const handleSave = async () => {
     try {
       const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
+
       if (selectedRequestId !== null) {
         if (selectedEmpId !== null) {
           // Reassign Job
@@ -244,31 +299,9 @@ export function ServiceDeptJobList() {
           // Assign Job
           await assignTechnician(selectedRequestId, inputEmpId);
         }
-
-        const firstName = empData.firstName; 
-        const fullName = `${empData.firstName} ${empData.lastName}`
-        const email = empData.email
-
-         sendEmail(email)
-
-
-        const message = `Hi ${firstName}, you have been assigned a new job. \n\n (JobID: #${selectedRequestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
-        const sendBirduserExists = await checkUserExists(inputEmpId);
-
-        if (!sendBirduserExists) {
-          const userCreated = await createTechnicianUser(inputEmpId, fullName);
-          if (userCreated) {
-            const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
-            botMessage(channelUrl, message);
-          }
-        } else {
-          const channelUrl = await createChannel(["Notification-Bot", inputEmpId]);
-          botMessage(channelUrl,message);
-          
-        }
       }
     } catch (err) {
-      console.log('Error creating user or sending notification on SendBird', err);
+      console.log('Error', err);
     }
   };
   

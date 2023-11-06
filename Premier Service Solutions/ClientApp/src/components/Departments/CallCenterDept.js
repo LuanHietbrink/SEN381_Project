@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CustomerList } from './CustomerList.js';
 import { Link } from 'react-router-dom';
+import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav.js';
 import './Dept Styles/CallCenter.css'
 export function CallCenterDept() {
     let [clients, setClients] = useState([]);
@@ -49,6 +50,8 @@ export function CallCenterDept() {
 
     return (
         <>
+            <EmployeeDashboardNav/>
+            
             <div className="container">
                 <h2>Call Center Dashboard</h2>
                 <hr />
