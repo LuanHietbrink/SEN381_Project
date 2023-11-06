@@ -71,6 +71,9 @@ export function LoginSignup() {
                 const clientResponse = await fetch(`api/clients/client-info/${email}`);
                 const clientData = await clientResponse.json();
 
+                console.log(clientData.length);
+
+
                 if (employeeData.length === 1) {
                     // Handle employee login
                     if (((employeeData[0].email !== null) && (employeeData[0].password !== null)) && ((email !== null) && (!password))) {
@@ -101,23 +104,39 @@ export function LoginSignup() {
                             setState({ ...state, error: 'Invalid details.', isErrorModalOpen: true });
                         }
                     }
+                } else if (clientData.length === 1) {
+                    // Handle client login
+                    if (((clientData[0].email !== null) && (clientData[0].password !== null)) && ((email !== null) && (!password))) {
+                        setState({ ...state, error: 'Password is required.', isErrorModalOpen: true });
+                        return;
+                    } else if (((clientData[0].email !== null) && (clientData[0].password == null)) && ((email !== null) && (!password))) {
+                        const response = await fetch(`api/clients/new-client-login/${email}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            setState({ userType: 'client', employeeData: clientData[0], error: null });
+                        }
+                    } else if (((clientData[0].email !== null) && (clientData[0].password !== null)) && ((email !== null) && (password !== ""))) {
+                        const response = await fetch(`api/clients/client-login/${email}/${password}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            setState({ userType: 'client', clientData: clientData[0], error: null });
+                        } else if (response.status === 400) {
+                            setState({ ...state, error: 'Invalid details.', isErrorModalOpen: true });
+                        }
+                    }
                 } else if (!email || !password) {
                     setState({ ...state, error: 'Email and password are required.', isErrorModalOpen: true });
                     return;
-                } else if (clientData.length === 1) {
-                    // Handle client login
-                    const response = await fetch(`api/clients/client-login/${email}/${password}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    });
-
-                    if (response.status === 200) {
-                        setState({ userType: 'client', clientData: clientData[0], error: null });
-                    } else if (response.status === 400) {
-                        setState({ ...state, error: 'Invalid details.', isErrorModalOpen: true });
-                    }
                 } else {
                     setState({ ...state, error: 'No matching user found.', isErrorModalOpen: true });
                 }
@@ -301,7 +320,7 @@ export function LoginSignup() {
                 {state.userType === 'login' && (
                     <>
                         <div className='input-group'>
-                            <div className='form-group, email-input'>
+                            <div className='form-group email-input'>
                                 <input
                                     type="email"
                                     name="email"
