@@ -153,7 +153,7 @@ export async function botJoinChannel(channelUrls) {
 
 export async function userJoinChannel(channelUrls, userId) {
     
-    const url = baseUrl.concat(`/v3/group_channels/${channelUrl}/join`)
+    const url = baseUrl.concat(`/v3/group_channels/${channelUrls}/join`)
 
 
     const headers = {
