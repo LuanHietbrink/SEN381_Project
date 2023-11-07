@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 function DateFilter({ selectedStartDate, selectedEndDate, onStartDateChange, onEndDateChange }) {
     return (
-        <div>
+        <div className='date-input'>
             <DatePicker
                 selected={selectedStartDate}
                 onChange={onStartDateChange}

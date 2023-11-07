@@ -397,11 +397,11 @@ select {
 }
 
 /* If you want to style the select element itself, you can use the following CSS */
-.filter-container select, input {
+.filter-container .filter-input, .filter-service-date-container input {
   width: 100%;
   box-sizing: border-box;
   padding: 5px;
-  /* background-color: #313074; */
+  background-color: #313074; 
   color: white;
 }
 

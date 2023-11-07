@@ -185,20 +185,6 @@ export function ServiceDeptJobList() {
     })
   };
 
-  const getEmployeeInfo = (empId) => {
-    const assignedTechnician = technicians.find((tech) => tech.empId === empId);
-    if (assignedTechnician) {
-      return {
-        name: `${assignedTechnician.firstName} ${assignedTechnician.lastName}`,
-        email: assignedTechnician.email,
-      };
-    }
-    return {
-      name: "",
-      email: "",
-    };
-  };
-
   
 
   const assignTechnician = async (requestId, empId) => {
@@ -220,13 +206,13 @@ export function ServiceDeptJobList() {
         });
   
         const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
-        const { name } = await getEmployeeInfo(empId);
-        const message = `Hey, ${name}, you have been assigned a new job. \n\n JobID: #${requestId}: \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const techName = await getEmployeeName(parseInt(empId))
+        const message = `Hey, ${techName}, you have been assigned a new job. \n\n JobID: #${requestId}: \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
         const sendBirdUserExists = await checkUserExists(empId);
   
         if (sendBirdUserExists) {
           // If the user exists, create a channel with the technician
-          const userCreated = await createTechnicianUser(empId, name);
+          const userCreated = await createTechnicianUser(empId, techName);
           if (userCreated) {
             const channelUrl = await createChannel(["Notification-Bot", empId]);
             await botMessage(channelUrl, message); // Await for the message to be sent
@@ -272,15 +258,15 @@ export function ServiceDeptJobList() {
         handleSendEmail(employeeEmail);
 
         const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
-        const {name} = await getEmployeeInfo(empId)
-        const message = `Hey, ${name}, you have been reassigned a job. \n\n (JobID: #${requestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+        const techName = await getEmployeeName(parseInt(empId))
+        const message = `Hey, ${techName}, you have been reassigned a job. \n\n (JobID: #${requestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
 
         const sendBirdUserExists = await checkUserExists(empId);
 
         if (sendBirdUserExists) {
           // If the user exists, create a channel with the technician
-          const userCreated = await createTechnicianUser(empId, {name});
-          console.log(name)
+          const userCreated = await createTechnicianUser(empId, techName);
+          console.log(techName)
           if (userCreated) {
             const channelUrl = await createChannel(["Notification-Bot", empId]);
             botMessage(channelUrl, message);
@@ -457,14 +443,14 @@ export function ServiceDeptJobList() {
         </div>
         <div className="-container-">
           <div className="filter-container">
-            <input
+            <input className="filter-input"
               type="text"
               placeholder="Search by Job"
               value={filterName}
               onChange={handleNameFilterChange}
             />
           </div>
-          <div className="filter-container-data">
+          <div className="filter-service-date-container">
             <DateFilter
               selectedStartDate={selectedStartDate}
               selectedEndDate={selectedEndDate}
@@ -473,7 +459,7 @@ export function ServiceDeptJobList() {
             />
           </div>
           <div className="filter-container">
-            <select
+            <select filter-input className="filter-input"
               value={selectedStatus}
               onChange={handleStatusFilterChange}
               id="status"
