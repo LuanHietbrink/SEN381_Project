@@ -166,6 +166,25 @@ export function ServiceDeptJobList() {
     }
   };
 
+  const getEmployeeEmail = (empId) => {
+    const assignedTechnician = technicians.find(tech => tech.empId === empId);
+    if (assignedTechnician) {
+        return `${assignedTechnician.email}`;
+    }
+    return '';
+  };
+
+  const handleSendEmail = (empEmail) => {
+    const apiUrl = `/api/auto-email/send-email/${empEmail}`;
+
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+  };
+
   const getEmployeeInfo = (empId) => {
     const assignedTechnician = technicians.find((tech) => tech.empId === empId);
     if (assignedTechnician) {
@@ -183,6 +202,8 @@ export function ServiceDeptJobList() {
   
 
   const assignTechnician = async (requestId, empId) => {
+    const employeeEmail = getEmployeeEmail(parseInt(empId));
+
     try {
       const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, {
         empId,
@@ -215,6 +236,8 @@ export function ServiceDeptJobList() {
           const channelUrl = await createChannel(["Notification-Bot", empId]);
           await botMessage(channelUrl, message); // Await for the message to be sent
         }
+
+        handleSendEmail(employeeEmail);
   
         console.log("Message sent successfully!");
       } else {
@@ -231,6 +254,8 @@ export function ServiceDeptJobList() {
   };
 
   const reassignTechnician = async (requestId, empId) => {
+    const employeeEmail = getEmployeeEmail(parseInt(empId));
+
     // Make a PUT request to update empId for the selected request
     try {
       const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, { empId });
@@ -243,6 +268,8 @@ export function ServiceDeptJobList() {
           isTechModalOpen: false,
           isMessageModalOpen: true,
         });
+
+        handleSendEmail(employeeEmail);
 
         const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
         const {name} = await getEmployeeInfo(empId)
@@ -263,6 +290,8 @@ export function ServiceDeptJobList() {
           const channelUrl = await createChannel(["Notification-Bot", empId]);
           botMessage(channelUrl, message);
         }
+
+
         console.log("Message sent successfully!");
       }else {
 

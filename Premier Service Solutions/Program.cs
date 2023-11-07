@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PremierSolutions.EmailAPI;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -26,6 +27,10 @@ options =>
     ServerVersion.Parse("8.0.34-mysql"));
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -35,7 +40,6 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
-
 
 var app = builder.Build();
 

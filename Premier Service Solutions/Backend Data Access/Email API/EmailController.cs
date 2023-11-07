@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PremierSolutions.Data;
 
-
 namespace PremierSolutions.EmailAPI
 {
     [Route("api/auto-email")]
@@ -16,7 +15,6 @@ namespace PremierSolutions.EmailAPI
     {
         private readonly IEmailService emailService;
         private readonly PremierSolutionsContextProcs _contextProcedures;
-
 
         public EmailController(IEmailService _emailService, PremierSolutionsContextProcs contextProcedures) { 
             emailService = _emailService;
@@ -32,7 +30,7 @@ namespace PremierSolutions.EmailAPI
 
             if (employeeDetails == null || employeeDetails.Count == 0)
             {
-                return NotFound("Employee with the given email does not exist.");
+                return NotFound("An employee with the given email does not exist.");
             }
 
             try
