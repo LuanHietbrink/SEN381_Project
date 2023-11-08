@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import DateFilter from "../DateFilter";
 import EmployeeDashboardNav from "../Navigation/EmployeeNav/EmployeeDashboardNav";
 import "./Dept Styles/Service.css";
-import { createTechnicianUser, botMessage, checkUserExists, createChannel } from "../SendBird"
+import {
+  createTechnicianUser,
+  botMessage,
+  checkUserExists,
+  createChannel,
+} from "../SendBird";
 import { sendEmail } from "../SendEmail";
 
 export function ServiceDeptJobList() {
   const [serviceRequests, setServiceRequests] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filterName, setFilterName] = useState("");
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("In Progress");
   const [filterId, setFilterId] = useState("");
   const [selectedTechnician, setSelectedTechnician] = useState("");
   const [technicians, setTechnicians] = useState([]);
   const [originalServiceRequests, setOriginalServiceRequests] = useState([]);
-  const [empData, setEmpData] = useState()
+  const [searchInput, setSearchInput] = useState(""); // New state variable
   // =================
   const [selectedRequestId, setSelectedRequestId] = useState(null);
   const [selectedEmpId, setSelectedEmpId] = useState(null);
@@ -42,7 +45,6 @@ export function ServiceDeptJobList() {
       .then((response) => {
         setOriginalServiceRequests(response.data);
         setServiceRequests(response.data);
-
       })
       .catch((error) => console.error("Error fetching data:", error));
 
@@ -56,15 +58,12 @@ export function ServiceDeptJobList() {
         console.log("Technicians:", technicianList);
       })
       .catch((error) => console.error("Error fetching technicians:", error));
-
   }, []);
-
 
   const handleViewDetails = (request) => {
     setSelectedJob(request);
     setIsModalOpen(true);
     setSelectedTechnician(null);
-    console.log("ASSIGN BUTTON PRESSED");
   };
 
   function getStatusColor(status) {
@@ -81,25 +80,17 @@ export function ServiceDeptJobList() {
         return "black";
     }
   }
-
-  const handleNameFilterChange = (e) => {
-    setFilterName(e.target.value);
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
   };
 
-  const handleIdilterChange = (e) => {
-    setFilterId(e.target.value);
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
   };
 
-  const handleStartDateChange = (date) => {
-    setSelectedStartDate(date);
-    filterServiceRequestsByDate();
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
   };
-
-  const handleEndDateChange = (date) => {
-    setSelectedEndDate(date);
-    filterServiceRequestsByDate();
-  };
-
   const handleStatusFilterChange = (e) => {
     setSelectedStatus(e.target.value);
   };
@@ -112,40 +103,31 @@ export function ServiceDeptJobList() {
     setIsModalOpen(false);
   };
 
-  const filterServiceRequestsByDate = () => {
-    const extractDatePart = (date) =>
-      new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-    const { selectedStartDate, selectedEndDate, originalServiceRequests } =
-      state;
-
-    if (selectedStartDate && selectedEndDate) {
-      const filteredRequests = originalServiceRequests.filter((request) => {
-        const requestDate = new Date(request.requestDate);
-        const requestDateOnly = extractDatePart(requestDate);
-        const selectedStartDateOnly = extractDatePart(selectedStartDate);
-        const selectedEndDateOnly = extractDatePart(selectedEndDate);
-
-        return (
-          requestDateOnly >= selectedStartDateOnly &&
-          requestDateOnly <= selectedEndDateOnly
-        );
-      });
-      setState({ ...state, serviceRequests: filteredRequests });
-    } else {
-      setState({ ...state, serviceRequests: originalServiceRequests });
+  const filteredServiceRequests = serviceRequests.filter((request) => {
+    // Check if the request date falls within the selected date range
+    const requestDate = new Date(request.requestDate);
+    if (startDate && endDate) {
+      const rangeStartDate = new Date(startDate);
+      const rangeEndDate = new Date(endDate);
+      if (requestDate < rangeStartDate || requestDate > rangeEndDate) {
+        return false;
+      }
     }
-  };
 
-  const filteredServiceRequests = serviceRequests.filter(
-    (request) =>
+    // Split the search input into words
+    const searchItems = searchInput.toLowerCase().split(" ");
+
+    // Check if any word matches the ServiceRequestId or job name
+    return (
       (selectedStatus === "" || request.status === selectedStatus) &&
-      (filterName === "" ||
-        request.requestDetails
-          .toLowerCase()
-          .includes(filterName.toLowerCase())) &&
-      (filterId === "" || request.requestId === filterId)
-  );
+      searchItems.every(
+        (item) =>
+          item === "" ||
+          request.requestDetails.toLowerCase().includes(item) ||
+          request.requestId === parseInt(item)
+      )
+    );
+  });
 
   // =============================================================================================
   const formatDate = (date) => {
@@ -167,36 +149,64 @@ export function ServiceDeptJobList() {
   };
 
   const getEmployeeEmail = (empId) => {
-    const assignedTechnician = technicians.find(tech => tech.empId === empId);
+    const assignedTechnician = technicians.find((tech) => tech.empId === empId);
     if (assignedTechnician) {
-        return `${assignedTechnician.email}`;
+      return `${assignedTechnician.email}`;
     }
-    return '';
+    return "";
   };
 
   const handleSendEmail = (empEmail) => {
     const apiUrl = `/api/auto-email/send-email/${empEmail}`;
 
     fetch(apiUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+        "Content-Type": "application/json",
+      },
+    });
   };
 
-  
+  const handleSendMessage = async (empId, requestId, assignStatus) => {
+    const selectedJobDetails = serviceRequests.find(
+      (request) => request.requestId === selectedRequestId
+    );
+    const techName = await getEmployeeName(parseInt(empId));
+
+    const message = `Hey, ${techName}, you have been ${assignStatus} a job. \n\n (JobID: #${requestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
+
+    const sendBirdUserExists = await checkUserExists(empId);
+
+    if (sendBirdUserExists) {
+      // If the user exists, create a channel with the technician
+      const userCreated = await createTechnicianUser(empId, techName);
+      console.log(techName);
+      if (userCreated) {
+        const channelUrl = await createChannel(["Notification-Bot", empId]);
+        botMessage(channelUrl, message);
+      }
+    } else {
+      // If the user doesn't exist, create a channel and send a message
+      const channelUrl = await createChannel(["Notification-Bot", empId]);
+      botMessage(channelUrl, message);
+    }
+
+    console.log("Message sent successfully!");
+  };
 
   const assignTechnician = async (requestId, empId) => {
     const employeeEmail = getEmployeeEmail(parseInt(empId));
 
     try {
-      const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, {
-        empId,
-        status: "In Progress",
-      });
+      const response = await axios.put(
+        `/api/service-requests/edit-request/${requestId}`,
+        {
+          empId,
+          status: "In Progress",
+        }
+      );
       console.log(response);
-  
+
       if (response.status === 200) {
         setState({
           ...state,
@@ -204,28 +214,9 @@ export function ServiceDeptJobList() {
           isTechModalOpen: false,
           isMessageModalOpen: true,
         });
-  
-        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
-        const techName = await getEmployeeName(parseInt(empId))
-        const message = `Hey, ${techName}, you have been assigned a new job. \n\n JobID: #${requestId}: \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
-        const sendBirdUserExists = await checkUserExists(empId);
-  
-        if (sendBirdUserExists) {
-          // If the user exists, create a channel with the technician
-          const userCreated = await createTechnicianUser(empId, techName);
-          if (userCreated) {
-            const channelUrl = await createChannel(["Notification-Bot", empId]);
-            await botMessage(channelUrl, message); // Await for the message to be sent
-          }
-        } else {
-          // If the user doesn't exist, create a channel and send a message
-          const channelUrl = await createChannel(["Notification-Bot", empId]);
-          await botMessage(channelUrl, message); // Await for the message to be sent
-        }
 
+        handleSendMessage(empId, requestId, "assigned");
         handleSendEmail(employeeEmail);
-  
-        console.log("Message sent successfully!");
       } else {
         setState({
           ...state,
@@ -244,7 +235,10 @@ export function ServiceDeptJobList() {
 
     // Make a PUT request to update empId for the selected request
     try {
-      const response = await axios.put(`/api/service-requests/edit-request/${requestId}`, { empId });
+      const response = await axios.put(
+        `/api/service-requests/edit-request/${requestId}`,
+        { empId }
+      );
       console.log(response);
 
       if (response.status === 200) {
@@ -255,43 +249,18 @@ export function ServiceDeptJobList() {
           isMessageModalOpen: true,
         });
 
+        handleSendMessage(empId, requestId, "reassigned");
         handleSendEmail(employeeEmail);
-
-        const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
-        const techName = await getEmployeeName(parseInt(empId))
-        const message = `Hey, ${techName}, you have been reassigned a job. \n\n (JobID: #${requestId}): \n Details: ${selectedJobDetails.requestDetails} \n Request Created on: ${selectedJobDetails.requestDate} \n Priority: ${selectedJobDetails.priority} `;
-
-        const sendBirdUserExists = await checkUserExists(empId);
-
-        if (sendBirdUserExists) {
-          // If the user exists, create a channel with the technician
-          const userCreated = await createTechnicianUser(empId, techName);
-          console.log(techName)
-          if (userCreated) {
-            const channelUrl = await createChannel(["Notification-Bot", empId]);
-            botMessage(channelUrl, message);
-          }
-        } else {
-          // If the user doesn't exist, create a channel and send a message
-          const channelUrl = await createChannel(["Notification-Bot", empId]);
-          botMessage(channelUrl, message);
-        }
-
-
-        console.log("Message sent successfully!");
-      }else {
-
+      } else {
         setState({
           ...state,
           errorMessage: "Technician re-assignment is unsuccessful.",
           isTechModalOpen: false,
           isMessageModalOpen: true,
-
-        })
+        });
       }
-
     } catch (error) {
-        console.error("Error updating empId:", error);
+      console.error("Error updating empId:", error);
     }
   };
 
@@ -304,7 +273,9 @@ export function ServiceDeptJobList() {
 
   const handleSave = async () => {
     try {
-      const selectedJobDetails = serviceRequests.find((request) => request.requestId === selectedRequestId);
+      const selectedJobDetails = serviceRequests.find(
+        (request) => request.requestId === selectedRequestId
+      );
 
       if (selectedRequestId !== null) {
         if (selectedEmpId !== null) {
@@ -316,12 +287,9 @@ export function ServiceDeptJobList() {
         }
       }
     } catch (err) {
-      console.log('Error', err);
+      console.log("Error", err);
     }
   };
-  
-    
-  
 
   const closeTechModal = () => {
     setState({ ...state, isTechModalOpen: false });
@@ -437,29 +405,39 @@ export function ServiceDeptJobList() {
       <EmployeeDashboardNav />
       <div className="job-list-wrapper">
         <div className="left-align">
-          <h2>Service Department</h2>
+          <h2 id="page-title">Service Department</h2>
           <div className="line"></div>
-          <p className="assign">List of Jobs</p>
+          <h4 className="assign">List of Jobs</h4>
         </div>
+        <h4 id="filter-heading">Filtering Options:</h4>
         <div className="-container-">
           <div className="filter-container">
-            <input className="filter-input"
+            <input
+              className="filter-input"
+              id="filter-searchbar"
               type="text"
-              placeholder="Search by Job"
-              value={filterName}
-              onChange={handleNameFilterChange}
+              placeholder="Search by Job ID or Job Name"
+              value={searchInput}
+              onChange={handleSearchInputChange}
             />
           </div>
           <div className="filter-service-date-container">
-            <DateFilter
-              selectedStartDate={selectedStartDate}
-              selectedEndDate={selectedEndDate}
-              onStartDateChange={handleStartDateChange}
-              onEndDateChange={handleEndDateChange}
+            <input
+              type="date"
+              placeholder="Start Date"
+              value={startDate}
+              onChange={handleStartDateChange}
+            />
+            <input
+              type="date"
+              placeholder="End Date"
+              value={endDate}
+              onChange={handleEndDateChange}
             />
           </div>
           <div className="filter-container">
-            <select filter-input className="filter-input"
+            <select
+              className="filter-input"
               value={selectedStatus}
               onChange={handleStatusFilterChange}
               id="status"
@@ -472,7 +450,8 @@ export function ServiceDeptJobList() {
             </select>
           </div>
         </div>
-
+        <div className="line"></div>
+        <br />
         {/* ========== */}
         <div className="ticket-list">
           {filteredServiceRequests.map((request) => (
@@ -485,24 +464,43 @@ export function ServiceDeptJobList() {
               data-toggle="modal"
               data-target="#technicianModal"
             >
-              <h5>
+              <h5 id="ticket-heading">
                 #{request.requestId} | {request.requestDetails}
               </h5>
               <div className="ticket-content">
                 <div>
-                  Request for client <b>#{request.clientId}</b> requested on{" "}
-                  <b>{formatDate(request.requestDate)}</b> is{" "}
-                  <b className="status-text" style={{ backgroundColor: getStatusColor(request.status) }}>
-                    {request.status}.
-                  </b>
+                  <ul className="ticket-info-list">
+                    <li>
+                      ClientID: <b>#{request.clientId}</b>
+                    </li>
+                    <li>
+                      Requested on: <b>{formatDate(request.requestDate)}</b>
+                    </li>
+                    <li>
+                      Status:{" "}
+                      <b
+                        className="status-text"
+                        style={{
+                          backgroundColor: getStatusColor(request.status),
+                        }}
+                      >
+                        {request.status}
+                      </b>
+                    </li>
+                  </ul>
                 </div>
                 <div>
                   <div className="technician-text">
-                    <p id="technician-title"><b>Assigned To: </b></p>
-                    <p id="technician-name">{request.empId
-                      ? `#${request.empId} | ${getEmployeeName(request.empId)}`
-                      : "None"}
-                      </p>
+                    <p id="technician-title">
+                      <b>Assigned To: </b>
+                    </p>
+                    <p id="technician-name">
+                      {request.empId
+                        ? `#${request.empId} | ${getEmployeeName(
+                            request.empId
+                          )}`
+                        : "None"}
+                    </p>
                   </div>
                 </div>
               </div>

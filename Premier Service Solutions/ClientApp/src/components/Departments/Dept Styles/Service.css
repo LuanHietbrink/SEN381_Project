@@ -66,7 +66,10 @@
   color: #313074;
   font-size: 110px;
 }
-
+#filter-heading{
+  text-align: center;
+  color: #313074;
+}
 .popup-heading {
   display: flex;
   flex-direction: column;
@@ -156,25 +159,52 @@
 .line {
   width: 100%;
   height: 2px;
-  background-color: #000000;
+  background-color: #313074;
 }
 
 .assign- {
-  color: #2d2c54;
+  color: #313074;
   text-align: center;
-  font-weight: 700;
-  font-size: x-large;
+
 }
 
 .ticket:hover {
+  position: relative;
   cursor: pointer;
-  background-color: rgba(8, 0, 255, 0.274);
-
+  background-color: #acabf1;
 }
 
-.ticket:active {
-  cursor: pointer;
-  background-color: rgba(8, 0, 255, 0.555);
+.ticket:hover::before {
+  content: "Click ticket to assign";
+  position: absolute;
+  background-color: #4b0082; 
+  color: #ffffff; 
+  padding: 5px 10px;
+  border-radius: 5px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.ticket:hover::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ffffff; 
+  border: 1px solid #ffffff; 
+  clip-path: polygon(50% 0%, 0 100%, 100% 100%);
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ticket:hover:hover::before {
+  opacity: 1;
+  visibility: visible;
 }
 
 .ticket-list {
@@ -185,21 +215,21 @@
 .technician-text {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  text-align: center; /* Center text within each paragraph */
+  align-items: center; 
+  text-align: center; 
 
 }
 #technician-title {
-  margin-bottom: 5px; /* Add some spacing between title and name */
+  margin-bottom: 5px; 
   color: #313074;
-  text-align: center; /* Optionally style the title */
+  text-align: center;
 }
 #technician-name {
   background-color: #313074;
   border-radius: 10px;
   color: white;
-  padding: 5px; /* Add padding for spacing between text and background */
-  min-width: 150px; /* Set a minimum width for consistency */
+  padding: 5px; 
+  min-width: 150px; 
 }
 .status-text{
   background-color: rgb(128, 0, 0);
@@ -212,7 +242,11 @@
   text-decoration: bold;
   text-align: left;
 }
-
+#ticket-heading{
+  font-style: oblique;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+}
 .ticket {
   width: 100%;
   border: 3px solid #313074;
@@ -221,31 +255,23 @@
   box-sizing: border-box;
   text-align: center;
   border-radius: 10px;
+
 }
 
-/* 
-.ticket-list {
-    display: flex;
-    flex-direction: column; 
-    align-items: center;
-    padding: 10px;
+.ticket-info-list li{
+  list-style-type: none;
+  text-align: left;
+  margin-top: 10px;
 }
-.ticket {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 70%; 
-    margin: 10px;
-    text-align: left;
-    border-radius: 12px;
-    background-color: lightgrey;
-}   */
+
 
 
 .ticket-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+  text-align: left; 
+  font-size: medium;
 }
 
 .ticket-content p {
@@ -392,8 +418,9 @@ select {
 }
 
 .filter-container {
-  width: 200px;
+  width: 300px;
   padding: 15px; /* Add margin between filter elements if needed */
+  
 }
 
 /* If you want to style the select element itself, you can use the following CSS */

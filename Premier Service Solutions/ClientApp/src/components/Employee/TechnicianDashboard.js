@@ -4,6 +4,7 @@ import EmployeeDashboardNav from '../Navigation/EmployeeNav/EmployeeDashboardNav
 import { useData } from '../DataContext';
 import "./Employee Styles/TechnicianDashboard.css"
 import Messaging from '../Messaging';
+import axios from 'axios';
 export function TechnicianDashboard() {
     // Access privateData and navigate functions from the DataContext
     const { privateData } = useData();
@@ -15,6 +16,9 @@ export function TechnicianDashboard() {
     const [isChatModalOpen, setIsChatModalOpen] = useState(false);
 
     const [filteredServiceRequests, setFilteredServiceRequests] = useState([]);
+
+    const [selectedServiceRequest, setSelectedServiceRequest] = useState(null);
+    const [newStatus, setNewStatus] = useState('');
 
     // Use useEffect to store employee data in local storage when it changes
     useEffect(() => {
@@ -41,11 +45,38 @@ export function TechnicianDashboard() {
     }
 
     // Function to report an issue
-    const reportIssue = async () => {
+    const reportIssue = async (request) => {
+        setSelectedServiceRequest(request);
         setIsIssueModalOpen(true);
     };
     
+    const updateStatus = async (selectedRequest, newStatus) => {
+        try {
+            const requestId = selectedRequest.requestId;
 
+            let confirmationMessage = "Are you sure you want to do this action ? It cannot be undone !";
+            const isConfirmed = window.confirm(confirmationMessage);
+
+            if (isConfirmed) {
+                const response = await axios.put(
+                    `/api/service-requests/edit-request/${requestId}`,{Status:newStatus});
+                    console.log(response)
+
+                if(response.status==200){
+                    window.alert("Successfully updated Job Status !")
+                    setIsIssueModalOpen(false)
+                    window.location.reload();
+                }
+                else{
+                    window.alert("Error Updating Job Status")
+
+                }
+            }
+        } catch (error) {
+         console.log("An eror has occured, please try again",error)   
+         window.alert("Error Updating Job Status")
+        }
+    };
 
     // Function to fetch employee details and filter service requests
     const fetchEmployeeDetails = async (email) => {
@@ -60,7 +91,7 @@ export function TechnicianDashboard() {
                 if (serviceRequestsResponse.ok) {
                     const serviceRequestsData = await serviceRequestsResponse.json();
                     const filteredRequests = serviceRequestsData.filter(
-                        (request) => request.empId === empId
+                        (request) => request.empId === empId && request.status !== 'Completed'
                     );
 
                     setFilteredServiceRequests(filteredRequests);
@@ -85,39 +116,28 @@ export function TechnicianDashboard() {
 
     const reportIssueModal = (
         <div className={`modal ${isIssueModalOpen ? 'show' : ''}`} tabIndex="-1" role="dialog" style={{ display: isIssueModalOpen ? 'block' : 'none' }}>
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <div className='modal-heading'>
-                            <h5 className="modal-title">Report Issue</h5>
-                        </div>
-                        <div>
-                            <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsIssueModalOpen(false)}></button>
-                        </div>
+        <div className="modal-dialog" role="document">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <div className='modal-heading'>
+                        <h5 className="modal-title">Complete Job</h5>
                     </div>
-                        <div className="modal-form">                    
-                            <input
-                                type="text"
-                                name="issueTitle"
-                                // value={formData.name}
-                                readOnly
-                                placeholder="Issue Title"
-                            />
-
-                            <textarea
-                                name="issueDescription"
-                                // value={formData.description}
-                                readOnly
-                                placeholder="Issue Description"
-                            />
-                        </div>
-                    <div className="modal-footer">
-                        <button type="button" className="btn btn-add" onClick={reportIssue}>Report</button>
+                    <div>
+                        <button type="button" className="close-modal-button fa-solid fa-xmark" data-dismiss="modal" onClick={() => setIsIssueModalOpen(false)}></button>
                     </div>
                 </div>
+                    <div className="modal-form">   
+                        <div className="buttons-container">           
+                            <button type="button" className="btn-completed" onClick={() => updateStatus(selectedServiceRequest, 'Completed')}>Complete Job</button>
+                            <button type="button" className="btn-delay" onClick={() => updateStatus(selectedServiceRequest, 'Delayed')}>Delay Job</button>
+                        </div>
+                    </div>
+                <div className="modal-footer">
+                <button type="button" className="btn btn-add" onClick={() => {setIsIssueModalOpen(false); }}>Close</button>                </div>
             </div>
         </div>
-    );
+    </div>
+);
 
     const chatModal = (
         
@@ -168,11 +188,11 @@ export function TechnicianDashboard() {
                             <div className="assigned-job-list">
                             {filteredServiceRequests.length > 0 ? (
                                 filteredServiceRequests.map((request) => (
-                                    <div key={request.requestId} className="assigned-job" onClick={() => setIsIssueModalOpen(true)}>
+                                    <div key={request.requestId} className="assigned-job" onClick={() => reportIssue(request)}  title='View Details'>
                                         <h5>
                                             #{request.requestId} | {request.requestDetails}
                                         </h5>
-                                        <div className="assigned-job-content" title='View Details'>
+                                        <div className="assigned-job-content">
                                             <p>
                                                 Request for client <b>#{request.clientId}</b> requested on <b>{formatDate(request.requestDate)}</b> is <b>{request.status}.</b>
                                             </p>
