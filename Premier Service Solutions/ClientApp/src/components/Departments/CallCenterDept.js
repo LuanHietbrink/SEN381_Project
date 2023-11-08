@@ -52,7 +52,7 @@ export function CallCenterDept() {
         <>
             <EmployeeDashboardNav/>
             
-            <div className="container">
+            <div className="call-center-header container">
                 <h2>Call Center Dashboard</h2>
                 <hr />
             </div>
@@ -61,7 +61,7 @@ export function CallCenterDept() {
                     <div className="col">
                         <button
                             id="answerCall"
-                            className="callCenterBtn mb-5"
+                            className="callCenterBtn mb-2"
                             onClick={callClick}
                         >
                             Answer call
@@ -71,19 +71,15 @@ export function CallCenterDept() {
                         ) : (
                             <></>
                         )}
-
-                        
                     </div>
-                    
                 </div>
 
                 <input
                     id="searchClient"
                     onChange={searchChange}
-                    className="searchBox mb-5"
+                    className="searchBox mb-4"
                     placeholder="Search by Name or Cellphone"
                 ></input>
-
 
                 {
                     clients.length !== 0 ? (
