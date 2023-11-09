@@ -77,27 +77,26 @@ export function ServiceDept() {
             </div>
             <div className="button-container">
                 <Link to="/jobs-list">
-                    <button className="servcie-button">View Jobs</button>
+                    <button className="service-button">View Jobs</button>
                 </Link>
-                <button className="servcie-button" onClick={openEscalateJobsModal}>Escalate Job</button>
             </div>
             <h1 className="center-head">Job Statistics</h1>
             <div className="display">
             <div className="stat-container">
                     <p className="titles">Total Service Requests:</p>
-                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalServiceRequests} />
+                    <input type="text" className="stats" id="jobId" name="jobId" readOnly value={statistics.totalServiceRequests} />
                 </div>
                 <div className="stat-container">
                     <p className="titles">Open Service Requests:</p>
-                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalOpenServiceRequests} />
+                    <input type="text" className="stats" id="jobId" name="jobId" readOnly value={statistics.totalOpenServiceRequests} />
                 </div>
                 <div className="stat-container">
                     <p className="titles">Total Assigned Jobs:</p>
-                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.totalAssignedJobs} />
+                    <input type="text" className="stats" id="jobId" name="jobId" readOnly value={statistics.totalAssignedJobs} />
                 </div>
                 <div className="stat-container">
                     <p className="titles">Technicians Available:</p>
-                    <input type="text" id="jobId" name="jobId" readOnly value={statistics.techniciansAvailable} />
+                    <input type="text" className="stats" id="jobId" name="jobId" readOnly value={statistics.techniciansAvailable} />
                 </div>
             </div>
 

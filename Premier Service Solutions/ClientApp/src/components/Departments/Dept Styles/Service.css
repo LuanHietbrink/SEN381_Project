@@ -135,6 +135,7 @@
 .center-head {
   margin-top: 50px;
   text-align: center;
+  color: #4b0082;
 }
 
 .user-info {
@@ -284,22 +285,22 @@
   margin-top: 100px;
 }
 
-.servcie-button {
-  background-color: white;
-  color: #2d2c54;
+.service-button {
+  background-color: #2D2C54;
+  color: white;
   border: solid 1px #2d2c54;
   padding: 10px 20px;
   margin: 50px; /* Add spacing between buttons */
   cursor: pointer;
   border-radius: 5px;
-  width: 225px;
+  width: 600px;
   font-size: 20px;
   font-weight: 500;
 }
 
-.servcie-button:hover{
-    background-color: #2D2C54;
-    color: white;
+.service-button:hover{
+    background-color: #d3d3d3a4;
+    color: #000000;
 }
 .display {
   border: solid 1px #2d2c54;
@@ -310,6 +311,7 @@
   height: 30vh;
   align-items: center; /* Center vertically within the container */
   margin: 20px;
+  background-color: #aaaaaa6e;
 }
 
 .stat-container {
@@ -412,7 +414,15 @@ select {
   background-color: #2d2c54;
   color: white;
 }
-
+.stats{
+  background-color: #313074;
+  border: solid #4b0082 2px;
+  text-align: center;
+  color: white;
+  font-size: large;
+  border-radius: 10px;
+  width: 60px;
+}
 #status{
   height: 40px;
 }

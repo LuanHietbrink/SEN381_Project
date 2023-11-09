@@ -73,7 +73,7 @@ export function ServiceDeptJobList() {
       case "Delayed":
         return "red";
       case "Pending":
-        return "yellow";
+        return "orange";
       case "In Progress":
         return "blue";
       default:
