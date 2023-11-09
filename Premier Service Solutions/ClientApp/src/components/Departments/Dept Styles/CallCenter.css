@@ -1,3 +1,7 @@
+.call-center-header{
+    margin-top: 80px;
+}
+
 .callCenterBtn {
     background-color: #2D2C54;
     color: #fff;
@@ -25,7 +29,7 @@
     border: 1px solid black;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 600px;
+    height: 500px;
     padding: 0;
 }
 
@@ -37,7 +41,7 @@
 
 .listBtn {
     position: absolute;
-    top: 10px;
+    top: 45px;
     right: 20px;
     padding: 5px;
 }

@@ -82,9 +82,12 @@
     flex-direction: column;
     align-items: center;
     padding: 10px;
-    max-height: 480px;
+    max-height: 600px;
     overflow-y: auto;
     width: 897px;
+    background-color: #313074;
+    border: 2px solid #313074;
+    border-radius: 10px;
 }
 
 .assigned-job-list h5 {
@@ -118,3 +121,36 @@
     max-width: 80%;
     margin: 0.5em 0 0 2em;
 }
+
+.buttons-container{
+    text-align: center;
+
+}
+
+.btn-completed, .btn-delay{
+    padding: 15px;
+    margin: 10px 20px;
+    color: white;
+    border-radius: 10px;
+    border-style: none;
+}
+
+.btn-completed:hover{
+    background-color: darkgreen;
+}
+
+.btn-delay:hover{
+    background-color: darkred;
+}
+.btn-completed:active, .btn-delay:active{
+    background-color: #313074;
+}
+
+.btn-completed{
+    background-color: green;
+}
+
+.btn-delay{
+    background-color: red;
+}
+

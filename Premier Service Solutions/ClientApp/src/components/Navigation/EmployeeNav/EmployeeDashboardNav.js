@@ -127,5 +127,6 @@ export default function EmployeeDashboardNav(props) {
                 <p><a href="/employee-account-settings">{theFirstName || storedEmployeeData.firstName} {theLastName || storedEmployeeData.lastName}</a></p>
             </div>
         </header>
+
     );
 }

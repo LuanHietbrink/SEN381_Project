@@ -1,28 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { RequestForm } from './RequestForm';
 import './Dept Styles/CallCenter.css'
-import { Link } from 'react-router-dom';
 import ServiceRequestsModal from './ServiceRequestModal';
 export function CustomerList(props) {
 
     let [selectedItem, setSelectedItem] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
-    const handleViewRequestsClick = (client) => {
-        setSelectedItem(client);
-        setShowModal(true);
-    };
-
     function handleClick(client) {
+        setShowModal(true);
         setSelectedItem(client);
         if (selectedItem != null) {
             document.getElementById('request-form').hidden = false;
+            document.getElementById('details').focus();
         }
     }
 
     return (
         <>
-            <div className="customer-list container mb-5">
+            <div className="customer-list container">
                 {props.data.map((client) => (
                     <div className="customer-list-item" key={client.clientId}>
                         <h6>{client.clientName}</h6>
